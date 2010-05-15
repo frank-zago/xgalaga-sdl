@@ -1,0 +1,52 @@
+
+
+
+
+
+
+
+
+CREDITS
+=======
+
+Original author:
+Joe Rumsey 
+
+X interface:
+Bill Dyess
+Rob Forsman
+and about a million others.
+
+Sound server/interface:
+Sujal Patel
+Paul Kendall (Sun and NAS support)
+
+Pixmaps:
+Joe Rumsey
+Mike McGrath
+
+Thanks: 
+Alec Habig for mirroring it at indiana
+Johnathan Hardwick for testing on many
+different platforms and sending bug fixes
+Koala team in France for bug fixes and for writing the XPM lib.
+All the dupes^H^H^H^H^Hnetrekers who helped test it 
+at the earliest stages.
+Bill Clarke for high score hacks
+Everyone that's written me thanking me, and especially
+the few who sent the five bucks in.
+
+Thank beyond the original development:
+Joey Hess, package maintainer on debian ...
+...for collecting a bunch of patches over years 
+Hans de Goede, package maintainer on fedora for fullscreen patch
+a person (have to find out whom) for the joystick patch
+Bryce Wagner, for his work on the hyperspace patch
+John Strickland, for his work on the hyperspace patch
+David Enderson, for his work on the hyperspace patch
+Greg Bell, for testing with FC4
+
+If somebody means to be missed on this list...
+... please let me know at tshe_hermann remove this at web dot de
+
+Have fun with Xgalaga!!!!

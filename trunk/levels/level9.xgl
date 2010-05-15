@@ -1,0 +1,46 @@
+path.1: 200,-30: s43 ssw3 sw3 wsw3 w3 wnw3 nw13 
+path.2: 200,-30: s43 sse3 se3 ese3 e3 ene3 ne13 
+path.4: 410,125: sw30 wsw3 w13 wnw3 nw6 
+path.5: -30,125: se30 ese3 e13 ene3 ne6 
+path.6: 100,-30: s53 se6 e26 n13 nw20 
+path.7: 300,-30: s53 sw6 w26 n13 ne20 
+path.8: 100,530: n33 ne33 ene3 e3 ese3 se3 sse3 s3 ssw3 sw3 wsw3 w20 wnw3 nw3 nnw3 n3 
+path.9: 300,530: n33 nw33 wnw3 w3 wsw3 sw3 ssw3 s3 sse3 se3 ese3 e20 ene3 ne3 nne3 n3 
+path.a: -30,250: e53 sw20 n46 
+path.b: 430,250: w53 se20 n46 
+path.c: 430,530: nw53 
+path.d: -30,530: ne53 
+path.e: -30,350: e5 ene4 ne5 nne6 ne5 ene4 e2 ese4 se5 sse6 se5 ese4 e2 ene4 ne5 nne6 n13
+path.f: 430,250: w40 wsw2 sw2 ssw2 s2 sse2 se2 ese2 e2 ene2 ne2 nne2 n2 nnw2 nw2 wnw2 w2 wsw2 sw2 ssw2 s2 sse2 se2 ese2 e2 ene2 ne2 nne2 n2 nnw2 nw2 wnw2 w2 wsw2 sw2 ssw2 s2 sse2 se2 ese2 e2 ene2 ne2 nne2 n13 
+path.g: -30,250: e40 ese2 se2 sse2 s2 ssw2 sw2 wsw2 w2 wnw2 nw2 nnw2 n2 nne2 ne2 ene2 e2 ese2 se2 sse2 s2 ssw2 sw2 wsw2 w2 wnw2 nw2 nnw2 n2 nne2 ne2 ene2 e2 ese2 se2 sse2 s2 ssw2 sw2 wsw2 w2 wnw2 nw2 nnw2 n13 
+path.h: 360,-30: sse10 s2 ssw10 s2 sse10 s2 ssw10 s2 sse10 s2 ssw10 s2 
+path.i: 320,-30: sse10 s2 ssw10 s2 sse10 s2 ssw10 s2 sse10 s2 ssw10 s2 
+path.j: 280,-30: sse10 s2 ssw10 s2 sse10 s2 ssw10 s2 sse10 s2 ssw10 s2 
+path.k: 240,-30: sse10 s2 ssw10 s2 sse10 s2 ssw10 s2 sse10 s2 ssw10 s2 
+path.l: 200,-30: sse10 s2 ssw10 s2 sse10 s2 ssw10 s2 sse10 s2 ssw10 s2 
+path.m: 160,-30: sse10 s2 ssw10 s2 sse10 s2 ssw10 s2 sse10 s2 ssw10 s2 
+path.n: 120,-30: sse10 s2 ssw10 s2 sse10 s2 ssw10 s2 sse10 s2 ssw10 s2 
+path.o: 80,-30: sse10 s2 ssw10 s2 sse10 s2 ssw10 s2 sse10 s2 ssw10 s2 
+path.p: 40,-30: sse10 s2 ssw10 s2 sse10 s2 ssw10 s2 sse10 s2 ssw10 s2 
+path.q: 0,-30: sse10 s2 ssw10 s2 sse10 s2 ssw10 s2 sse10 s2 ssw10 s2 
+shapes:\
+---0--0---\
+--111111--\
+6666666666\
+7777777777\
+8888888888\
+9999999999
+paths:\
+---g--g---\
+--gggggg--\
+8989898989\
+1111111111\
+cccccccccc\
+hijklmnopq
+delays:\
+--- --- --- 405 --- --- 400 --- --- ---\
+--- --- 435 430 425 420 415 410 --- ---\
+340 340 330 330 320 320 310 310 300 300\
+245 240 235 230 225 220 215 210 205 200\
+145 140 135 130 125 120 115 110 105 100\
+000 000 000 000 000 000 000 000 000 000

@@ -1,0 +1,315 @@
+#!/usr/local/bin/perl
+#
+# creates images.c and images.h.  Takes the imagedir as a parameter.
+#
+# Bill Dyess, 10/5/94
+#
+# Bill Dyess, 2/11/95
+#  - Now always compiles in default.x[pb]m.
+#  - Compiles in all image files if -c given as a parameter.
+#
+require "find.pl";
+
+$path = $ARGV[0];
+if ($path eq "-c") {
+  $compile_in = 1;
+  $path = $ARGV[1];
+} else {
+  $compile_in = 0;
+}
+
+die "Usage: $0 [-c] <imagedir>\n  -c    Compile in all images.\n" unless $path;
+
+&find($path);
+
+&init_lookup();
+
+open(C,">images.c") || die "can't open images.c: $!";
+open(H,">images.h") || die "can't open images.h: $!";
+open(SCRIPT_IN,"$0") || die "can't open $0: $!";
+open(SCRIPT_OUT,">$0.out") || die "can't open $0.out: $!";
+while(<SCRIPT_IN>) { 
+  print SCRIPT_OUT; 
+  last if /^  %lookup = \(/; 
+}
+close(SCRIPT_IN);
+
+$help = "/* {width,height,frames,xpm,filename,loaded,alternate,bad,compiled_in,xbmdata,xpmdata,pixmap,clipmask} */\n";
+
+print C <<EOF;
+/* images.c.  Contains the image control data. [BDyess] */
+/* automatically created by scripts/mkimgsrc */
+
+#include <stdlib.h>
+#include "Wlib.h"
+#include "images.h"
+#include "struct.h"
+#include "proto.h"
+
+/* compiled in images in alphabetical order, XBM before XPM. [BDyess] */
+EOF
+
+# sort the filelist
+@filelist = sort keys %table;
+
+# copy in all the xbm and xpm data if $compile_in is set, otherwise just
+# the data for the default image.
+chdir($path) || die "can't chdir() to $path: $!";
+if($compile_in) {
+  for $file (@filelist) {
+    &include_bitmap($file);
+    &include_pixmap($file);
+  }
+} else {
+  &include_bitmap("/default");
+}
+
+# includes the given bitmap in the C source.
+sub include_bitmap {
+  local($file) = @_;
+  $ok = 0;
+  if(open(IN,".$file.xbm")) {
+    while(<IN>) {
+      if (/^#define\s*\S*_width\s*(\d*)/) {
+	$lookup{"${file}_width"} = $1;
+	next;
+      }
+      if (/^#define\s*\S*_height\s*(\d*)/) {
+	$lookup{"${file}_height"} = $1;
+	next;
+      }
+      if (/^static.*char\s\S*_bits\[\]/) {
+        $name = $file;
+	$name =~ s,^/,,;
+	$name =~ s,[/.],_,g;
+        print C "static char ${name}_bits[] = {\n";
+	$lookup{"${file}_xbmdata"} = "${name}_bits";
+	$ok = 1;
+	next;
+      }
+      print C;
+    }
+    print C "\n";
+    if($ok) {
+      $lookup{"${file}_compiled_in"} = 1;
+    } else {
+      print STDERR "Error parsing $file.xbm!\n";
+    }
+  }
+}
+
+# includes the given pixmap in the C source.
+sub include_pixmap {
+  local($file) = @_;
+  $ok = 0;
+  if(open(IN,".$file.xpm")) {
+    while(<IN>) {
+      if (/static.*char[\s\*]*\S*\[\]/) {
+        $name = $file;
+	$name =~ s,^/,,;
+	$name =~ s,[/.],_,g;
+	s/\*\s*\S*\[\]/* ${name}_xpm\[\]/;
+        print C;
+	$lookup{"${file}_xpmdata"} = "${name}_xpm";
+        $ok = 1;
+      } else {
+	print C;
+      }
+    }
+    print C "\n";
+    if($ok) {
+      $lookup{"${file}_compiled_in"} = 1;
+    } else {
+      print STDERR "Error parsing $file.xpm!\n";
+    }
+  }
+}
+
+# start of imagearray
+#$height = $lookup{"/default_height"};
+#$width = $lookup{"/default_width"};
+print C <<EOF;
+/* keep sorted (for bsearch) [BDyess] */
+static W_Image imagearray[] = {
+EOF
+#   {$height, $width, 1, 0, "/default", 1, I_DEFAULT, 0, 1, default_bits, default_xpm, 0, 0},
+
+
+print H <<EOF;
+/* images.h.  Contains the #defines and extern's for all the image management
+   data [BDyess] */
+/* automatically created by scripts/mkimgsrc */
+
+#include "Wlib.h"
+
+W_Image * getImage P((int offset));
+void loadImageByFilename P((char *filename));
+void loadAllImages P((void));
+
+#define I_DEFAULT              0
+EOF
+#
+
+$counter = 0; #1;
+for $file (@filelist) {
+  &print_lookup($file);
+  print C $help if ($counter % 25) == 0;
+  $frames = $lookup{"${file}_frames"};
+  $frames = 0 unless $frames;
+  $alternate = $lookup{"${file}_alternate"};
+  $alternate = "I_DEFAULT" unless $alternate;
+  $width = $lookup{"${file}_width"};
+  $width = 0 unless $width;
+  $height = $lookup{"${file}_height"};
+  $height = 0 unless $height;
+  $is_compiled_in = $lookup{"${file}_compiled_in"};
+  $is_compiled_in = 0 unless $is_compiled_in;
+  $xbmdata = $lookup{"${file}_xbmdata"};
+  $xbmdata = "NULL" unless $xbmdata;
+  $xpmdata = $lookup{"${file}_xpmdata"};
+  if($xpmdata) {
+    $xpmdata = "(char**)$xpmdata";
+  } else {
+    $xpmdata = "NULL" unless $xpmdata;
+  }
+  print C <<EOF;
+   {$width, $height, $frames, 0, "$file", 0, $alternate, 0, $is_compiled_in, $xbmdata, $xpmdata, 0, 0},
+EOF
+  $file =~ s,^/,,;
+  $file =~ s,[./],_,g;
+  $file = "\U$file";
+  $file =~ s/^(WEAPONS|PLANETS|INTRO)_//;
+  printf(H "#define I_%-20s $counter\n",$file);
+  $counter++;
+}
+
+$counter--;
+printf(H "#define I_%-20s $counter\n",LAST);
+
+print C <<EOF;
+};
+
+W_Image *
+getImage(offset)
+  int offset;
+{
+  W_Image * image = &imagearray[offset];
+  if(!image->loaded) {
+    W_LoadImage(image);
+  }
+  return image;
+}
+
+#ifndef __STDC__
+#define const
+#endif /*__STDC__*/
+
+int cmpfilenames(left,right)
+  const void *left, *right;
+{
+  return strcmp((char*)left,((W_Image*)right)->filename);
+}
+
+void
+loadImageByFilename(filename)
+  char *filename;
+{
+  W_Image *image;
+
+  image = bsearch(filename, imagearray, sizeof(imagearray) / sizeof(W_Image),
+                  sizeof(W_Image), cmpfilenames);
+  if(image && !image->loaded) W_LoadImage(image);
+}
+
+void
+loadAllImages()
+{
+  int i;
+  for(i=I_DEFAULT; i<I_LAST; i++) 
+    if(!imagearray[i].loaded) 
+      W_LoadImage(&imagearray[i]);
+}
+EOF
+
+
+close C;
+close H;
+
+print SCRIPT_OUT ");\n}\n";
+close SCRIPT_OUT;
+unlink("$0.bak");
+rename("$0","$0.bak") || print STDERR "Error renaming $0 to $0.bak: $!";
+rename("$0.out","$0") || print STDERR "Error renaming $0.out to $0: $!";
+chmod 0755, "$0";
+
+sub wanted {
+  return unless /\.x[bp]m$/;
+  $x = $name;
+  $x =~ s/^$path//;
+  $x =~ s/\.x[bp]m$//;
+  return unless -f "$_";
+  $table{$x} = 1;
+}
+
+sub print_lookup {
+  local($name) = @_;
+  local($alternate,$frames);
+  print SCRIPT_OUT ",\n" if $notfirst;
+  $notfirst = 1;
+  $alternate = $lookup{"${name}_alternate"};
+  $alternate = 'I_DEFAULT' unless $alternate;
+  $frames = $lookup{"${name}_frames"};
+  printf(SCRIPT_OUT "%-40s \'$alternate\'","'${file}_alternate',");
+  printf(SCRIPT_OUT ",\n%-40s '$frames'","'${file}_frames',") if $frames;
+}
+
+# lookup is a table to lookup values that are different than 0 or filename.
+# <path>_frames and <path>_alternate are searched for and used.
+#
+# lookup is generated automatically when mkimgsrc is run and saved to this
+# file.  If it's a new image, I_DEFAULT is used.
+sub init_lookup {
+  %lookup = (
+'/al_alternate',                         'I_DEFAULT',
+'/alien1_alternate',                     'I_DEFAULT',
+'/alien10_alternate',                    'I_DEFAULT',
+'/alien11_alternate',                    'I_DEFAULT',
+'/alien12_alternate',                    'I_DEFAULT',
+'/alien13_alternate',                    'I_DEFAULT',
+'/alien14_alternate',                    'I_DEFAULT',
+'/alien15_alternate',                    'I_DEFAULT',
+'/alien16_alternate',                    'I_DEFAULT',
+'/alien17_alternate',                    'I_DEFAULT',
+'/alien2_alternate',                     'I_DEFAULT',
+'/alien3_alternate',                     'I_DEFAULT',
+'/alien4_alternate',                     'I_DEFAULT',
+'/alien5_alternate',                     'I_DEFAULT',
+'/alien6_alternate',                     'I_DEFAULT',
+'/alien7_alternate',                     'I_DEFAULT',
+'/alien8_alternate',                     'I_DEFAULT',
+'/alien9_alternate',                     'I_DEFAULT',
+'/etorp_alternate',                      'I_DEFAULT',
+'/explosion_alternate',                  'I_DEFAULT',
+'/extra_alternate',                      'I_DEFAULT',
+'/miniship_alternate',                   'I_DEFAULT',
+'/mtorp_alternate',                      'I_DEFAULT',
+'/pause_alternate',                      'I_DEFAULT',
+'/player1_alternate',                    'I_DEFAULT',
+'/player2_alternate',                    'I_DEFAULT',
+'/player3_alternate',                    'I_DEFAULT',
+'/pr_blank_alternate',                   'I_DEFAULT',
+'/pr_brain_alternate',                   'I_DEFAULT',
+'/pr_doub_alternate',                    'I_DEFAULT',
+'/pr_extrabullet_alternate',             'I_DEFAULT',
+'/pr_lemon_alternate',                   'I_DEFAULT',
+'/pr_shield_alternate',                  'I_DEFAULT',
+'/pr_sing_alternate',                    'I_DEFAULT',
+'/pr_speed_alternate',                   'I_DEFAULT',
+'/pr_trip_alternate',                    'I_DEFAULT',
+'/s1000_alternate',                      'I_DEFAULT',
+'/s2000_alternate',                      'I_DEFAULT',
+'/s4000_alternate',                      'I_DEFAULT',
+'/s500_alternate',                       'I_DEFAULT',
+'/shield_alternate',                     'I_DEFAULT',
+'/title_alternate',                      'I_DEFAULT');
+}

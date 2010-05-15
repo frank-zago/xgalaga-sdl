@@ -1,0 +1,19 @@
+/* XPM */
+static char * miniship_xpm[] = {
+"7 8 8 1",
+" 	c None",
+".	c #939307070000",
+"X	c #BBBB37370707",
+"o	c #838383838383",
+"O	c #D7D7D7D7E7E7",
+"+	c #AFAFB3B3D3D3",
+"@	c #01010000FFFF",
+"#	c #00000101A2A2",
+"  .XX  ",
+"  XX.. ",
+"o  Oo  ",
+"Oo Oo o",
+"Oo+O++o",
+"O+oOoo+",
+"Oo Oo o",
+"@# o  #"};

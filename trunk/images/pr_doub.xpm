@@ -1,0 +1,18 @@
+/* XPM */
+static char * pr_doub_xpm[] = {
+"15 10 5 1",
+" 	c None",
+".	c #000081810000",
+"X	c #0000B0B00000",
+"o	c #0000E5E50000",
+"O	c #BCBCBCBCBCBC",
+"  .XoooooooX.  ",
+" XXo ooooo ooX ",
+"XXo O ooo O ooX",
+"XX OOO o OOO oo",
+"XX OOO o OOO oo",
+"XX OOO o OOO oo",
+"XXX O ooo O ooo",
+"XX OOO o OOO oX",
+" XX   XXo   oX ",
+"  .XXXXXXXXX.  "};

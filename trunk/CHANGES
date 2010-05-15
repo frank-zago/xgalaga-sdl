@@ -1,0 +1,190 @@
+Changelog for xgalaga
+=====================
+Version 2.1.01.0 (HR 2008/03/05)
+- Updated configure.in and Makefile.in for building an new configure
+  script and Makefile with BSD support (autoconf -o configure configure.in).
+  The goal is to build on supported platforms 'out of the box'. If there 
+  is anything to do, please let me know at
+   tshe_hermann remove_this at web dot de
+- Added scrolling credits in the title screen. Therefore increased 
+  the third paragraph of the version number.
+
+Version 2.1.00.2 (HR 2008/02/11)
+- Changed numbering scheme to a dotted style to become better compatibility 
+  with distro's numbering scheme.
+- Fixed broken sound. xgal.sndsrv.linux opens /dev/dsp now with O_WRONLY.
+  This makes simultaneously playing oggs working.
+- Added man page (content and build handling). Added <s> and <Q> key. 
+   
+Version 2.1.00-1 (HR 2008/02/07)
+- added ifdefs in score.c for compiling with no sound support
+- added file mkinstalldirs. Needed by make install
+
+Version 2.1.00-0 (HR 2008/02/06)
+- This release is mainly a bugfix relase. Some of them are years old. 
+  See hints below.
+- added the xgalaga_2.0.34-44.diff from debian. Thanks to Joey Hess for
+  collecting all these stuff over the years. 
+  Main changes are: compiling xgalaga-hyperspace, full screen mode, security
+  fixes for HOME-Variable and global score file, joystick support, 
+  improvements of sound server, new weapons machine gun and spread shot, ....
+- Bugs as reported at sourceforge Request ID 1394882 "make error on fc4 64-bit"
+  and 1167157 "make error on FC3" are supposed to be fixed. Changed the order
+  of header files in several .c files. I have no 64 bit system to test this, 
+  but I got the same error on ubuntu 7.10
+- Debian bug report #149743: "xgalaga starts when i want to turn sounds off" is
+  fixed. In fact, it started on any key except <q> or <Q>. Now starts only on
+  the keys <k> and <m> as stated in the last line on the title screen. 
+  Turning sound off works during the game and at the title screen. For clarity
+  there is now a 'Q' (=quiet) right from the level, which appears, when sound
+  is switched off.
+- Debian bug report #60266: "Too slow when sounds are not available" is 
+  probably fixed. I could not exactly reproduce the bug. On my box, xgalaga 
+  crashes totally. Maybe it depends on the sound system. I added the evaluation
+  of the returncode on writing to /dev/dsp. The crash was gone away.
+- Debian bug report #399987 "xgalaga -level accepts ""impossible to loose"" 
+  levels" is partially fixed. The -level parameter value is cut to 15. Higher
+  levels are still avalable by playing (good luck).
+- Added a couple of additional key codes. The <p> (pause) and <s> (toggle 
+  sound) did not work, because they produce key codes increased with 256. 
+  Editing the high score name also didn't work on the same reason.
+- Added bugfix for "[1837041] Fix seg fault" as reported on sourceforge
+- Changed order of libs in configure.in. This (and some other improvements) 
+  makes xgalaga compile under Cygwin/X
+ 
+
+===== Notes below by Joe Rumsey (changed order from bottom to top (HR)) ====
+
+v2.0.34 Fixed the sound server string allocation bug submitted by
+           everyone and their mother.  D'oh.  
+    Also in sound server, changed an fd <= 0 to fd < 0.
+        (pointed out by Isaac To <kkto@cs.hku.hk>)
+    Changed a library order problem that caused problems for
+        some people.  Don't know why.
+    Added -level command line option to start at any given level
+        (submitted by Bill Kawakami <billk@rogers.wave.ca>)
+    Fixed levels 9 and 12.  The conversion to the new level file
+        format wasn't quite perfect. (Also pointed out by Bill K.)
+    Changed "mkinstalldirs" in Makefile.in to "./mkinstalldirs" for
+        people who (quite sensibly) don't have . in root's path.
+    Pressing a key to start the game starts in keyboard mode, pressing 
+        a mouse button starts in mouse mode.  It used to be this way,
+        I don't know when it broke.
+    Turned off the cheat mode.  Not s'posed to be on in the source I
+        ship.  Oops.
+    Changed install dirs to /usr/local/lib/xgalaga/*, /usr/local/bin/xgalaga
+        in keeping with where things installed "by hand" should go.
+	Package maintainers - if you need any additional support from
+        me to make getting your packages in the right directories,
+        please let me know.
+
+v2.0   I moved again! Addresses changed.
+    Level descriptions are now read from human readable(sorta ;) text files.
+        Adding new levels is MUCH easier now.
+    Gets much harder as the level increases.
+    Now uses GNU Autoconfigure
+    Doesn't crash if sound support is installed but no sound hardware present
+
+1.4a   bug that caused segfaults on hpux(and likely others, I don't
+    know why I didn't run into it actually) fixed.
+
+v1.6c   I moved, addresses (both snail and email) changed.
+    Added kludge for a bug(?) in recent linux kernels with only the PC speaker.
+        #define PCSP_ONLY in the Imakefile if that describes your system AND
+        sound doesn't work otherwise.
+    Added #defines for Solaris in xgal.sndsrv.sun.c for bzero and bcopy
+    Added a patch from Martin Eskildsen to make the entry positions work
+        if WINWIDTH and WINHEIGHT are redefined.  (Compile time option,
+        doesn't mean you can scale the window!)
+    Enemy torp speed now increases every five levels, instead of 15.
+    Thought seriously about doing 5 more levels and some other stuff
+        and making this v1.7.  Maybe soon.  So many ideas, so little
+        time.
+
+v1.6b   Single bug fix, on some systems (SGI and Linux ELF notably) the game just
+      froze when you started it.  It was just an unitialized variable.
+
+v1.6    Added high score hacks from Bill Clarke <bill@discworld.anu.edu.au>
+          compile time option NOSCOREHOGS changes the high scores to allow
+          only one high score per uid.  Note that you will have to
+          erase any existing *global* score file to use this mod.  The
+          personal score files are still ok.
+          Also, -scores option on the command line prints out the
+          score table and exits.
+    Ship display shows the number left when > 6 ships
+          remain. (also from Bill, them aussies is GOOD!)
+    Gets harder every 15 levels.  people getting near (past?)
+          level 200 is really disgusting, stop it!  (The guy that
+          wanted a save game option was the last straw ;)  May need to
+          be harder still, I'll think up something more fiendish for 1.7
+    Added Imakefile defs for Solaris (-DUSE_LRAND48 was apparently needed.
+
+v1.5a   Added Sun and NAS sound support, thanks to Paul Kendall.
+      NAS should work on ANY system with NAS installed.
+
+v1.5    15 levels
+    Aliens will not attack until all waves have entered. (You're 
+      welcome, Rick.)
+    Fixed for TrueColor and Mono displays. (XStoreColor causes them
+      to crash - just removed the color cycling on the high
+      scores for those displays).  Also, no more strange colored
+          squares around objects on TrueColor displays.  There may
+      still be invisible ships on mono displays - this is a
+      problem with libXpm translating sprites with all dark
+          colors into all black sprites.  Solution: draw brighter
+      sprites.
+
+v1.4    changed x11window.c into libXsprite.  Very few code changes, just
+      took a chainsaw to it and spilt it into manageable chunks.
+    new alien types, new levels, new prizes (HINT: not every effect
+      of a prize need be immediately apparent.  Looking at the source
+      is cheating ;-)
+    grabs the pointer intelligently - only when using the mouse to play,
+      and only when actually playing.  Ungrabs at the title screen
+      and when paused.
+    tiny (3x3) mouse pointer
+    Compile option to automatically insert the user's real name
+      into the high score list.  (Also fills it in as the default
+      if prompting for a name) look in the Imakefile to turn this on
+    Help info on title screen, scoring info gone(because the ships
+      change from level to level now)
+    Other minor bugs fixed.
+    Lots of tweaks for difficulty
+
+v1.3a   Took out the $@#!%^ usleep entirely.  select should be fine on
+    everyone's system.
+
+1.3    added personal high scores, expanded global to 20 places
+    reloads high scores before checking/adding a score (in case
+      someone else made the list)
+    compiles clean with -Wall
+    title page cycles through info
+    sped up aliens during entry phase.  Bit of a kludge to keep
+      the paths I have defined already working about the same, but
+      no one but me is likely to care ;-)
+
+vv1.2a   FreeBSD works for real
+    Imakefile had CDEBUGFLAGS set for my machine. oops.
+    forgot to #ifdef a coupld of play_sound()'s.  oops.
+
+v1.2    Shrunk window to 400x500 (Was 400x600)
+    Started adding Galaga style entrance paths
+    Changed name to XGalaga
+    Bonus pods, weapon upgrades
+    SOUND!  For Linux and FreeBSD anyway.  Bug Sujal for others.
+    added some command line switches 
+    changed default controls to keyboard.
+
+v1.1    Added an Imakefile
+    pressing button no longer restarts game while entering a high
+        score.
+    Added info to title screen.
+    #ifdef'd out the cheat keys.  #define IM_A_BIG_FAT_CHEATER
+    to get them back :)
+    added patches for AIX, HPUX, SUNOS, ULTRIX, thanks to
+    Johnathan Hardwick for all of them!
+    Added keyboard controls
+
+v1.0  5/11/95 first public release
+
+

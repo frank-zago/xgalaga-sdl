@@ -1,0 +1,18 @@
+/* XPM */
+static char * pr_shield_xpm[] = {
+"15 10 5 1",
+" 	c None",
+".	c #000081810000",
+"X	c #0000B0B00000",
+"o	c #0000E5E50000",
+"O	c #0000FFFFFFFF",
+"  .Xooo ooo..  ",
+" .Xooo O oooo. ",
+".XXo  OOO  ooo.",
+"XXo O OOO O ooo",
+"XXX O OOO O ooo",
+"XXX O OOO O ooo",
+"XXX OOOOOOO ooo",
+".XX O OOO O oo.",
+" .X O  O  O o. ",
+"  .X XX XX X.  "};

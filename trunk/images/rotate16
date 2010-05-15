@@ -1,0 +1,26 @@
+#!/bin/sh
+#
+# Take a single 20x20 image and output a file with 16 rotated views
+# Joe Rumsey <ogre@atomic.com>
+#
+# Usage: rotate16 <filename>
+#
+        
+xpmtoppm < $1 > 00.pnm
+xpmtoppm < $1 | pnmrotate -noantialias -22.5 | pnmcut 3 3 20 20 > 01.pnm
+xpmtoppm < $1 | pnmrotate -noantialias -45   | pnmcut 4 4 20 20 > 02.pnm
+xpmtoppm < $1 | pnmrotate -noantialias -67.5 | pnmcut 3 3 20 20 > 03.pnm
+xpmtoppm < $1 | pnmrotate -noantialias -90   > 04.pnm
+xpmtoppm < $1 | pnmrotate -noantialias -67.5 | pnmcut 3 3 20 20 | pnmflip -tb > 05.pnm
+xpmtoppm < $1 | pnmrotate -noantialias -45   | pnmcut 4 4 20 20 | pnmflip -tb > 06.pnm
+xpmtoppm < $1 | pnmrotate -noantialias -22.5 | pnmcut 3 3 20 20 | pnmflip -tb > 07.pnm
+xpmtoppm < $1 | pnmflip -tb > 08.pnm
+xpmtoppm < $1 | pnmrotate -noantialias -67.5 | pnmcut 3 3 20 20 | pnmflip -xy > 09.pnm
+xpmtoppm < $1 | pnmrotate -noantialias -45   | pnmcut 4 4 20 20 | pnmflip -xy > 10.pnm
+xpmtoppm < $1 | pnmrotate -noantialias -22.5 | pnmcut 3 3 20 20 | pnmflip -xy > 11.pnm
+xpmtoppm < $1 | pnmrotate -noantialias  90   > 12.pnm
+xpmtoppm < $1 | pnmrotate -noantialias  67.5 | pnmcut 3 3 20 20 > 13.pnm
+xpmtoppm < $1 | pnmrotate -noantialias  45   | pnmcut 4 4 20 20 > 14.pnm
+xpmtoppm < $1 | pnmrotate -noantialias  22.5 | pnmcut 3 3 20 20 > 15.pnm
+pnmcat -tb 00.pnm 01.pnm 02.pnm 03.pnm 04.pnm 05.pnm 06.pnm 07.pnm 08.pnm 09.pnm 10.pnm 11.pnm 12.pnm 13.pnm 14.pnm 15.pnm | ppmtoxpm | sed "s/#000000000000/None/"
+rm  00.pnm 01.pnm 02.pnm 03.pnm 04.pnm 05.pnm 06.pnm 07.pnm 08.pnm 09.pnm 10.pnm 11.pnm 12.pnm 13.pnm 14.pnm 15.pnm

@@ -1,0 +1,51 @@
+# Makefile.in for libsprite
+# $Id: Makefile.in,v 1.1.1.1 1998/04/12 06:03:22 mrogre Exp $
+
+top_srcdir = @top_srcdir@
+srcdir = @srcdir@
+VPATH = @srcdir@
+
+.SUFFIXES:
+.SUFFIXES: .c .o
+
+AR = ar
+AR_FLAGS = rc
+RANLIB = @RANLIB@
+
+RM = rm -f
+CC = @CC@
+CFLAGS = -I. -I.. @CFLAGS@ @X_CFLAGS@ @DEFS@
+LDFLAGS = @LDFLAGS@
+LIBS = @LIBS@ @X_LIBS@
+INSTALL = @INSTALL@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = $(exec_prefix)/bin
+libdir = $(prefix)/lib
+infodir = $(prefix)/info
+
+OBJS = border.o cursor.o init.o misc.o sector.o \
+	buffer.o data.o line.o mouse.o text.o \
+	circle.o event.o makewindow.o point.o tile.o \
+	cleararea.o fill.o mapwindow.o scale.o triangle.o \
+	color.o image.o menu.o scroll.o
+SRCS = `echo $(OBJS) | sed -e 's/\.o/.c/g'`
+TARGET = libsprite.a
+
+all: $(TARGET)
+
+install: all
+	mkinstalldirs $(libdir)
+	$(INSTALL) $(TARGET) $(libdir)/$(TARGET)
+
+$(TARGET): $(OBJS)
+	$(RM) $(TARGET)
+	$(AR) $(AR_FLAGS) $(TARGET) $(OBJS)
+	$(RANLIB) $(TARGET)
+
+clean:
+	$(RM) core *.o $(OBJS) $(TARGET)
+
+distclean: clean
+	$(RM) Makefile config.h config.status config.cache config.log
+

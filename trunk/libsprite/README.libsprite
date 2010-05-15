@@ -1,0 +1,22 @@
+
+  The library named libXsprite was originally x11window.c from the
+full color paradise netrek client.  It has been hacked into manageble
+bits and a small amount of functionality added.  As you can see by
+XGalaga, it is a very powerful set of routines for games, and by
+making it into a standalone library, I hope to see it in use by
+others.
+
+  The copyright for XGalaga does NOT apply to libXsprite!  It is
+covered by it's own copyright in copyright2.h.  It is still free
+software however, and you are free to use it however you see fit.
+  
+  The one big thing lacking is documentation.  It could also be
+cleaned up a little, and there are a few things (wm hints, etc) that
+still say "XGalaga", but other than that it will work quite well as a
+separate library.  I'd like to hear about it if you do, because I want
+to see more bitchin' X games like XGalaga ;-)  I'm sure Bill Dyess
+(dyessww@eng.auburn.edu) would too, as he wrote most of the cool
+pixmap stuff for it.
+
+	Joe Rumsey (mrogre@mediaone.net)
+	May 17, 1995

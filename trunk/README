@@ -1,0 +1,100 @@
+
+                            XGalaga v2.0
+
+		  Copyright (c) 1995-1998 Joe Rumsey
+			<mrogre@mediaone.net>
+      XGalaga Home Page: http://rumsey.org/xgal.html
+
+  Please see the file INSTALL for installation instructions.
+
+  This is the first game I've written for X from "scratch" (the
+graphics interface is borrowed, I wrote everything else), but is by no
+means my first game.  I have written several popular shareware games
+for the Amiga, and plan to start porting them to X.  This project is
+to help me get used to X and to fine tune the graphics routines to
+make the next project easier.
+
+  Previous versions of this game were released as shareware.  However,
+it was never really worth my while.  Therefore, with apologies to the
+good souls that sent their payments in, I have placed it under the GNU
+GPL.  See COPYING for details
+
+See the file INSTALL for installation instructions.
+
+  Note that XGalaga is a major X server hog.  I doubt it will run
+well over a network.  Run it on the same machine as your display if at
+all possible.  On my 486DX/66 w/ accelerated graphics, the X server
+uses every available cycle to keep up, but the game still runs at
+nearly 30 frames/sec in buffered mode (and in non-buffered mode would
+run much faster than that if it weren't being purposely held to 30 fps)
+
+  You may find this amusing when you realize the original Galaga was
+probably a 6502 or Z-80 with 16k RAM.
+
+Command line options:
+  -scores              Print out the high score tables and exit
+  -display <display>   Set your display
+  -mouse               Use mouse control (same as 'm' at the title screen)
+  -keyboard        Use keyboard control (same as 'k')
+  -nosound             Turn sound off on platforms with sound support
+  -b                   turn buffered mode off, use this if it runs
+                       too slowly.  Will cause flicker, maybe lots,
+                       maybe only a little.
+  -level <level>       Set the starting level to <level>
+  <anything else>      print usage and version.
+
+Basic instructions:
+  It's Galaga, you know how to play Galaga, stop bothering me.
+  (Ship follows the mouse, button fires.  Auto-fire by holding it
+   down, so no-one accuses me of breaking their mouse!)
+
+Keyboard commands:
+
+  p - pauses
+  q - end this game
+  b - Toggle buffering (flicker vs. speed.)
+  o - Toggle OR mode.  Don't use this, it sucks.
+  s - toggle sound if your system supports it
+  m - Turn mouse control on     (also works to start the game)
+  k - Turn keyboard controls on (also works to start the game)
+      Controls: left_arrow  - move left
+        right_arrow - move right
+        space_bar   - fire
+
+Tech stuff about the graphics:
+    Why are the graphics so much snazzier than anything this side of
+XDoom? (which I now hear may only really work well on Linux, and which
+certainly doesn't come with source code) libXsprite, that's why!
+Originally the netrek graphics routines, then souped up for xpm
+support by Bill Dyess and others, I have turned it into a library for
+general use.  Want to use it yourself?  Go ahead!  It is free and
+quite powerful, as you can see.  Much more than just sprite handling,
+it takes care of every aspect of the X interface.  Perfect for getting
+games written quickly and painlessly.
+
+Credits:
+   Galaga code: 
+            Joe Rumsey (mrogre@mediaone.net)
+   X interface:
+            Bill Dyess(dyessww@eng.auburn.edu), 
+            Rob Forsman(thoth@cis.ufl.edu), 
+            and about a million others.
+
+   Sound server/interface:
+        Sujal Patel (smpatel@wam.umd.edu)
+        Paul Kendall (paul@kcbbs.gen.nz) (Sun and NAS support)
+
+   Pixmaps: 
+            Joe Rumsey (ogre@atomic.com)
+            Mike McGrath (mcgrath@epx.cis.umn.edu)
+
+   Thanks: Alec Habig for mirroring it at indiana
+       Johnathan Hardwick for testing on many
+             different platforms and sending bug fixes
+       Koala team in France for bug fixes and for writing the XPM
+         lib.
+       All the dupes^H^H^H^H^Hnetrekers who helped
+         test it at the earliest stages.
+       Bill Clarke (bill@discworld.anu.edu.au) for high score hacks
+       Everyone that's written me thanking me, and especially
+         the few who sent the five bucks in.

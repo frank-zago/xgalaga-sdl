@@ -1,0 +1,17 @@
+/* XPM */
+static char * pr_speed_xpm[] = {
+"15 10 4 1",
+" 	c None",
+".	c #999995953E3E",
+"X	c #FFFFFFFF0000",
+"o	c #FFFF00000000",
+"  ..XX    X..  ",
+" ..XX oooo XX. ",
+"...X o    XXXX.",
+"..XX o   XXXXXX",
+"...XX ooo XXXXX",
+"....XX   o XXXX",
+".....    o XXXX",
+".... oooo XXXX.",
+" ....    XXXX. ",
+"  ...........  "};

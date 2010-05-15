@@ -1,0 +1,18 @@
+/* XPM */
+static char * pr_sing_xpm[] = {
+"15 10 5 1",
+" 	c None",
+".	c #868600000000",
+"X	c #CCCC00000000",
+"o	c #FFFF00000000",
+"O	c #BCBCBCBCBCBC",
+"  .XoooooooX.  ",
+" XXoooo oooooX ",
+"XXXooo O oooooX",
+"XXooo OOO ooooo",
+"XXXoo OOO ooooo",
+"XXXoo OOO ooooo",
+"XXXXoo O oooooo",
+"XXXXX OOO ooooX",
+" XXXXX   ooooX ",
+"  .XXXXXXXXX.  "};

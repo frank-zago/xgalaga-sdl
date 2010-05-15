@@ -1,0 +1,49 @@
+
+If you've installed XGalaga before v2.0, forget what you learned.
+With XGalaga 2.0, GNU autoconfigure is used.  This means that most
+people should be able to do:
+
+./configure
+make
+make install
+
+and be done. Make sure to have root privileges for make install.
+
+  You may want to look at config.h after running configure and change
+some of the options.
+
+*** You can probably stop reading now and give it a shot.  Read on
+*** if you have trouble.  Also make sure to read README.SOUND if
+*** you are on something other than a Linux, FreeBSD or Sun machine.
+
+--> You need xpmlib!  If you don't have it already, you can get it
+    from ftp.x.org:/contrib/libraries.  If your libXpm is in a
+    non-standard location, you will need to give the location to
+    configure with --with-xpm-lib=DIR.
+
+--> XGalaga is known to work on the following platforms:
+	Linux
+	AIX
+	HPUX
+	SunOS
+	Solaris(?)
+	Ultrix
+	SGI
+	FreeBSD
+    If yours isn't listed, let me know!
+    However, I've only tested Linux since the switch to autoconf.
+    Please send me a patch if you have to do anything to make it compile.
+
+--> Sound now works on Linux, FreeBSD, and Suns with native support,
+    and NAS support is provided for others.  See README.SOUND for
+    details, or if you just want to charge ahead and try it,
+    then change NAS_SOUND in the Imakefile to be #defined (instead
+    of #undef'd) For systems with native support, you shouldn't
+    need to change anything.
+
+  As distributed, the images are compiled in to images.c, so you don't
+need the images directory.  images.c and images.h are created
+automatically by "mkimgsrc"; if you change any pixmaps, you will have
+to rerun mkimgsrc to update images.c and images.h
+
+  mkimgsrc was written by Bill Dyess (dyessww@eng.auburn.edu)
