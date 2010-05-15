@@ -61,7 +61,10 @@
 
 #define PRIZESPEED 3
 
-struct W_Image *prizeImages[NUMPRIZES];
+static struct {
+	struct W_Image *image;
+	const char *desc;
+} prizes[NUMPRIZES];
 
 struct prize {
     struct prize *next, *prev;
@@ -70,20 +73,38 @@ struct prize {
 
 void init_prizes()
 {
-    prizeImages[0] = getImage(I_PR_SING);
-    prizeImages[1] = getImage(I_PR_DOUB);
-    prizeImages[2] = getImage(I_PR_TRIP);
-    prizeImages[3] = getImage(I_PR_SPEED);
-    prizeImages[4] = getImage(I_PR_SHIELD);
-    prizeImages[5] = getImage(I_PR_BRAIN);
-    prizeImages[6] = getImage(I_PR_LEMON);
-    prizeImages[7] = getImage(I_PR_EXTRABULLET);
+    prizes[0].image = getImage(I_PR_SING);
+	prizes[0].desc = "Shot single torpedo";
+
+    prizes[1].image = getImage(I_PR_DOUB);
+	prizes[1].desc = "Shot double torpedo";
+
+    prizes[2].image = getImage(I_PR_TRIP);
+	prizes[2].desc = "Shot triple torpedo";
+
+    prizes[3].image = getImage(I_PR_SPEED);
+	prizes[3].desc = "Increase ship speed";
+
+    prizes[4].image = getImage(I_PR_SHIELD);
+	prizes[4].desc = "Shield";
+
+    prizes[5].image = getImage(I_PR_SMART);
+	prizes[5].desc = "Smart";
+
+    prizes[6].image = getImage(I_PR_LEMON);
+	prizes[6].desc = "Increase chance to get a bonus";
+
+    prizes[7].image = getImage(I_PR_EXTRABULLET);
+	prizes[7].desc = "Add a torpedo";
+
 #ifdef ENABLE_SPREAD_SHOT
-    prizeImages[8] = getImage(I_PR_SPREAD);
+    prizes[8].image = getImage(I_PR_SPREAD);
+	prizes[8].desc = "Spread Shot";
 #endif
 
 #ifdef ENABLE_MACHINE_GUN
-    prizeImages[NUMPRIZES - 1] = getImage(I_PR_MACHINE);
+    prizes[NUMPRIZES - 1].image = getImage(I_PR_MACHINE);
+	prizes[NUMPRIZES - 1].desc = "Machine Gun";
 #endif
 }
 
@@ -132,8 +153,8 @@ void do_prizes()
     while(p) {
 		if (gstate != PAUSED)
 			p->y+=PRIZESPEED;
-		S_DrawImage(p->x-prizeImages[p->type]->width/2, p->y-prizeImages[p->type]->width/2,
-					0, prizeImages[p->type]);
+		S_DrawImage(p->x-prizes[p->type].image->width/2, p->y-prizes[p->type].image->width/2,
+					0, prizes[p->type].image);
 
 		if(p->y > (WINHEIGHT-20) && (ABS(p->x - plx) < 15)
 #ifdef NO_PRIZE_WHILE_DEAD
@@ -266,5 +287,37 @@ void do_prizes()
 		}
 		p=p->next;
     }
+}
+
+void show_bonuses(int top)
+{
+	int i;
+	int dy = SFont_TextHeight(fnt_reg_yellow);
+	const char *label = "Bonuses";
+	int length;
+    SDL_Rect dstrect;
+
+	if (dy < 22)
+		dy = 22;
+
+	SFont_WriteCenter(fnt_reg_yellow, top, label);
+
+	/* Draw a line. */
+	length = SFont_TextWidth(fnt_reg_yellow, label);
+
+    dstrect.x = (WINWIDTH-length)/2;
+    dstrect.y = top + 1 + SFont_TextHeight(fnt_reg_yellow);
+    dstrect.w = length;
+    dstrect.h = 1;
+    SDL_FillRect (screen, &dstrect, 0xff0000);
+
+	top += dy;
+
+    for (i=0; i<NUMPRIZES; i++) {
+		S_DrawImage(100, top, 0, prizes[i].image);
+
+		SFont_Write(fnt_reg_yellow, 130, top, prizes[i].desc);
+		top += dy;
+	}
 }
 
