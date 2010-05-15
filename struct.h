@@ -1,7 +1,7 @@
 #ifndef STRUCT_H
 #define STRUCT_H
 
-#include "Wlib.h"
+#include <SDL/SDL.h>
 
 struct torp {
     struct torp *next, *prev;
@@ -13,7 +13,7 @@ struct torp {
 struct star {
     int x, y;
     int speed;
-    W_Color color;
+	Uint32 pixel;       /* pixel color */
 };
 
 struct alien {
@@ -25,26 +25,38 @@ struct alien {
     int path, path_pos;
     int escorting;
     int entering, enterdelay;
-    W_Image *shape;
+    struct W_Image *shape;
 };
 
 struct explosion {
     struct explosion *next, *prev;
     int x, y;
     int frame;
-    W_Image *shape;
+    struct W_Image *shape;
 };
 
 struct score_bubble {
     struct score_bubble *next, *prev;
     int x, y;
     int count;
-    W_Image *shape;
+    struct W_Image *shape;
 };
 
 struct js_state {
     signed short but;
     signed long dir;
+};
+
+struct FNT_fixed {
+	int width, height;
+	unsigned char data[];
+};
+
+enum gstate {
+	INTRO,			   /* Main screen */
+	PLAYING,		   /* Playing */
+	PAUSED,			   /* Paused (playing) */
+	GETTING_NAME,	   /* Game over, getting name for new highscore */
 };
 
 #endif

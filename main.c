@@ -8,13 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifdef HAVE_SYS_TIME_H
-#include <sys/time.h>
-#endif
-#ifdef HAVE_UNISTD_H
-# include <unistd.h>
-#endif
-#include "libsprite/Wlib.h"
+
 #include "struct.h"
 #include "data.h"
 #include "images.h"
@@ -23,9 +17,11 @@
 #include "proto.h"
 #include "sound.h"
 
-struct torp torps[MAXTORPS];
-struct star stars[NUMSTARS];
-struct torp *first_etorp=0;
+#include <SDL_image.h>
+
+static struct torp torps[MAXTORPS];
+static struct star stars[NUMSTARS];
+static struct torp *first_etorp=0;
 
 static int convoyx = 0, convoymove = 1;
 static int livecount = 0;
@@ -33,11 +29,16 @@ static int starspeed = 1;
 static int attacking = 0, maxattacking, entering=0;
 static int maxetorps = 5, numetorps=0;
 static int plflash = 50;
-static int fullscreen = 0;
 #ifndef ORIGINAL_XGALAGA
 static int shots = 0;
 static int hits = 0;
 #endif
+static int mx;
+
+static struct W_Image *playerShip;
+static struct W_Image *playerTorp;
+static struct W_Image *enemyTorp;
+static struct W_Image *shieldImage;
 
 #define convoy_x_pos(i) (convoyx+(20 * (i - 10 * (i/10))))
 #define convoy_y_pos(i) (20 + (20*(i/10)))
@@ -61,64 +62,60 @@ static int moves[16][2] = {
     {-1,-4}
 };
 
-void
-xgal_exit(int v)
+static void xgal_exit(int v)
 {
-    /*    W_AutoRepeatOn();*/
-    /* Destroy our main window so the fullscreen mode gets unset if we're
-       running fullscreen. (We should really clean up much more here!) */
-    W_DestroyWindow(shellWin);
-#ifdef SOUND
-    kill_sound();
-#endif
-    /*    sleep(1);*/ /* Without this, the auto-repeat request fails on my machine... */
-    /* Note if we ever need this autorepeat thingie again, the sleep can and should be replaced by a call to XSync() */
+	sound_exit();
+	SDL_Quit();
     exit(v);
 }
 
-
 static void print_usage()
 {
-#ifdef SOUND 
-#define PRINT_SOUND	"-nosound             Turn sound OFF\n"
-#else
-#define PRINT_SOUND	""
-#endif
-
-    printf("\
-XGalaga v%s\n\
-Copyright (c) 1995-1998 Joe Rumsey\n\
-Contributions by Hermann Riedel\n\
-Command line options:\n\
--scores              Prints out the high score files and exits\n\
--display <display>   Set your display\n\
--mouse               Use mouse control (same as 'm' at the title screen)\n\
--keyboard            Use keyboard control (same as 'k')\n%s\
--level <number>      Choose starting level (>= 1)\n\
--window              Start in windowed mode instead of fullscreen\n\
--winsize <WxH>       Window size (default 468 x 596)\n\
--b                   turn buffered mode off, use this if it runs\n\
-too slowly.  Will cause flicker, maybe lots,\n\
-maybe only a little.\n\
-\n\
-This game is now free software, under the GPL\n\
-\n\
-Basic instructions:\n\
-It's Galaga, you know how to play Galaga, stop bothering me.\n\
-(Ship follows the mouse, button fires.  Auto-fire by holding it\n\
-down, so no-one accuses me of breaking their mouse!)\n\
-\n\
-Keyboard commands:\n\
-\n\
-p - pauses\n\
-q - end this game\n\
-b - Toggle buffering (flicker vs. speed.)\n\
-alt + enter - Toggle fullscreen - window\n", VERSION,
-	PRINT_SOUND
-           );
+    printf("XGalaga v%s\n"
+		   "Copyright (c) 1995-1998 Joe Rumsey\n"
+		   "Contributions by Hermann Riedel\n"
+		   "Command line options:\n"
+		   "  -scores              Prints out the high score files and exits\n"
+		   "  -display <display>   Set your display\n"
+		   "  -nosound             Turn sound OFF\n"
+		   "  -level <number>      Choose starting level (>= 1)\n"
+		   "  -window              Start in windowed mode instead of fullscreen\n"
+		   "  -winsize <WxH>       Window size (default 468 x 596)\n"
+		   "  -b                   turn buffered mode off, use this if it runs\n"
+		   "                       too slowly.  Will cause flicker, maybe lots,\n"
+		   "                       maybe only a little.\n"
+		   "\n"
+		   "This game is now free software, under the GPLv2\n"
+		   "\n"
+		   "Basic instructions:\n"
+		   "  It's Galaga, you know how to play Galaga, stop bothering me.\n"
+		   "\n"
+		   "Keyboard commands:\n"
+		   "  p - pauses\n"
+		   "  q - end this game\n"
+		   "  alt + enter - Toggle fullscreen - window\n",
+ VERSION);
 }
 
 /*------------------stars-----------------*/
+
+/* Pick a random color, except black. */
+static Uint32 get_random_star_color()
+{
+	switch(random() % 5) {
+	case 0:
+		return SDL_MapRGB(screen->format, 0xFF, 0xFF, 0xFF);
+	case 1:
+		return SDL_MapRGB(screen->format, 0x00, 0xFF, 0x00);
+	case 2:
+		return SDL_MapRGB(screen->format, 0x00, 0xFF, 0xFF);
+	case 3:
+		return SDL_MapRGB(screen->format, 0xFF, 0x00, 0x00);
+	default:
+		return SDL_MapRGB(screen->format, 0xFF, 0xFF, 0x00);
+	}
+}
+
 static void init_stars()
 {
     int i;
@@ -127,119 +124,71 @@ static void init_stars()
         stars[i].x = random()%WINWIDTH;
         stars[i].y = random()%WINHEIGHT;
         stars[i].speed = (random()%3)+1;
-        switch(random()%5) {
-        case 0:
-            stars[i].color = W_White;
-            break;
-        case 1:
-            stars[i].color = W_Green;
-            break;
-        case 2:
-            stars[i].color = W_Cyan;
-            break;
-        case 3:
-            stars[i].color = W_Red;
-            break;
-        default:
-            stars[i].color = W_Yellow;
-            break;
-        }
-    }
-}
-
-static int drewlevel = 0;
-
-static void undo_stars()
-{
-    int i;
-    
-    if(wantStars) {
-        for(i=0;i<NUMSTARS;i++) {
-            W_DrawPoint(baseWin, stars[i].x, stars[i].y, W_Black);
-        }
-    }
-    if(drewlevel) {
-        W_ClearArea(baseWin, WINWIDTH/2 - (W_StringWidth("LEVEL 000", W_BigFont)/2), WINHEIGHT/2-W_BigTextheight/2,
-                    10*W_BigTextwidth, W_BigTextheight);
-        drewlevel = 0;
+		stars[i].pixel = get_random_star_color();
     }
 }
 
 static void do_stars()
 {
     int i;
-    
+
     if(wantStars) {
+
+		if (SDL_MUSTLOCK(screen))
+			SDL_LockSurface(screen);
+
         for(i=0;i<NUMSTARS;i++) {
-            if(!paused)
-                stars[i].y+=stars[i].speed*((starspeed < 20) ? ABS(starspeed) : 20);
+			stars[i].y+=stars[i].speed*((starspeed < 20) ? ABS(starspeed) : 20);
             if(stars[i].y >= WINHEIGHT) {
-                stars[i].y-=WINHEIGHT+starspeed;
+                stars[i].y-=WINHEIGHT-ABS(starspeed);
                 stars[i].x = random() % WINWIDTH;
-                switch(random()%5) {
-                case 0:
-                    stars[i].color = W_White;
-                    break;
-                case 1:
-                    stars[i].color = W_Green;
-                    break;
-                case 2:
-                    stars[i].color = W_Cyan;
-                    break;
-                case 3:
-                    stars[i].color = W_Red;
-                    break;
-                default:
-                    stars[i].color = W_Yellow;
-                    break;
-                }
+				stars[i].pixel = get_random_star_color();
             }
-            W_DrawPoint(baseWin, stars[i].x, stars[i].y, stars[i].color);
+			S_DrawPoint(stars[i].x, stars[i].y, stars[i].pixel);
         }
 #ifdef SHOW_SHIELD_BAR
-	    if ((plshield > 0) || (shieldsleft > 0)) { 
-		int shieldcount = 0;
-		int total_shields = (plshield + shieldsleft) * 19 / SHIELDTIME + 1;
-		while (total_shields > 0) {
-			shieldcount++;
-			total_shields -= 19;
-			W_DrawImage(baseWin, WINWIDTH - 20 * shieldcount, 0, 0, shieldImage, W_Cyan);
+	    if ((plshield > 0) || (shieldsleft > 0)) {
+			int shieldcount = 0;
+			int total_shields = (plshield + shieldsleft) * 19 / SHIELDTIME + 1;
+			while (total_shields > 0) {
+				shieldcount++;
+				total_shields -= 19;
+				S_DrawImage(WINWIDTH - 20 * shieldcount, 0, 0, shieldImage);
+			}
+			while (total_shields < 0) {
+				int column;
+				column = WINWIDTH - 20 * shieldcount - total_shields++;
+				W_MakeLine(screen, column, 0, column, 20, S_Black);
+				W_MakeLine(screen, column - 1, 0, column - 1, 20, S_Black);
+			}
 		}
-		while (total_shields < 0) {
-			int column;
-			column = WINWIDTH - 20 * shieldcount - total_shields++;
-			W_MakeLine(baseWin, column, 0, column, 20, W_Black);
-			W_MakeLine(baseWin, column - 1, 0, column - 1, 20, W_Black);
-		}
-       	    }
 #endif /* SHOW_SHIELD_BAR */
 
-
+		if (SDL_MUSTLOCK(screen))
+			SDL_UnlockSurface(screen);
     }
+
     if(starspeed != 1) {
         char buf[20];
-#ifndef ORIGINAL_XGALAGA
-	int y;
-#endif
-    
-        drewlevel = 1;
+		int y;
+
         sprintf(buf, "LEVEL %d", level+1);
+
+		y = (WINHEIGHT - SFont_TextHeight(fnt_big_red))/2;
+		SFont_WriteCenter(fnt_big_red, y, buf);
+
 #ifndef ORIGINAL_XGALAGA
-	y = WINHEIGHT/2-W_BigTextheight/2;
-#endif
-        W_MaskText(baseWin, WINWIDTH/2 - (W_StringWidth(buf, W_BigFont)/2), WINHEIGHT/2-W_BigTextheight/2, W_Red, buf, strlen(buf), W_BigFont);
-#ifndef ORIGINAL_XGALAGA
-	if (shots > 0) {
-		int x = WINWIDTH/2 - 14 * W_Textwidth;
-		y += W_BigTextheight + 20;
-	
-		sprintf(buf, "Torps: %d  Hits: %d", shots, hits);
-		W_MaskText(baseWin, x, y, W_Yellow, buf, strlen(buf), W_RegularFont);
-	
-		x += 23 * W_Textwidth;
-		sprintf(buf, "(%d%%)", 100 * hits / shots);
-		W_MaskText(baseWin, x, y, W_Green, buf, strlen(buf), W_RegularFont);
-	}
+		if (shots > 0) {
+			int x = WINWIDTH/2 - 14 * RegularFont.width;
+			y += W_BigTextheight + 20;
+
+			sprintf(buf, "Torps: %d  Hits: %d", shots, hits);
+			W_MaskText(screen, x, y, S_Yellow, buf, strlen(buf), W_RegularFont);
+
+			x += 23 * RegularFont.width;
+			sprintf(buf, "(%d%%)", 100 * hits / shots);
+			W_MaskText(screen, x, y, S_Green, buf, strlen(buf), W_RegularFont);
+		}
 #endif
     }
 }
@@ -273,14 +222,12 @@ static void init_aliens(int level)
 
     delete_etorps();
     metaLevel = 1;
-    if(read_level(level) <= 0)
-    {
-	fprintf(stderr, "Error reading level %d\n", level);
-	exit(0);
+    if (read_level(level) <= 0) {
+		fprintf(stderr, "Error reading level %d\n", level);
+		exit(0);
     }
 
     for(i=0;i<MAXALIENS;i++) {
-
         livecount++;
         new_alien(level, i, &aliens[i]);
     }
@@ -289,17 +236,12 @@ static void init_aliens(int level)
         torps[i].alive = 0;
 }
 
-    
+
 static void undo_aliens()
 {
     int i;
 
     for(i=0;i<MAXALIENS;i++) {
-        if(aliens[i].alive)
-            W_ClearArea(baseWin, 
-                        aliens[i].x-(aliens[i].shape->width/2), 
-                        aliens[i].y-(aliens[i].shape->height/2),
-                        aliens[i].shape->width, aliens[i].shape->height);
         if(aliens[i].dying) {
             aliens[i].alive = 0;
             aliens[i].dying=0;
@@ -307,11 +249,10 @@ static void undo_aliens()
     }
 }
 
-static void
-do_escort(int i)
+static void do_escort(int i)
 {
     int fs = aliens[i].escorting;
-    
+
     if(!aliens[fs].alive) {
         aliens[i].escorting = -1;
     } else if(aliens[fs].dir >= 0) {
@@ -331,8 +272,8 @@ do_convoy(int i)
 {
     aliens[i].x += convoymove;
     if((entering == 0) &&
-       (attacking < maxattacking) && 
-       ((livecount < maxattacking) || 
+       (attacking < maxattacking) &&
+       ((livecount < maxattacking) ||
         ((random()%10000) < (level + 2 *(48-(livecount)))))) {
         switch(random()%2) {
         case 0:
@@ -390,14 +331,14 @@ static void do_enter(int i)
     if(aliens[i].path >= 0) {
         aliens[i].x += moves[aliens[i].dir][0] + metaLevel * moves[aliens[i].dir][0]/2;
         aliens[i].y += moves[aliens[i].dir][1] + metaLevel * moves[aliens[i].dir][1]/2;
-    
+
         aliens[i].steer--;
         if(aliens[i].steer <= 0) {
             aliens[i].path_pos++;
             enter_path_dir(aliens[i].path, aliens[i].path_pos, &aliens[i].dir, &aliens[i].steer);
-	    if(metaLevel > 1)
-		aliens[i].steer = aliens[i].steer / (1 + ((metaLevel - 1) * .5));
-	    /*aliens[i].steer -= ((metaLevel - 1) * (aliens[i].steer / 3));*/
+			if(metaLevel > 1)
+				aliens[i].steer = aliens[i].steer / (1 + ((metaLevel - 1) * .5));
+			/*aliens[i].steer -= ((metaLevel - 1) * (aliens[i].steer / 3));*/
 
             if(aliens[i].dir < 0) {
                 aliens[i].path = -1;
@@ -407,9 +348,9 @@ static void do_enter(int i)
         if(tc < 35) tc = 35;
         if(numetorps < maxetorps && (!(random()%tc))) {
             int xs, ys;
-        
+
             /* could aim better, not sure it should! */
-        
+
             if(aliens[i].x > plx + 200) {
                 xs = -3;
             } else if(aliens[i].x > plx + 100) {
@@ -441,27 +382,27 @@ static void do_enter(int i)
             else
                 aliens[i].dir = 12;
         } else {
-	    if(convoy_y_pos(i) < aliens[i].y) {
-		if(diffx < 4 + (metaLevel * 2)) {
-		    aliens[i].x = convoy_x_pos(i);
-		    aliens[i].dir = 0;
-		} else {
-		    if(convoy_x_pos(i) > aliens[i].x)
-			aliens[i].dir = 2;
-		    else
-			aliens[i].dir = 14;
-		}
-	    } else {
-		if(diffx < 4 + (metaLevel * 2)) {
-		    aliens[i].x = convoy_x_pos(i);
-		    aliens[i].dir = 8;
-		} else {
-		    if(convoy_x_pos(i) > aliens[i].x)
-			aliens[i].dir = 6;
-		    else
-			aliens[i].dir = 10;
-		}
-	    }
+			if(convoy_y_pos(i) < aliens[i].y) {
+				if(diffx < 4 + (metaLevel * 2)) {
+					aliens[i].x = convoy_x_pos(i);
+					aliens[i].dir = 0;
+				} else {
+					if(convoy_x_pos(i) > aliens[i].x)
+						aliens[i].dir = 2;
+					else
+						aliens[i].dir = 14;
+				}
+			} else {
+				if(diffx < 4 + (metaLevel * 2)) {
+					aliens[i].x = convoy_x_pos(i);
+					aliens[i].dir = 8;
+				} else {
+					if(convoy_x_pos(i) > aliens[i].x)
+						aliens[i].dir = 6;
+					else
+						aliens[i].dir = 10;
+				}
+			}
         }
         aliens[i].x += moves[aliens[i].dir][0] + metaLevel * moves[aliens[i].dir][0]/2;
         aliens[i].y += moves[aliens[i].dir][1] + metaLevel * moves[aliens[i].dir][1]/2;
@@ -473,7 +414,7 @@ static void do_aliens()
     int i, j;
     int tc;
 
-    if(!paused) {
+    if(gstate != PAUSED) {
         convoyx += convoymove;
         if(convoyx <= 0) {
             convoyx=0;
@@ -483,7 +424,7 @@ static void do_aliens()
             convoymove = -convoymove;
         }
     }
-    
+
     livecount=0; attacking = 0;
     for(i=0, livecount=0, entering=0; i < MAXALIENS; i++) {
         if(aliens[i].alive) {
@@ -497,7 +438,7 @@ static void do_aliens()
 
     for(i=0; i < MAXALIENS; i++) {
         if(aliens[i].alive) {
-            if(!paused) {
+            if (gstate != PAUSED) {
                 if(aliens[i].escorting >= 0) {
                     do_escort(i);
                 }
@@ -520,7 +461,7 @@ static void do_aliens()
                         aliens[i].x = -20;
                     else if(aliens[i].x < -20)
                         aliens[i].x = WINWIDTH+20;
-            
+
                     if(aliens[i].y > WINHEIGHT) {
                         aliens[i].x = 20 * (i - 10 * (i/10)) + convoyx + convoymove;
                         aliens[i].y = -30;
@@ -536,13 +477,13 @@ static void do_aliens()
                     } else if(aliens[i].y < 0) {
                         aliens[i].dir = 8;
                     }
-            
+
                     if(aliens[i].escorting < 0) {
                         aliens[i].steer--;
                         if(aliens[i].steer <= 0) {
                             if(aliens[i].path >= 0) {
                                 int lastdir=aliens[i].dir;
-                
+
                                 aliens[i].path_pos++;
                                 path_dir(aliens[i].path, aliens[i].path_pos, &aliens[i].dir, &aliens[i].steer);
                                 if(aliens[i].dir < 0) {
@@ -600,7 +541,7 @@ static void do_aliens()
 
                     if(numetorps < maxetorps && (!(random()%tc))) {
                         int xs, ys;
-            
+
                         /* could aim better, not sure it should! */
 
                         if(aliens[i].x > plx + 200) {
@@ -618,24 +559,23 @@ static void do_aliens()
                         new_etorp(aliens[i].x, aliens[i].y, xs, ys);
                     }
                 }
-                W_DrawImage(baseWin, 
-                            aliens[i].x-(aliens[i].shape->width/2), 
+                S_DrawImage(aliens[i].x-(aliens[i].shape->width/2),
                             aliens[i].y-(aliens[i].shape->height/2),
-                            aliens[i].dir < 0 ? 0 : aliens[i].dir, aliens[i].shape, W_Green);
-            } else {  /* paused */
-                W_DrawImage(baseWin, 
-                            aliens[i].x-(aliens[i].shape->width/2), 
+                            aliens[i].dir < 0 ? 0 : aliens[i].dir,
+							aliens[i].shape);
+            } else {
+				/* paused */
+                S_DrawImage(aliens[i].x-(aliens[i].shape->width/2),
                             aliens[i].y-(aliens[i].shape->height/2),
-                            aliens[i].dir < 0 ? 0 : aliens[i].dir, aliens[i].shape, W_Green);
+                            aliens[i].dir < 0 ? 0 : aliens[i].dir,
+							aliens[i].shape);
             }
         }
     }
-    if(livecount == 0 && !paused) {
+    if (livecount == 0 && (gstate != PAUSED)) {
         starspeed++;
-#ifdef SOUND
         if(starspeed == 2)
             play_sound(SND_WARP);
-#endif
         if(starspeed >= 120) {
             starspeed = -20;
         } else if(starspeed == 1) {
@@ -646,7 +586,6 @@ static void do_aliens()
         }
     }
 }
-
 
 /*------------------player----------------*/
 static void init_player()
@@ -668,24 +607,8 @@ static void new_torp(int x, int y, int xs, int ys)
             torps[i].xspeed = xs;
             torps[i].yspeed = ys;
             numtorps++;
-#ifdef SOUND
             play_sound(SND_FIRETORP);
-#endif
             return;
-        }
-    }
-}
-
-static void undo_torps()
-{
-    int i;
-
-    for(i=0;i<MAXTORPS;i++) {
-        if(torps[i].alive) {
-            W_CacheClearArea(baseWin, 
-                             torps[i].x-(playerTorp->width/2), 
-                             torps[i].y-(playerTorp->height/2), 
-                             playerTorp->width, playerTorp->height+1);
         }
     }
 }
@@ -696,7 +619,7 @@ static void do_torps()
 
     for(i=0;i<MAXTORPS;i++) {
         if(torps[i].alive) {
-            if(!paused) {
+            if(gstate != PAUSED) {
                 torps[i].y += torps[i].yspeed;
                 torps[i].x += torps[i].xspeed;
                 torps[i].frame++;
@@ -708,7 +631,7 @@ static void do_torps()
                         aliens[j].dying = 1;
                         if(aliens[j].dir >= 0)
                             attacking--;
-            
+
                         torps[i].alive=0;
                         numtorps--;
                         if(j >= 10) {
@@ -728,7 +651,7 @@ static void do_torps()
                                 for(k = j+9;k < j+12; k++) {
                                     if(aliens[k].escorting == j)
                                         ne++;
-                                }                   
+                                }
                                 score_flagship(aliens[j].x, aliens[j].y, ne);
                             }
                             new_explosion(aliens[j].x, aliens[j].y, 1);
@@ -736,22 +659,21 @@ static void do_torps()
                         goto skip;
                     }
                 }
-                if(torps[i].y < -torps[i].yspeed || 
-                   torps[i].x < ABS(torps[i].xspeed) || 
+                if(torps[i].y < -torps[i].yspeed ||
+                   torps[i].x < ABS(torps[i].xspeed) ||
                    torps[i].x > WINWIDTH-ABS(torps[i].xspeed)) {
                     torps[i].alive = 0;
                     numtorps--;
                 } else
-                    W_DrawImage(baseWin, 
-                                torps[i].x-(playerTorp->width/2), 
-                                torps[i].y-(playerTorp->height/2), 
-                                torps[i].frame, playerTorp, W_Red);
+                    S_DrawImage(torps[i].x-(playerTorp->width/2),
+                                torps[i].y-(playerTorp->height/2),
+                                torps[i].frame, playerTorp);
             skip: ;
-            } else {/* paused */
-                W_DrawImage(baseWin, 
-                            torps[i].x-(playerTorp->width/2), 
-                            torps[i].y-(playerTorp->height/2), 
-                            torps[i].frame, playerTorp, W_Red);
+            } else {
+				/* paused */
+                S_DrawImage(torps[i].x-(playerTorp->width/2),
+                            torps[i].y-(playerTorp->height/2),
+                            torps[i].frame, playerTorp);
             }
         }
     }
@@ -764,7 +686,7 @@ static void do_etorps()
     while(t) {
         nextt=t->next;
         if(t->alive) {
-            if(!paused) {
+            if(gstate != PAUSED) {
                 t->y+=t->yspeed;
                 t->x+=t->xspeed;
                 t->frame++;
@@ -783,325 +705,317 @@ static void do_etorps()
                     pldead = 1;
                     new_explosion(plx, WINHEIGHT - playerShip->height/2, 2);
                 } else {
-                    W_DrawImage(baseWin, 
-                                t->x-(enemyTorp->width/2), 
-                                t->y-(enemyTorp->height/2), 
-                                t->frame, enemyTorp, W_Red);
+                    S_DrawImage(t->x-(enemyTorp->width/2),
+                                t->y-(enemyTorp->height/2),
+                                t->frame, enemyTorp);
                 }
             } else {
-                W_DrawImage(baseWin, 
-                            t->x-(enemyTorp->width/2), 
-                            t->y-(enemyTorp->height/2), 
-                            t->frame, enemyTorp, W_Red);
+                S_DrawImage(t->x-(enemyTorp->width/2),
+                            t->y-(enemyTorp->height/2),
+                            t->frame, enemyTorp);
             }
         }
         t = nextt;
     }
 }
 
-static void undo_etorps()
+static void start_game()
 {
-    struct torp *t = first_etorp;
-
-    while(t) {
-        W_CacheClearArea(baseWin, 
-                         t->x-(enemyTorp->width/2), 
-                         t->y-(enemyTorp->width/2), 
-                         enemyTorp->width, enemyTorp->height);
-        t=t->next;
-    }
+	gstate = PLAYING;
+	maxtorps = MINTORPS;
+	weapon = 0;
+	movespeed = MINSPEED;
+	ships=2;
+#ifdef ACTIVATED_SHIELD
+	shieldsleft = STARTSHIELDS;
+	shieldon = 0;
+#else
+	shieldsleft = 0;
+#endif
+	level=startLevel;  /* change made here */
+	init_aliens(level);
+	gotlemon = 0;
+	pldead = 0;
+	score = 0;
+	nextBonus = 20000;
+	plx = WINWIDTH/2;
+	mx = plx;
 }
 
-static void undo_player()
-{
-    int y = WINHEIGHT - playerShip->height, h = playerShip->height;
-    if(plshield) {
-        y -= 3;
-        h += 3;
-    }
-    W_CacheClearArea(baseWin, plx-(playerShip->width/2), y,
-                     playerShip->width, h);
-}
-
-static void do_player(mx, my, but)
-int mx, my, but;
+static void do_player(int but)
 {
     static int torpok;
 #ifdef ENABLE_MACHINE_GUN
     static int shotside = 0;
 #endif
-    W_Event wev;
+    SDL_Event event;
     static int keys = 0;
 
-    if(gameOver) {
-        while(W_EventsPending()) {
-            W_NextEvent(&wev);
-        
-	    if(gameOver)
-	      mouseControl = 1;
+    if (gstate == INTRO) {
+        while(SDL_PollEvent(&event)) {
 
-            switch(wev.type) {
-            case W_EV_KEY:
-                if(score_key(&wev))
-                    continue;
-                switch(wev.key) {
-                case 'q':
-                case 'Q':
-                case 256+'Q':   //369:
-                case 256+'q':   //337:
+            switch(event.type) {
+			case SDL_QUIT:
+				xgal_exit(0);
+                    break;
+
+            case SDL_KEYDOWN:
+                switch(event.key.keysym.sym) {
+				case SDLK_ESCAPE:
+                case SDLK_q:
                     xgal_exit(0);
                     break;
-                case 'm':
-                case 256+'m':    //365:
-                    mouseControl = 2;
-                    break;
-                 case 'k':
-                 case 256+'k':   //363:
-                     mouseControl = 0;
-                     W_UngrabPointer();
-                     break;
-                case '\r'+256:
-                    W_ToggleFullscreen(shellWin);
-                    fullscreen = !fullscreen;
-                    if (fullscreen)
-                        W_BlankCursor(baseWin);
-                    else
-                        W_RevertCursor(baseWin);
-                    return;
-                    break;
-#ifdef SOUND
-                case 's':       /* toggle sound on the title screen */
-                case 256+'s':
+
+				case SDLK_k:
+					start_game();
+					break;
+
+				case SDLK_RETURN:
+					if (event.key.keysym.mod & (KMOD_LALT | KMOD_RALT))
+						toggle_fullscreen();
+					break;
+
+                case SDLK_s:       /* toggle sound on the title screen */
                     playSounds = !playSounds;
-                    return;     /* this key must not start the game */
-                    break;
-#endif
-		default:
-/*printf ("1keyevent %d\n", wev.key); */
+					return;     /* this key must not start the game */
+					break;
+
+				default:
                     return;     /* unhandled key must not cause any action */
-		    break;
+					break;
                 }
-                if(mouseControl < 2)
-                    mouseControl = 0;		
-            case W_EV_BUTTON:
-                if(!getting_name) {
-                    if(mouseControl)
-                        W_GrabPointer(baseWin);
-                    gameOver = 0;
-                    maxtorps = MINTORPS;
-                    weapon = 0;
-                    movespeed = MINSPEED;
-                    ships=2;
-#ifdef ACTIVATED_SHIELD
-		    shieldsleft = STARTSHIELDS;
-		    shieldon = 0;
-#else
-		    shieldsleft = 0;
-#endif
-                    level=startLevel;  /* change made here */
-                    init_aliens(level);
-                    gotlemon = 0;
-                    pldead = 0;
-                    score = 0;
-                    nextBonus = 20000;
-                    plx = WINWIDTH/2;
-                    W_ClearWindow(baseWin);
-                }
-                break;
-            case W_EV_EXPOSE:
-	    	if (wev.Window == shellWin)
-		    draw_score();
-		break;
+
+				break;
+
             default:
-/*printf ("2keyevent %d\n", wev.key);*/
-              break;
+				break;
             }
         }
         return;
     }
+	else if (gstate == GETTING_NAME) {
 
-    while(W_EventsPending()) {
-        W_NextEvent(&wev);
+        while(SDL_PollEvent(&event)) {
+            switch(event.type) {
+			case SDL_QUIT:
+				xgal_exit(0);
+                    break;
 
-        switch(wev.type) {
-        case W_EV_KEY_OFF:
-            switch(wev.key) {
-            case 'f'+128:
-                keys &= ~(RIGHTKEY);
+            case SDL_KEYDOWN:
+                if (score_key(event.key.keysym.sym))
+                    continue;
+			}
+		}
+		return;
+	}
+
+
+    while(SDL_PollEvent(&event)) {
+
+        switch(event.type) {
+		case SDL_QUIT:
+			xgal_exit(0);
+			break;
+
+        case SDL_KEYUP:
+            switch(event.key.keysym.sym) {
+            case SDLK_RIGHT:
+                keys &= ~RIGHTKEY;
                 break;
-            case 'b'+128:
-                keys &= ~(LEFTKEY);
+
+            case SDLK_LEFT:
+                keys &= ~LEFTKEY;
                 break;
-            case ' ':
-            case 256+' ':       //288:
-                keys &= ~(FIREKEY);
-                break;
+
+            case SDLK_SPACE:
+                keys &= ~FIREKEY;
+				break;
+
 #ifdef ACTIVATED_SHIELD
-	    case 'x':
-            case 256+'x':
-		shieldsleft += plshield;
-		plshield = 0;
-		shieldon = 0;
-		break;
+			case SDLK_x:
+				shieldsleft += plshield;
+				plshield = 0;
+				shieldon = 0;
+				break;
 #endif
+			default:
+				break;
             }
             break;
-        case W_EV_KEY:
-            switch(wev.key) {
-            case 'f'+128:
+
+        case SDL_KEYDOWN:
+            switch(event.key.keysym.sym) {
+            case SDLK_RIGHT:
                 keys |= RIGHTKEY;
                 break;
-            case 'b'+128:
+
+            case SDLK_LEFT:
                 keys |= LEFTKEY;
                 break;
-            case ' ':
-            case 256+' ':       //288:
+
+            case SDLK_SPACE:
                 keys |= FIREKEY;
-                break;
-            case 'k':
-            case 256+'k':       //363:
-                mouseControl = 0;
-                W_UngrabPointer();
-                break;
-            case 'm':
-            case 256+'m':       //365:
-                mouseControl = 1;
-                W_GrabPointer(baseWin);
-                break;
+				break;
+
 #ifdef ACTIVATED_SHIELD
-	    case 'x':
-            case 256+'x':
-		plshield += shieldsleft;
-		shieldsleft = 0;
-		shieldon = 1;
-		break;
+			case SDLK_x:
+				plshield += shieldsleft;
+				shieldsleft = 0;
+				shieldon = 1;
+				break;
 #endif
-            case 'q':
-            case 256+'q':       //369:
-                if(!pldead  && !paused) {
+
+            case SDLK_g:
+                if(!pldead  && (gstate != PAUSED)) {
                     new_explosion(plx, WINHEIGHT - ((playerShip->height)/2), 2);
                     ships = 0;
                     pldead = 1;
                 }
-                break;
-            case 'Q':
-            case 256+'Q':       //337:
+				break;
+
+            case SDLK_q:
                 xgal_exit(0);
-                break;
-            case 'b':
-            case 256+'b':       //354:
-                W_Buffer(baseWin, !W_IsBuffered(baseWin));
-                W_ClearWindow(baseWin);
-                break;
-            case 'p':
-            case 256+'p':       //368:
-                paused=!paused;
-                if(!paused) {
-                    undo_pause();
-                    if(mouseControl)
-                        W_GrabPointer(baseWin);
-                } else
-                    W_UngrabPointer();
-                break;
-#ifdef SOUND
-            case 's':
-            case 256+'s':       //371:
+				break;
+
+            case SDLK_p:
+				if (gstate == PAUSED)
+					gstate = PLAYING;
+				else
+					gstate = PAUSED;
+				break;
+
+            case SDLK_s:
                 playSounds = !playSounds;
-                break;
-#endif
+				break;
+
 #ifdef IM_A_BIG_FAT_CHEATER
-            case 'i':
-            case 256+'i':       //361:
+            case SDLK_i:
                 if(plflash >= 0)
                     plflash = -2;
                 else
                     plflash = 0;
-                break;
-            case 'l':
-            case 256+'l':       //364:
-                {
-                    int i;
-                    for(i=0;i<MAXALIENS;i++)
-                        aliens[i].alive=0;
-                    if(starspeed != 1)
-                        level++;
-                }
-                break;
-            case 'c':
-            case 256+'c':       //355:
+				break;
+
+            case SDLK_l:
+			{
+				int i;
+				for(i=0;i<MAXALIENS;i++)
+					aliens[i].alive=0;
+				if(starspeed != 1)
+					level++;
+			}
+			break;
+
+            case SDLK_c:
                 score+= BONUSSHIPSCORE;
-                break;
-            case 'h':
-            case 256+'h':       //360:
+				break;
+
+            case SDLK_h:
                 plshield = SHIELDTIME;
-#ifdef SOUND
-                play_sound(SND_SHIELD);
-#endif
-                break;
-            case 'w':
-            case 256+'w':       //375:
+				play_sound(SND_SHIELD);
+				break;
+
+            case SDLK_w:
                 weapon++;
-                if(weapon == NUMWEAPONS)
-                    weapon=0;
-                break;
-            case 't':
-            case 256+'t':       //372:
+				if(weapon == NUMWEAPONS)
+					weapon=0;
+				break;
+
+            case SDLK_t:
                 maxtorps++;
-                if(maxtorps > MAXTORPS)
-                    maxtorps = MINTORPS;
-                break;
+				if(maxtorps > MAXTORPS)
+					maxtorps = MINTORPS;
+				break;
+
 #endif /* IM_A_BIG_FAT_CHEATER */
-            case '\r'+256:
-                W_ToggleFullscreen(shellWin);
-                fullscreen = !fullscreen;
-                if (fullscreen)
-                    W_BlankCursor(baseWin);
-                else
-                    W_RevertCursor(baseWin);
-                break;
+
+			case SDLK_RETURN:
+				if (event.key.keysym.mod & (KMOD_LALT | KMOD_RALT))
+					toggle_fullscreen();
+				break;
+
             default:
-/*printf ("3keyevent %d\n", wev.key);*/
                 break;
             }
-        case W_EV_EXPOSE:
-	    if (wev.Window == shellWin)
-	    	draw_score();
-	    break;
+			break;
+
+		case SDL_JOYBUTTONDOWN:
+			/* todo: right now test only button 3. */
+			if (event.jbutton.button == 2) {
+				keys |= FIREKEY;
+			}
+//			printf("FZ-  got jbutton %d\n", event.jbutton.button);
+			break;
+
+		case SDL_JOYBUTTONUP:
+			/* todo: right now test only button 3. */
+			if (event.jbutton.button == 2) {
+				keys &= ~FIREKEY;
+			}
+//			printf("FZ-  got jbutton %d\n", event.jbutton.button);
+			break;
+
+		case SDL_JOYHATMOTION:
+			if (event.jhat.value & SDL_HAT_RIGHT) {
+				keys |= RIGHTKEY;
+				keys &= ~LEFTKEY;
+			}
+			else if (event.jhat.value & SDL_HAT_LEFT) {
+				keys |= LEFTKEY;
+				keys &= ~RIGHTKEY;
+			}
+			else
+				keys &= ~(LEFTKEY | RIGHTKEY);
+			break;
+
+		case SDL_JOYAXISMOTION:
+			// todo: good for that joystick
+			if (event.jaxis.axis == 0 || event.jaxis.axis == 3)  {
+				if (event.jaxis.value < -10000) {
+					keys |= LEFTKEY;
+					keys &= ~RIGHTKEY;
+				}
+				else if (event.jaxis.value > 10000) {
+					keys |= RIGHTKEY;
+					keys &= ~LEFTKEY;
+				}
+				else
+					keys &= ~(LEFTKEY | RIGHTKEY);
+			}
+			break;
         }
     }
 
-    if(!paused) {
+    if (gstate != PAUSED) {
         torpok--;
 
-        if((!mouseControl && ! js_device) ||
-	   (js_device && mx == plx && but == 0)) {
-            if(keys & LEFTKEY)
-                mx = 0;
-            else if(keys & RIGHTKEY)
-                mx = WINWIDTH;
-            else
-                mx = plx;
-        
-            if(keys & FIREKEY)
-                but = W_LBUTTON;
-            else
-                but = 0;
-        }
-        
+		if(keys & LEFTKEY)
+			mx = 0;
+		else if(keys & RIGHTKEY)
+			mx = WINWIDTH;
+		else
+			mx = plx;
+
+		if(keys & FIREKEY)
+			but = 1;
+		else
+			but = 0;
+
         if(pldead) {
             pldead++;
             if(pldead >= 100) {
                 if(ships<=0) {
-                    gameOver = 1;
-                    W_UngrabPointer();
                     if(check_score(score)) {
 #ifdef USE_REAL_NAMES
                         add_score(getUsersFullName(), score);
                         title_page = 1; pagetimer = 300;
+						gstate = INTRO;
 #else
-                        getting_name = 1;
+						gstate = GETTING_NAME;
 #endif
-                    }
+                    } else {
+						gstate = INTRO;
+					}
                 } else {
 #ifdef DISABLE_RESET_ON_DEATH
                     ships--;
@@ -1110,38 +1024,38 @@ int mx, my, but;
                     	maxtorps = MINTORPS;
                     switch (weapon)
                     {
-                    	case SINGLESHOT:
-                    		if (maxtorps < 3)
-                    		{
-                    			maxtorps = 3;
-                    			weapon = SINGLESHOT;
-                    		}
-                    		break;
-                    	case DOUBLESHOT:
-	                    	if (maxtorps < 4)
-                    		{
-                    			maxtorps = 4;
-                    		}
-        					break;
-                   		case SPREADSHOT:
-                    		if (maxtorps < 5)
-                    		{
-                    			maxtorps = 5;
-                    		}
-                    		break;
-						case TRIPLESHOT:
-							if (maxtorps < 6)
-                    		{
-                    			maxtorps = 6;
-                    		}
-                    		break;
-                    	case MACHINEGUN:
-                    		if (maxtorps < 3)
-                    		{
-                    			maxtorps = 3;
-                    		}
-                    		break;
-		}
+					case SINGLESHOT:
+						if (maxtorps < 3)
+						{
+							maxtorps = 3;
+							weapon = SINGLESHOT;
+						}
+						break;
+					case DOUBLESHOT:
+						if (maxtorps < 4)
+						{
+							maxtorps = 4;
+						}
+						break;
+					case SPREADSHOT:
+						if (maxtorps < 5)
+						{
+							maxtorps = 5;
+						}
+						break;
+					case TRIPLESHOT:
+						if (maxtorps < 6)
+						{
+							maxtorps = 6;
+						}
+						break;
+					case MACHINEGUN:
+						if (maxtorps < 3)
+						{
+							maxtorps = 3;
+						}
+						break;
+					}
 #else
                     ships--;
                     maxtorps = MINTORPS;
@@ -1161,13 +1075,13 @@ int mx, my, but;
             case SINGLESHOT:
                 if(numtorps < maxtorps)
                     new_torp(plx, WINHEIGHT - playerShip->height, 0, -TORPSPEED);
-		    torpok = TORPDELAY;
+				torpok = TORPDELAY;
                 break;
             case DOUBLESHOT:
                 if(numtorps < maxtorps-1) {
                     new_torp(plx-5, WINHEIGHT - playerShip->height, 0, -TORPSPEED);
                     new_torp(plx+5, WINHEIGHT - playerShip->height, 0, -TORPSPEED);
-		    torpok = TORPDELAY;
+					torpok = TORPDELAY;
                 }
                 break;
             case TRIPLESHOT:
@@ -1175,61 +1089,61 @@ int mx, my, but;
                     new_torp(plx-5, WINHEIGHT - playerShip->height, -2, 1-TORPSPEED);
                     new_torp(plx,   WINHEIGHT - playerShip->height, 0,   -TORPSPEED);
                     new_torp(plx+5, WINHEIGHT - playerShip->height, 2, 1-TORPSPEED);
-		    torpok = TORPDELAY;
+					torpok = TORPDELAY;
                 }
                 break;
 #ifdef ENABLE_SPREAD_SHOT
             case SPREADSHOT:
             	if (numtorps == 0)
                 {
-			if ((maxtorps % 2) == 1)
-				new_torp(plx, WINHEIGHT - playerShip->height, 0, -TORPSPEED*1.15);
-			else
-			{
-				new_torp(plx - 5, WINHEIGHT - playerShip->height, 0, -TORPSPEED*1.15);
-				new_torp(plx + 5, WINHEIGHT - playerShip->height, 0, -TORPSPEED*1.15);
-			}
-			if (maxtorps > 2)
-			{
-				new_torp(plx, WINHEIGHT - playerShip->height - 15, -2, -TORPSPEED*1.15);
-				new_torp(plx, WINHEIGHT - playerShip->height - 15, 2, -TORPSPEED*1.15);
-			}
-			if (maxtorps > 4)
-			{
-				new_torp(plx, WINHEIGHT - playerShip->height - 25, -4, -TORPSPEED*1.15);
-				new_torp(plx, WINHEIGHT - playerShip->height - 25, 4, -TORPSPEED*1.15);
-			}
-			if (maxtorps > 6)
-			{
-				new_torp(plx, WINHEIGHT - playerShip->height - 35, -6, -TORPSPEED*1.15);
-				new_torp(plx, WINHEIGHT - playerShip->height - 35, 6, -TORPSPEED*1.15);
-			}
-			if (maxtorps > 8)
-			{
-				new_torp(plx, WINHEIGHT - playerShip->height - 50, -8, -TORPSPEED*1.15);    
-				new_torp(plx, WINHEIGHT - playerShip->height - 50, 8, -TORPSPEED*1.15);
-			}
-			if (maxtorps > 10)
-			{
-				new_torp(plx, WINHEIGHT - playerShip->height - 60, -10, -TORPSPEED*1.15);
-				new_torp(plx, WINHEIGHT - playerShip->height - 60, 10, -TORPSPEED*1.15);
-                        }
-                        torpok = TORPDELAY;
-                 }
-		 break;
+					if ((maxtorps % 2) == 1)
+						new_torp(plx, WINHEIGHT - playerShip->height, 0, -TORPSPEED*1.15);
+					else
+					{
+						new_torp(plx - 5, WINHEIGHT - playerShip->height, 0, -TORPSPEED*1.15);
+						new_torp(plx + 5, WINHEIGHT - playerShip->height, 0, -TORPSPEED*1.15);
+					}
+					if (maxtorps > 2)
+					{
+						new_torp(plx, WINHEIGHT - playerShip->height - 15, -2, -TORPSPEED*1.15);
+						new_torp(plx, WINHEIGHT - playerShip->height - 15, 2, -TORPSPEED*1.15);
+					}
+					if (maxtorps > 4)
+					{
+						new_torp(plx, WINHEIGHT - playerShip->height - 25, -4, -TORPSPEED*1.15);
+						new_torp(plx, WINHEIGHT - playerShip->height - 25, 4, -TORPSPEED*1.15);
+					}
+					if (maxtorps > 6)
+					{
+						new_torp(plx, WINHEIGHT - playerShip->height - 35, -6, -TORPSPEED*1.15);
+						new_torp(plx, WINHEIGHT - playerShip->height - 35, 6, -TORPSPEED*1.15);
+					}
+					if (maxtorps > 8)
+					{
+						new_torp(plx, WINHEIGHT - playerShip->height - 50, -8, -TORPSPEED*1.15);
+						new_torp(plx, WINHEIGHT - playerShip->height - 50, 8, -TORPSPEED*1.15);
+					}
+					if (maxtorps > 10)
+					{
+						new_torp(plx, WINHEIGHT - playerShip->height - 60, -10, -TORPSPEED*1.15);
+						new_torp(plx, WINHEIGHT - playerShip->height - 60, 10, -TORPSPEED*1.15);
+					}
+					torpok = TORPDELAY;
+				}
+				break;
 #endif /* ENABLE_SPREAD_SHOT */
 #ifdef ENABLE_MACHINE_GUN
             case MACHINEGUN:
-                 if(numtorps < maxtorps)
-                 {
-			shotside = (shotside == -15) ? 15 : -15;
-			new_torp(plx + shotside, WINHEIGHT - playerShip->height, 0, -TORPSPEED * 1.3);
-			torpok = TORPDELAY - 2;
-		}
-		break;
+				if(numtorps < maxtorps)
+				{
+					shotside = (shotside == -15) ? 15 : -15;
+					new_torp(plx + shotside, WINHEIGHT - playerShip->height, 0, -TORPSPEED * 1.3);
+					torpok = TORPDELAY - 2;
+				}
+				break;
 #endif /* ENABLE_MACHINE_GUN */
-	    }
-	}
+			}
+		}
 
 
         if(!but)
@@ -1246,39 +1160,64 @@ int mx, my, but;
         if(plx > WINWIDTH - 10)
 			plx=10;
 #else
-  
-    
+
         if(plx < playerShip->width/2)
             plx=playerShip->width/2;
         if(plx> WINWIDTH - playerShip->width/2)
             plx=WINWIDTH - playerShip->width/2;
 #endif
-    
+
         if(plflash > 0)
             plflash--;
         if(!(plflash % 2))
-            W_DrawImage(baseWin, plx-(playerShip->width/2), WINHEIGHT - playerShip->height, counter, playerShip, W_Red);
+            S_DrawImage(plx-(playerShip->width/2), WINHEIGHT - playerShip->height, counter, playerShip);
         if(plshield > 0)
             plshield--;
         if(plshield && ((plshield > SHIELDTIME/4) || plshield % 2)) {
-            W_DrawImage(baseWin, plx-(shieldImage->width/2), WINHEIGHT - shieldImage->height - 3, 0, shieldImage,
-                        W_Cyan);
+            S_DrawImage(plx-(shieldImage->width/2), WINHEIGHT - shieldImage->height - 3, 0, shieldImage);
         }
     } else if (!pldead) { /* paused */
-        W_DrawImage(baseWin, plx-(playerShip->width/2), WINHEIGHT - playerShip->height, counter, playerShip, W_Red);
+        S_DrawImage(plx-(playerShip->width/2), WINHEIGHT - playerShip->height, counter, playerShip);
     }
 }
 
-int
-main(argc, argv)
-int     argc;
-char  **argv;
+static int init_fonts(void)
+{
+	struct W_Image *img;
+
+	if ((img = getImage(F_REG_GREEN)))
+		fnt_reg_green = SFont_InitFont(img->surface);
+
+	if ((img = getImage(F_REG_CYAN)))
+		fnt_reg_cyan = SFont_InitFont(img->surface);
+
+	if ((img = getImage(F_REG_YELLOW)))
+		fnt_reg_yellow = SFont_InitFont(img->surface);
+
+	if ((img = getImage(F_REG_RED)))
+		fnt_reg_red = SFont_InitFont(img->surface);
+
+	if ((img = getImage(F_REG_GREY)))
+		fnt_reg_grey = SFont_InitFont(img->surface);
+
+	if ((img = getImage(F_BIG_RED)))
+		fnt_big_red = SFont_InitFont(img->surface);
+
+    if (!fnt_reg_green || !fnt_reg_cyan || !fnt_reg_yellow ||
+		!fnt_reg_red || !fnt_reg_grey || !fnt_big_red)
+		return 0;
+
+	return 1;
+}
+
+int main(int argc, char *argv[])
 {
     int ac;
     char *dpyname = 0;
-    int mx, my, but;
-    int start_fullscreen = 1;
-   
+    int but;
+
+	but = 0;
+
     for(ac = 1; ac < argc; ac++) {
         if(*argv[ac] == '-') {
             int w, h;
@@ -1289,33 +1228,21 @@ char  **argv;
             if(strcmp(argv[ac], "-display") == 0 && (ac+1 < argc)) {
                 dpyname = argv[ac+1];
                 ac++;
-            } else if (strcmp(argv[ac], "-b") == 0) {
-                useBuffered = !useBuffered;
-            } else if (strcmp(argv[ac], "-keyboard") == 0) {
-                mouseControl = 0;
-            } else if (strcmp(argv[ac], "-mouse") == 0) {
-                mouseControl = 1;
-#ifdef SOUND
             } else if (strcmp(argv[ac], "-nosound") == 0) {
                 playSounds = 0;
-#endif
-	/* '-level' option defined here */
-            } else if (strcmp(argv[ac], "-level") == 0 && (ac+1 < argc) 
-                       && atoi(argv[ac+1]) >= 1) 
+				/* '-level' option defined here */
+            } else if (strcmp(argv[ac], "-level") == 0 && (ac+1 < argc)
+                       && atoi(argv[ac+1]) >= 1)
             {
                 int nlev;
-                nlev = atoi(argv[ac+1]); 
+                nlev = atoi(argv[ac+1]);
                 if (nlev > 15 ) nlev = 15;
                 startLevel = nlev;
                 ac++;
             } else if (strcmp(argv[ac], "-nostars") == 0) {
                 wantStars = 0;
-            } else if (strcmp(argv[ac], "-nouseor") == 0) {
-                useOR = 0;
-            } else if (strcmp(argv[ac], "-noclipmask") == 0) {
-                useClipMask = 0;
             } else if (strcmp(argv[ac], "-window") == 0) {
-                start_fullscreen = 0;
+                fullscreen = 0;
             } else if ((strcmp(argv[ac], "-winsize") == 0) && (++ac < argc) &&
                        (sscanf(argv[ac], "%dx%d", &w, &h) == 2)) {
                 WINWIDTH  = w;
@@ -1329,28 +1256,22 @@ char  **argv;
             exit(0);
         }
     }
-        
-    W_Initialize(dpyname);
 
-    backColor = W_Black;
-    WINHEIGHT -= (W_Textheight+1);
-    shellWin = W_MakeWindow("XGalaga", 0, 0, WINWIDTH, WINHEIGHT + W_Textheight+1, 0, "tiny", 0, W_White);
-    baseWin = W_MakeWindow("", 0, W_Textheight+1, WINWIDTH, WINHEIGHT, shellWin, "tiny", 0, W_White);
-    W_Buffer(shellWin, 0);
-    W_MapWindow(shellWin);
-    W_MapWindow(baseWin);
-    if (start_fullscreen)
-    {
-      W_ToggleFullscreen(shellWin);
-      W_BlankCursor(baseWin);
-      fullscreen = 1;
+    S_Initialize(fullscreen);
+
+    SDL_WM_SetCaption("XGalaga (SDL)", NULL);
+
+// todo fz    W_SetImageDir(IMAGEDIR);
+
+	if (!loadAllImages()) {
+		fprintf(stderr, "Cannot load one or more images\n");
+		return -1;
+	}
+
+	if (!init_fonts()) {
+		fprintf(stderr, "Invalid font\n");
+		return -1;
     }
-
-    /*    W_AutoRepeatOff();*/
-
-    W_Flush();
-
-    W_SetImageDir(IMAGEDIR);
 
     playerShip = getImage(I_PLAYER1);
     playerTorp = getImage(I_MTORP);
@@ -1366,67 +1287,63 @@ char  **argv;
     init_explosions();
     init_score();
     init_prizes();
-#ifdef SOUND
-    init_sound();       /* starts the soundserver */
-#endif
+    init_sound();
     init_aliens(level);
     init_framerate();
-#ifdef __linux__
     init_joystick();
-#endif
 
     ships = 2;
     nextBonus = 20000;
+	gstate = INTRO;
+	plx = WINWIDTH/2;
 
     while(1) {
         counter++;
 
-	/* For the benefit of unbuffered mode, the most important things are
-	 * erased/redrawn closest together so they spend the least time blanked.
-	 * player, aliens and etorps are most important for game play.
-	 * pause, title and name are important in their modes and aren't done
-	 * otherwise.
-	 *
-	 * The title, name, pause and score "extra ship" want to overlay
-	 * everything else drawn, so they come last.
-	 */
-	undo_stars();
+		S_ClearScreen();
+
+		/* For the benefit of unbuffered mode, the most important things are
+		 * erased/redrawn closest together so they spend the least time blanked.
+		 * player, aliens and etorps are most important for game play.
+		 * pause, title and name are important in their modes and aren't done
+		 * otherwise.
+		 *
+		 * The title, name, pause and score "extra ship" want to overlay
+		 * everything else drawn, so they come last.
+		 */
         undo_explosions();
         undo_prizes();
-        undo_torps();
-        undo_etorps();
         undo_aliens();
-        undo_player();
-        if(gameOver && getting_name) undo_name();
-        if(paused) undo_pause();
-        undo_score();
-
-        W_FlushClearAreaCache(baseWin);
 
         do_etorps();
-        do_player(mx, my, but);
+        do_player(but);
         do_aliens();
         do_torps();
         do_prizes();
         do_explosions();
- 	do_stars();
-        do_score();
-        if(gameOver) { do_title(); if(getting_name) do_name(); }
-        if(paused) do_pause();
+		do_stars();
 
-        W_DisplayBuffer(baseWin);
+		switch(gstate) {
+		case INTRO:
+			do_title();
+			break;
 
-	/* This is an XSync style round trip to the server with the bonus of
-	 * getting the mouse position.
-	 * If the server can't draw at the UTIMER frame rate then this will be
-	 * the only delay in the loop.
-	 */
-	W_GetMouse(baseWin, &mx, &my, &but);
-#ifdef __linux__
-	do_joystick(&mx, &my, &but);
-#endif
+		case GETTING_NAME:
+			do_name();
+			break;
+
+		case PAUSED:
+			do_pause();
+			/* fall through */
+
+		case PLAYING:
+			do_score();
+		}
+
+        /* Update the display */
+		SDL_Flip(screen);
+
         do_framerate();
-
     }
     return (0);
 }

@@ -2,20 +2,16 @@
 #include "copyright.h"
 
 #include <config.h>
-#include "Wlib.h"
-#include "images.h"
+#include <SDL/SDL.h>
+
 #include "defs.h"
 #include "data.h"
 #include "struct.h"
+#include "images.h"
 
 int buttonDown = 0;
 
-W_Window shellWin, baseWin;
-
-W_Image *playerShip, *playerTorp, *enemyTorp, *shieldImage;
-
 int score;
-int paused;
 
 int ships;
 
@@ -24,12 +20,8 @@ int startLevel=1;       /* default starting level defined here */
 
 int nextBonus;
 
-int gameOver=1;
-int getting_name = 0;
-
 int counter;
 
-int mouseControl = 0;
 int wantStars = 1;
 
 /* Modified slightly to better fit on 800x600 in fullscreen mode */
@@ -59,18 +51,13 @@ int alien_shape[ALIENSHAPES] = {
 int weapon = 0;
 int maxtorps = 4, numtorps = 0;
 
-int plx = 200;
+int plx;
 int pldead = 0;
 
 int movespeed = MINSPEED;
 
-#ifdef SOUND
 char *unixSoundPath=SOUNDDIR;
-#ifndef NAS_SOUND
-char *unixSoundDev=SOUNDDEV;
-#endif
-int playSounds=1;
-#endif
+int playSounds=0;
 
 int plshield = 0;
 int shieldsleft = 0;
@@ -81,3 +68,25 @@ int title_page=0, pagetimer=300;
 int gotlemon = 0;
 
 struct alien aliens[MAXALIENS];
+
+#if 0
+const SDL_Color S_White  = { 0xFF, 0xFF, 0xFF, 0x00 };
+const SDL_Color S_Green  = { 0x00, 0xFF, 0x00, 0x00 };
+const SDL_Color S_Cyan   = { 0x00, 0xFF, 0xFF, 0x00 };
+const SDL_Color S_Red    = { 0xFF, 0x00, 0x00, 0x00 };
+const SDL_Color S_Yellow = { 0xFF, 0xFF, 0x00, 0x00 };
+const SDL_Color S_Black  = { 0x00, 0x00, 0x00, 0x00 };
+const SDL_Color S_Grey   = { 0xA9, 0xA9, 0xA9, 0x00 };
+#endif
+
+SFont_Font *fnt_reg_green;
+SFont_Font *fnt_reg_cyan;
+SFont_Font *fnt_reg_yellow;
+SFont_Font *fnt_reg_red;
+SFont_Font *fnt_reg_grey;
+
+SFont_Font *fnt_big_red;
+
+enum gstate gstate;
+
+int fullscreen = 0;				/* windowed = 0, fullscreen != 0 */
