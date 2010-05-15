@@ -1,6 +1,23 @@
-/* $Id: highscore.c,v 1.2 1998/04/30 05:11:55 mrogre Exp $ */
-/* Copyright (c) 1998 Joe Rumsey (mrogre@mediaone.net) */
-#include "copyright.h"
+/*
+ * XGalaga-SDL - a SDL port of XGalaga, clone of the game Galaga
+ * Copyright (c) 1995-1998 Joe Rumsey (mrogre@mediaone.net)
+ * Copyright (c) 2010 Frank Zago
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ */
 
 #include <config.h>
 
@@ -19,8 +36,8 @@
 #include <string.h>
 #ifdef _AIX
 #include <net/nh.h>
-#else /* This is for ntohl, htonl.  
-	 This file is correct for hpux and linux for sure, 
+#else /* This is for ntohl, htonl.
+	 This file is correct for hpux and linux for sure,
 	 probably others as well. */
 #include <netinet/in.h>
 #endif
@@ -91,7 +108,7 @@ char *getUsersFullName()
         {
             /* A ha. Now copy the users name to be in place of '&' */
             strcpy(cp2, pass->pw_name);
-       
+
             /* Convert the first letter to uppercase. */
             if(islower(*cp2))
                 *cp2 = toupper(*cp2);
@@ -136,7 +153,7 @@ static void save_scores()
 		}
         close(hsf);
     }
-	
+
     return;
 error2:
     printf("Error saving high scores file %s\n", my_file_name);
@@ -197,7 +214,7 @@ int score_key(SDLKey key)
 		break;
 
 	default:
-		if (nnpos < 19 && 
+		if (nnpos < 19 &&
 			key >= SDLK_SPACE &&
 			key <= SDLK_z) {
 			new_name[nnpos++] = key;
@@ -247,12 +264,12 @@ void show_scores(int top)
     dstrect.y = top + 1 + SFont_TextHeight(fnt_reg_yellow);
     dstrect.w = length;
     dstrect.h = 1;
-    SDL_FillRect (screen, &dstrect, 0xff0000); 
+    SDL_FillRect (screen, &dstrect, 0xff0000);
 
     for(i=0;i<NUM_MY_SCORES;i++) {
 		SFont_Font *font = i==my_thisplace ? fnt_reg_red : fnt_reg_grey;
 
-		sprintf(buf, "  %2d. %-20s     %7ld %5ld", i+1, 
+		sprintf(buf, "  %2d. %-20s     %7ld %5ld", i+1,
 				my_scores[i].name, my_scores[i].score,my_scores[i].level);
 		SFont_WriteCenter(font, top+(3+i)*dy, buf);
     }
@@ -310,7 +327,7 @@ error2:
 
 void print_scores() {
     int i;
-    
+
     load_scores();
 
     printf("-----------------------------------------------\n");
@@ -321,7 +338,7 @@ void print_scores() {
     for(i=0;i<NUM_MY_SCORES;i++) {
 	if(my_scores[i].score == 0)
 	    break;
-	printf("%-20s %8ld %8ld\n", my_scores[i].name, 
+	printf("%-20s %8ld %8ld\n", my_scores[i].name,
 	       my_scores[i].score, my_scores[i].level);
     }
     printf("--------------------------------------\n");

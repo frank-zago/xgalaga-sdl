@@ -1,29 +1,30 @@
 /*  SFont: a simple font-library that uses special .pngs as fonts
     Copyright (C) 2003 Karl Bartel
+    Copyright (C) 2010 Frank Zago
 
     License: GPL or LGPL (at your choice)
     WWW: http://www.linux-games.com/sfont/
 
-    This program is free software; you can redistribute it and/or modify        
-    it under the terms of the GNU General Public License as published by        
-    the Free Software Foundation; either version 2 of the License, or           
-    (at your option) any later version.                                         
-                                                                                
-    This program is distributed in the hope that it will be useful,       
-    but WITHOUT ANY WARRANTY; without even the implied warranty of              
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               
-    GNU General Public License for more details.                
-                                                                               
-    You should have received a copy of the GNU General Public License           
-    along with this program; if not, write to the Free Software                 
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA   
-                                                                                
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
     Karl Bartel
-    Cecilienstr. 14                                                    
+    Cecilienstr. 14
     12307 Berlin
     GERMANY
-    karlb@gmx.net                                                      
-*/                                                                            
+    karlb@gmx.net
+*/
 
 #include <assert.h>
 #include <stdlib.h>
@@ -40,7 +41,7 @@ static Uint32 GetPixel(SDL_Surface *Surface, Sint32 X, Sint32 Y)
 
 	assert(X>=0);
 	assert(X<Surface->w);
-   
+
 	Bpp = Surface->format->BytesPerPixel;
 	bits = ((Uint8 *)Surface->pixels)+Y*Surface->pitch+X*Bpp;
 
@@ -52,7 +53,7 @@ static Uint32 GetPixel(SDL_Surface *Surface, Sint32 X, Sint32 Y)
 	case 2:
 		return *((Uint16 *)Surface->pixels + Y * Surface->pitch/2 + X);
 		break;
-	case 3: { // Format/endian independent 
+	case 3: { // Format/endian independent
 		Uint8 r, g, b;
 		r = *((bits)+Surface->format->Rshift/8);
 		g = *((bits)+Surface->format->Gshift/8);
@@ -85,7 +86,7 @@ SFont_Font* SFont_InitFont(SDL_Surface* Surface)
 
     pink = SDL_MapRGB(Surface->format, 255, 0, 255);
     while (x < Surface->w) {
-		if (GetPixel(Surface, x, 0) == pink) { 
+		if (GetPixel(Surface, x, 0) == pink) {
     	    Font->CharPos[i++]=x;
     	    while((x < Surface->w) && (GetPixel(Surface, x, 0)== pink))
 				x++;
@@ -94,7 +95,7 @@ SFont_Font* SFont_InitFont(SDL_Surface* Surface)
 		x++;
     }
     Font->MaxPos = x-1;
-    
+
     pixel = GetPixel(Surface, 0, Surface->h-1);
     SDL_UnlockSurface(Surface);
     SDL_SetColorKey(Surface, SDL_SRCCOLORKEY, pixel);
@@ -130,14 +131,14 @@ void SFont_Write(const SFont_Font *Font, int x, int y, const char *text)
 			continue;
 		}
 
-		srcrect.w = dstrect.w = 
+		srcrect.w = dstrect.w =
 			(Font->CharPos[charoffset+2] + Font->CharPos[charoffset+1])/2 -
 			(Font->CharPos[charoffset] + Font->CharPos[charoffset-1])/2;
 		srcrect.x = (Font->CharPos[charoffset]+Font->CharPos[charoffset-1])/2;
 		dstrect.x = x - (float)(Font->CharPos[charoffset]
 								- Font->CharPos[charoffset-1])/2;
 
-		SDL_BlitSurface(Font->Surface, &srcrect, screen, &dstrect); 
+		SDL_BlitSurface(Font->Surface, &srcrect, screen, &dstrect);
 
 		x += Font->CharPos[charoffset+1] - Font->CharPos[charoffset];
     }
@@ -159,7 +160,7 @@ int SFont_TextWidth(const SFont_Font *Font, const char *text)
             width += Font->CharPos[2]-Font->CharPos[1];
 			continue;
 		}
-	
+
 		width += Font->CharPos[charoffset+1] - Font->CharPos[charoffset];
     }
 
