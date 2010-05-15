@@ -1,0 +1,18 @@
+/* XPM */
+static char * pr_brain_xpm[] = {
+"15 10 5 1",
+" 	c None",
+".	c #9F9F37370202",
+"X	c #FFFF59590404",
+"o	c #BCBCBCBCBCBC",
+"O	c #A8A800000000",
+"  ...XXXXXX..  ",
+" ..X       XX. ",
+"...  o o o  XX.",
+".. o o o o o XX",
+"..  o o o o o X",
+"... o o o o  XX",
+".... oo     XXX",
+".... o XXXXXXXO",
+" ... o XXXXXXO ",
+"  ... .......  "};

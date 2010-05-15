@@ -1,0 +1,146 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(data.h)
+AC_PREFIX_DEFAULT(/usr/local/lib/xgalaga)
+
+test "$prefix" = NONE && prefix=/usr/local/lib/xgalaga
+test "$exec_prefix" = NONE && exec_prefix=/usr/local/bin
+
+AC_CANONICAL_HOST
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
+AC_PROG_RANLIB
+
+AC_ARG_WITH(xpm-lib,[  --with-xpm-lib          Directory containing libXpm (may be autodetected)],xpm_lib=$withval)
+AC_ARG_WITH(sound,  [  --with-sound            Type of sound to use (native or nas)],sound_type=$withval)
+
+AC_PATH_XTRA
+if test -n "$no_x"; then
+  AC_MSG_ERROR([Can't find X, you need X!])
+else
+  INCS="$INCS -I$x_includes"
+  if test -n "$x_libraries"; then
+    LIBS="-L$x_libraries"
+  fi
+
+  if test -n "$xpm_lib"; then
+    LIBS="$LIBS -L$xpm_lib"
+  fi
+fi
+
+AC_MSG_NOTICE([host os is detected as $host_os ])
+if test -n "$sound-type"; then
+  case $host_os in
+    *linux*)
+      sound_type=native
+      ;;
+    *dragonfly*)
+      sound_type=native
+      ;;
+    *freebsd*)
+      sound_type=native
+      ;;
+    *netbsd*)
+      sound_type=native
+      ;;
+    *sunos*)
+      sound_type=native
+      ;;
+    *solaris*)
+      sound_type=native
+      ;;
+    *)
+      sound_type=none
+      ;;
+    esac
+fi
+
+AC_MSG_NOTICE([sound type choosen as $sound_type ])
+case $sound_type in
+  native)
+    case $host_os in
+      *linux*)
+        SOUNDSERVER=xgal.sndsrv.oss
+	AC_DEFINE([SOUNDDEV],["/dev/dsp"], [The sound device to use (E.G. /dev/dsp)])
+        SOUNDSRVDIR=""
+	AC_DEFINE([SOUND],[1], [Whether to compile with sound support or not])
+	;;
+      *freebsd* | *dragonfly*)
+        SOUNDSERVER=xgal.sndsrv.freebsd
+	AC_DEFINE(SOUNDDEV,"/dev/dsp")
+        SOUNDSRVDIR=""
+	AC_DEFINE(SOUND,1)
+	;;
+      *netbsd*)
+        SOUNDSERVER=xgal.sndsrv.linux
+        AC_DEFINE(SOUNDDEV, "/dev/audio")
+        SOUNDSRVDIR="/libexec"
+        AC_DEFINE(SOUND,1)
+        ;;
+      *sunos*)
+        SOUNDSERVER=xgal.sndsrv.sun.c
+	AC_DEFINE(SOUNDDEV,"/dev/audio")
+        SOUNDSRVDIR=""
+  	AC_DEFINE(SOUND,1)
+	;;
+      *solaris*)
+        SOUNDSERVER=xgal.sndsrv.sun.c
+	AC_DEFINE(SOUNDDEV,"/dev/audio")
+        SOUNDSRVDIR=""
+	AC_DEFINE(SOUND,1)
+	;;
+      *)
+        AC_MSG_WARN([Native sound selected but not supported for $host_os])
+	;;
+    esac
+    ;;
+  nas)
+    AC_DEFINE(SOUND,1)
+    AC_DEFINE(NAS_SOUND)
+    ;;
+  *)
+    AC_MSG_WARN([Sound type set to $sound_type for $host_os. Sound will not work])
+    ;;
+esac
+
+AC_DEFINE_UNQUOTED(SCOREFILE,"$prefix/scores")
+AC_DEFINE_UNQUOTED(SOUNDDIR,"$prefix/sounds/")
+CREDITSFILE="$prefix/CREDITS"
+AC_DEFINE_UNQUOTED(CREDITSFILE,"$CREDITSFILE")
+AC_DEFINE(IMAGEDIR,"images")
+AC_DEFINE_UNQUOTED(LEVELDIR,"$prefix/levels/")
+
+AC_CHECK_LIB(X11, main, LIBS="$LIBS -lX11")
+AC_CHECK_LIB(Xmu, main, LIBS="$LIBS -lXmu",,-lX11)
+AC_CHECK_LIB(Xt, main, LIBS="$LIBS -lXt",,-lX11)
+AC_CHECK_LIB(Xext, main, LIBS="$LIBS -lXext",,-lX11)
+AC_CHECK_LIB(XExExt, main, LIBS="$LIBS -lXExExt",,-lX11)
+AC_CHECK_LIB(Xpm, main, LIBS="$LIBS -lXpm",AC_MSG_ERROR(libXpm can't be found.  Get it from ftp://ftp.x.org/contrib/libraries or specify the location with --with-xpm-lib=DIR.),-lX11)
+
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS(fcntl.h malloc.h strings.h sys/ioctl.h sys/time.h unistd.h)
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_HEADER_TIME
+
+dnl Checks for library functions.
+AC_PROG_GCC_TRADITIONAL
+AC_TYPE_SIGNAL
+AC_CHECK_FUNCS(gettimeofday select random lrand48)
+
+AC_SUBST(SOUNDSERVER)
+AC_SUBST(SOUNDSRVDIR)
+AC_SUBST(SOUNDDEV)
+AC_SUBST(SOUND)
+AC_SUBST(CREDITSFILE)
+
+AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_FILES([Makefile libsprite/Makefile])
+AC_OUTPUT
+

@@ -1,0 +1,639 @@
+#!/usr/local/bin/perl
+#
+# creates images.c and images.h.  Takes the imagedir as a parameter.
+#
+# Bill Dyess, 10/5/94
+#
+# Bill Dyess, 2/11/95
+#  - Now always compiles in default.x[pb]m.
+#  - Compiles in all image files if -c given as a parameter.
+#
+require "find.pl";
+
+$path = $ARGV[0];
+if ($path eq "-c") {
+  $compile_in = 1;
+  $path = $ARGV[1];
+} else {
+  $compile_in = 0;
+}
+
+die "Usage: $0 [-c] <imagedir>\n  -c    Compile in all images.\n" unless $path;
+
+&find($path);
+
+&init_lookup();
+
+open(C,">images.c") || die "can't open images.c: $!";
+open(H,">images.h") || die "can't open images.h: $!";
+open(SCRIPT_IN,"$0") || die "can't open $0: $!";
+open(SCRIPT_OUT,">$0.out") || die "can't open $0.out: $!";
+while(<SCRIPT_IN>) { 
+  print SCRIPT_OUT; 
+  last if /^  %lookup = \(/; 
+}
+close(SCRIPT_IN);
+
+$help = "/* {width,height,frames,xpm,filename,loaded,alternate,bad,compiled_in,xbmdata,xpmdata,pixmap,clipmask} */\n";
+
+print C <<EOF;
+/* images.c.  Contains the image control data. [BDyess] */
+/* automatically created by scripts/mkimgsrc */
+
+#include <stdlib.h>
+#include "Wlib.h"
+#include "images.h"
+#include "struct.h"
+#include "proto.h"
+
+/* compiled in images in alphabetical order, XBM before XPM. [BDyess] */
+EOF
+
+# sort the filelist
+@filelist = sort keys %table;
+
+# copy in all the xbm and xpm data if $compile_in is set, otherwise just
+# the data for the default image.
+chdir($path) || die "can't chdir() to $path: $!";
+if($compile_in) {
+  for $file (@filelist) {
+    &include_bitmap($file);
+    &include_pixmap($file);
+  }
+} else {
+  &include_bitmap("/default");
+}
+
+# includes the given bitmap in the C source.
+sub include_bitmap {
+  local($file) = @_;
+  $ok = 0;
+  if(open(IN,".$file.xbm")) {
+    while(<IN>) {
+      if (/^#define\s*\S*_width\s*(\d*)/) {
+	$lookup{"${file}_width"} = $1;
+	next;
+      }
+      if (/^#define\s*\S*_height\s*(\d*)/) {
+	$lookup{"${file}_height"} = $1;
+	next;
+      }
+      if (/^static.*char\s\S*_bits\[\]/) {
+        $name = $file;
+	$name =~ s,^/,,;
+	$name =~ s,[/.],_,g;
+        print C "static char ${name}_bits[] = {\n";
+	$lookup{"${file}_xbmdata"} = "${name}_bits";
+	$ok = 1;
+	next;
+      }
+      print C;
+    }
+    print C "\n";
+    if($ok) {
+      $lookup{"${file}_compiled_in"} = 1;
+    } else {
+      print STDERR "Error parsing $file.xbm!\n";
+    }
+  }
+}
+
+# includes the given pixmap in the C source.
+sub include_pixmap {
+  local($file) = @_;
+  $ok = 0;
+  if(open(IN,".$file.xpm")) {
+    while(<IN>) {
+      if (/static.*char[\s\*]*\S*\[\]/) {
+        $name = $file;
+	$name =~ s,^/,,;
+	$name =~ s,[/.],_,g;
+	s/\*\s*\S*\[\]/* ${name}_xpm\[\]/;
+        print C;
+	$lookup{"${file}_xpmdata"} = "${name}_xpm";
+        $ok = 1;
+      } else {
+	print C;
+      }
+    }
+    print C "\n";
+    if($ok) {
+      $lookup{"${file}_compiled_in"} = 1;
+    } else {
+      print STDERR "Error parsing $file.xpm!\n";
+    }
+  }
+}
+
+# start of imagearray
+#$height = $lookup{"/default_height"};
+#$width = $lookup{"/default_width"};
+print C <<EOF;
+/* keep sorted (for bsearch) [BDyess] */
+static W_Image imagearray[] = {
+EOF
+#   {$height, $width, 1, 0, "/default", 1, I_DEFAULT, 0, 1, default_bits, default_xpm, 0, 0},
+
+
+print H <<EOF;
+/* images.h.  Contains the #defines and extern's for all the image management
+   data [BDyess] */
+/* automatically created by scripts/mkimgsrc */
+
+#include "Wlib.h"
+
+W_Image * getImage P((int offset));
+void loadImageByFilename P((char *filename));
+void loadAllImages P((void));
+
+#define I_DEFAULT              0
+EOF
+#
+
+$counter = 0; #1;
+for $file (@filelist) {
+  &print_lookup($file);
+  print C $help if ($counter % 25) == 0;
+  $frames = $lookup{"${file}_frames"};
+  $frames = 0 unless $frames;
+  $alternate = $lookup{"${file}_alternate"};
+  $alternate = "I_DEFAULT" unless $alternate;
+  $width = $lookup{"${file}_width"};
+  $width = 0 unless $width;
+  $height = $lookup{"${file}_height"};
+  $height = 0 unless $height;
+  $is_compiled_in = $lookup{"${file}_compiled_in"};
+  $is_compiled_in = 0 unless $is_compiled_in;
+  $xbmdata = $lookup{"${file}_xbmdata"};
+  $xbmdata = "NULL" unless $xbmdata;
+  $xpmdata = $lookup{"${file}_xpmdata"};
+  if($xpmdata) {
+    $xpmdata = "(char**)$xpmdata";
+  } else {
+    $xpmdata = "NULL" unless $xpmdata;
+  }
+  print C <<EOF;
+   {$width, $height, $frames, 0, "$file", 0, $alternate, 0, $is_compiled_in, $xbmdata, $xpmdata, 0, 0},
+EOF
+  $file =~ s,^/,,;
+  $file =~ s,[./],_,g;
+  $file = "\U$file";
+  $file =~ s/^(WEAPONS|PLANETS|INTRO)_//;
+  printf(H "#define I_%-20s $counter\n",$file);
+  $counter++;
+}
+
+$counter--;
+printf(H "#define I_%-20s $counter\n",LAST);
+
+print C <<EOF;
+};
+
+W_Image *
+getImage(offset)
+  int offset;
+{
+  W_Image * image = &imagearray[offset];
+  if(!image->loaded) {
+    W_LoadImage(image);
+  }
+  return image;
+}
+
+#ifndef __STDC__
+#define const
+#endif /*__STDC__*/
+
+int cmpfilenames(left,right)
+  const void *left, *right;
+{
+  return strcmp((char*)left,((W_Image*)right)->filename);
+}
+
+void
+loadImageByFilename(filename)
+  char *filename;
+{
+  W_Image *image;
+
+  image = bsearch(filename, imagearray, sizeof(imagearray) / sizeof(W_Image),
+                  sizeof(W_Image), cmpfilenames);
+  if(image && !image->loaded) W_LoadImage(image);
+}
+
+void
+loadAllImages()
+{
+  int i;
+  for(i=I_DEFAULT; i<I_LAST; i++) 
+    if(!imagearray[i].loaded) 
+      W_LoadImage(&imagearray[i]);
+}
+EOF
+
+
+close C;
+close H;
+
+print SCRIPT_OUT ");\n}\n";
+close SCRIPT_OUT;
+unlink("$0.bak");
+rename("$0","$0.bak") || print STDERR "Error renaming $0 to $0.bak: $!";
+rename("$0.out","$0") || print STDERR "Error renaming $0.out to $0: $!";
+chmod 0755, "$0";
+
+sub wanted {
+  return unless /\.x[bp]m$/;
+  $x = $name;
+  $x =~ s/^$path//;
+  $x =~ s/\.x[bp]m$//;
+  return unless -f "$_";
+  $table{$x} = 1;
+}
+
+sub print_lookup {
+  local($name) = @_;
+  local($alternate,$frames);
+  print SCRIPT_OUT ",\n" if $notfirst;
+  $notfirst = 1;
+  $alternate = $lookup{"${name}_alternate"};
+  $alternate = 'I_DEFAULT' unless $alternate;
+  $frames = $lookup{"${name}_frames"};
+  printf(SCRIPT_OUT "%-40s \'$alternate\'","'${file}_alternate',");
+  printf(SCRIPT_OUT ",\n%-40s '$frames'","'${file}_frames',") if $frames;
+}
+
+# lookup is a table to lookup values that are different than 0 or filename.
+# <path>_frames and <path>_alternate are searched for and used.
+#
+# lookup is generated automatically when mkimgsrc is run and saved to this
+# file.  If it's a new image, I_DEFAULT is used.
+sub init_lookup {
+  %lookup = (
+'/Fed.bronco/AS_alternate',              'I_DEFAULT',
+'/Fed.bronco/AT_alternate',              'I_DEFAULT',
+'/Fed.bronco/BB_alternate',              'I_DEFAULT',
+'/Fed.bronco/CA_alternate',              'I_DEFAULT',
+'/Fed.bronco/DD_alternate',              'I_DEFAULT',
+'/Fed.bronco/SB_alternate',              'I_DEFAULT',
+'/Fed.bronco/SC_alternate',              'I_DEFAULT',
+'/Fed/AS_alternate',                     'I_FED_CA',
+'/Fed/AT_alternate',                     'I_IND_AT',
+'/Fed/BB_alternate',                     'I_FED_CA',
+'/Fed/CA_alternate',                     'I_DEFAULT',
+'/Fed/CL_alternate',                     'I_FED_CA',
+'/Fed/CV_alternate',                     'I_FED_CA',
+'/Fed/DD_alternate',                     'I_FED_CA',
+'/Fed/FR_alternate',                     'I_FED_CA',
+'/Fed/JS_alternate',                     'I_FED_SB',
+'/Fed/PT_alternate',                     'I_FED_CA',
+'/Fed/PU_alternate',                     'I_IND_PT',
+'/Fed/SB_alternate',                     'I_DEFAULT',
+'/Fed/SC_alternate',                     'I_FED_CA',
+'/Fed/UT_alternate',                     'I_FED_CA',
+'/Fed/WB_alternate',                     'I_FED_SB',
+'/Ind/AS_alternate',                     'I_FED_CA',
+'/Ind/AT_alternate',                     'I_FED_SB',
+'/Ind/BB_alternate',                     'I_FED_CA',
+'/Ind/CA_alternate',                     'I_FED_CA',
+'/Ind/CL_alternate',                     'I_FED_CA',
+'/Ind/CV_alternate',                     'I_FED_CA',
+'/Ind/DD_alternate',                     'I_FED_CA',
+'/Ind/FR_alternate',                     'I_FED_CA',
+'/Ind/JS_alternate',                     'I_FED_JS',
+'/Ind/PT_alternate',                     'I_FED_CA',
+'/Ind/PU_alternate',                     'I_FED_SB',
+'/Ind/SB_alternate',                     'I_FED_SB',
+'/Ind/SC_alternate',                     'I_FED_CA',
+'/Ind/UT_alternate',                     'I_FED_CA',
+'/Ind/WB_alternate',                     'I_FED_SB',
+'/Kli.bronco/AS_alternate',              'I_DEFAULT',
+'/Kli.bronco/AT_alternate',              'I_DEFAULT',
+'/Kli.bronco/BB_alternate',              'I_DEFAULT',
+'/Kli.bronco/CA_alternate',              'I_DEFAULT',
+'/Kli.bronco/DD_alternate',              'I_DEFAULT',
+'/Kli.bronco/SB_alternate',              'I_DEFAULT',
+'/Kli.bronco/SC_alternate',              'I_DEFAULT',
+'/Kli/AS_alternate',                     'I_FED_CA',
+'/Kli/AT_alternate',                     'I_IND_AT',
+'/Kli/BB_alternate',                     'I_FED_CA',
+'/Kli/CA_alternate',                     'I_FED_CA',
+'/Kli/CL_alternate',                     'I_FED_CA',
+'/Kli/CV_alternate',                     'I_FED_CA',
+'/Kli/DD_alternate',                     'I_FED_CA',
+'/Kli/FR_alternate',                     'I_FED_CA',
+'/Kli/JS_alternate',                     'I_FED_SB',
+'/Kli/PT_alternate',                     'I_FED_CA',
+'/Kli/PU_alternate',                     'I_IND_PU',
+'/Kli/SB_alternate',                     'I_FED_SB',
+'/Kli/SC_alternate',                     'I_FED_CA',
+'/Kli/UT_alternate',                     'I_FED_CA',
+'/Kli/WB_alternate',                     'I_FED_SB',
+'/Ori.bronco/AS_alternate',              'I_DEFAULT',
+'/Ori.bronco/AT_alternate',              'I_DEFAULT',
+'/Ori.bronco/BB_alternate',              'I_DEFAULT',
+'/Ori.bronco/CA_alternate',              'I_DEFAULT',
+'/Ori.bronco/DD_alternate',              'I_DEFAULT',
+'/Ori.bronco/SB_alternate',              'I_DEFAULT',
+'/Ori.bronco/SC_alternate',              'I_DEFAULT',
+'/Ori/AS_alternate',                     'I_FED_CA',
+'/Ori/AT_alternate',                     'I_IND_AT',
+'/Ori/BB_alternate',                     'I_FED_CA',
+'/Ori/CA_alternate',                     'I_FED_CA',
+'/Ori/CL_alternate',                     'I_FED_CA',
+'/Ori/CV_alternate',                     'I_FED_CA',
+'/Ori/DD_alternate',                     'I_FED_CA',
+'/Ori/FR_alternate',                     'I_FED_CA',
+'/Ori/JS_alternate',                     'I_FED_SB',
+'/Ori/PT_alternate',                     'I_FED_CA',
+'/Ori/PU_alternate',                     'I_IND_PU',
+'/Ori/SB_alternate',                     'I_FED_SB',
+'/Ori/SC_alternate',                     'I_FED_CA',
+'/Ori/UT_alternate',                     'I_FED_CA',
+'/Ori/WB_alternate',                     'I_FED_SB',
+'/Rom.bronco/AS_alternate',              'I_DEFAULT',
+'/Rom.bronco/AT_alternate',              'I_DEFAULT',
+'/Rom.bronco/BB_alternate',              'I_DEFAULT',
+'/Rom.bronco/CA_alternate',              'I_DEFAULT',
+'/Rom.bronco/DD_alternate',              'I_DEFAULT',
+'/Rom.bronco/SB_alternate',              'I_DEFAULT',
+'/Rom.bronco/SC_alternate',              'I_DEFAULT',
+'/Rom.starwars/AS_alternate',            'I_DEFAULT',
+'/Rom.starwars/BB_alternate',            'I_DEFAULT',
+'/Rom.starwars/CA_alternate',            'I_DEFAULT',
+'/Rom.starwars/DD_alternate',            'I_DEFAULT',
+'/Rom.starwars/SB_alternate',            'I_DEFAULT',
+'/Rom.starwars/SC_alternate',            'I_DEFAULT',
+'/Rom/AS_alternate',                     'I_FED_CA',
+'/Rom/AT_alternate',                     'I_IND_AT',
+'/Rom/BB_alternate',                     'I_FED_CA',
+'/Rom/CA_alternate',                     'I_FED_CA',
+'/Rom/CL_alternate',                     'I_FED_CA',
+'/Rom/CV_alternate',                     'I_FED_CA',
+'/Rom/DD_alternate',                     'I_FED_CA',
+'/Rom/FR_alternate',                     'I_FED_CA',
+'/Rom/JS_alternate',                     'I_FED_SB',
+'/Rom/PT_alternate',                     'I_FED_CA',
+'/Rom/PU_alternate',                     'I_IND_PU',
+'/Rom/SB_alternate',                     'I_FED_SB',
+'/Rom/SC_alternate',                     'I_FED_CA',
+'/Rom/UT_alternate',                     'I_FED_CA',
+'/Rom/WB_alternate',                     'I_FED_SB',
+'/cloak_alternate',                      'I_DEFAULT',
+'/dashboard_bg_alternate',               'I_DEFAULT',
+'/default_alternate',                    'I_DEFAULT',
+'/emph_planet_seq_alternate',            'I_DEFAULT',
+'/emph_player_seq_alternate',            'I_DEFAULT',
+'/emph_player_seql_alternate',           'I_DEFAULT',
+'/exp2_alternate',                       'I_DEFAULT',
+'/explosion_alternate',                  'I_DEFAULT',
+'/hull_alternate',                       'I_DEFAULT',
+'/intro/clock_alternate',                'I_DEFAULT',
+'/intro/fedshield_alternate',            'I_DEFAULT',
+'/intro/header_alternate',               'I_DEFAULT',
+'/intro/header1_alternate',              'I_DEFAULT',
+'/intro/header2_alternate',              'I_DEFAULT',
+'/intro/header3_alternate',              'I_DEFAULT',
+'/intro/header4_alternate',              'I_DEFAULT',
+'/intro/headerA_alternate',              'I_DEFAULT',
+'/intro/headerB_alternate',              'I_DEFAULT',
+'/intro/icon_alternate',                 'I_DEFAULT',
+'/intro/klishield_alternate',            'I_DEFAULT',
+'/intro/noentry_alternate',              'I_DEFAULT',
+'/intro/orishield_alternate',            'I_DEFAULT',
+'/intro/romshield_alternate',            'I_DEFAULT',
+'/intro/safe_alternate',                 'I_DEFAULT',
+'/newstats/flag_alert_alternate',        'I_DEFAULT',
+'/newstats/flag_army_alternate',         'I_DEFAULT',
+'/newstats/flag_beaming_alternate',      'I_DEFAULT',
+'/newstats/flag_bomb_alternate',         'I_DEFAULT',
+'/newstats/flag_cloak_alternate',        'I_DEFAULT',
+'/newstats/flag_down_alternate',         'I_DEFAULT',
+'/newstats/flag_etemp_alternate',        'I_DEFAULT',
+'/newstats/flag_fed_alternate',          'I_DEFAULT',
+'/newstats/flag_fighter_alternate',      'I_DEFAULT',
+'/newstats/flag_fuel_alternate',         'I_DEFAULT',
+'/newstats/flag_fuse_alternate',         'I_DEFAULT',
+'/newstats/flag_hull_alternate',         'I_DEFAULT',
+'/newstats/flag_kli_alternate',          'I_DEFAULT',
+'/newstats/flag_missile_alternate',      'I_DEFAULT',
+'/newstats/flag_ori_alternate',          'I_DEFAULT',
+'/newstats/flag_plasma_alternate',       'I_DEFAULT',
+'/newstats/flag_pressor_alternate',      'I_DEFAULT',
+'/newstats/flag_repair_alternate',       'I_DEFAULT',
+'/newstats/flag_rom_alternate',          'I_DEFAULT',
+'/newstats/flag_ship_fed_alternate',     'I_DEFAULT',
+'/newstats/flag_ship_kli_alternate',     'I_DEFAULT',
+'/newstats/flag_ship_ori_alternate',     'I_DEFAULT',
+'/newstats/flag_ship_rom_alternate',     'I_DEFAULT',
+'/newstats/flag_speed1_alternate',       'I_DEFAULT',
+'/newstats/flag_speed2_alternate',       'I_DEFAULT',
+'/newstats/flag_torp_alternate',         'I_DEFAULT',
+'/newstats/flag_tractor_alternate',      'I_DEFAULT',
+'/newstats/flag_up_alternate',           'I_DEFAULT',
+'/newstats/flag_war_alternate',          'I_DEFAULT',
+'/newstats/flag_wtemp_alternate',        'I_DEFAULT',
+'/newstats/status_template_alternate',   'I_DEFAULT',
+'/oldexp_alternate',                     'I_DEFAULT',
+'/planets/F/0000_alternate',             'I_BARREN',
+'/planets/F/0001_alternate',             'I_BARREN',
+'/planets/F/0010_alternate',             'I_BARREN',
+'/planets/F/0011_alternate',             'I_BARREN',
+'/planets/F/0100_alternate',             'I_BARREN',
+'/planets/F/0101_alternate',             'I_BARREN',
+'/planets/F/0110_alternate',             'I_BARREN',
+'/planets/F/0111_alternate',             'I_BARREN',
+'/planets/F/1000_alternate',             'I_BARREN',
+'/planets/F/1001_alternate',             'I_BARREN',
+'/planets/F/1010_alternate',             'I_BARREN',
+'/planets/F/1011_alternate',             'I_BARREN',
+'/planets/F/1100_alternate',             'I_BARREN',
+'/planets/F/1101_alternate',             'I_BARREN',
+'/planets/F/1110_alternate',             'I_BARREN',
+'/planets/F/1111_alternate',             'I_BARREN',
+'/planets/F/MOO_0000_alternate',         'I_MOOBARREN',
+'/planets/F/MOO_0001_alternate',         'I_MOOBARREN',
+'/planets/F/MOO_0010_alternate',         'I_MOOBARREN',
+'/planets/F/MOO_0011_alternate',         'I_MOOBARREN',
+'/planets/F/MOO_0100_alternate',         'I_BARREN',
+'/planets/F/MOO_0101_alternate',         'I_BARREN',
+'/planets/F/MOO_0110_alternate',         'I_BARREN',
+'/planets/F/MOO_0111_alternate',         'I_BARREN',
+'/planets/F/MOO_1000_alternate',         'I_MOOBARREN',
+'/planets/F/MOO_1001_alternate',         'I_MOOBARREN',
+'/planets/F/MOO_1010_alternate',         'I_MOOBARREN',
+'/planets/F/MOO_1011_alternate',         'I_MOOBARREN',
+'/planets/F/MOO_1100_alternate',         'I_BARREN',
+'/planets/F/MOO_1101_alternate',         'I_BARREN',
+'/planets/F/MOO_1110_alternate',         'I_BARREN',
+'/planets/F/MOO_1111_alternate',         'I_BARREN',
+'/planets/F/MOO_m0000_alternate',        'I_MBARRENXPM',
+'/planets/F/MOO_m0001_alternate',        'I_MBARRENXPM',
+'/planets/F/MOO_m0010_alternate',        'I_MBARRENXPM',
+'/planets/F/MOO_m0011_alternate',        'I_MBARRENXPM',
+'/planets/F/MOO_m0100_alternate',        'I_MBARRENXPM',
+'/planets/F/MOO_m0101_alternate',        'I_MBARRENXPM',
+'/planets/F/MOO_m0110_alternate',        'I_MBARRENXPM',
+'/planets/F/MOO_m0111_alternate',        'I_MBARRENXPM',
+'/planets/F/MOO_m1000_alternate',        'I_MBARRENXPM',
+'/planets/F/MOO_m1001_alternate',        'I_MBARRENXPM',
+'/planets/F/MOO_m1010_alternate',        'I_MBARRENXPM',
+'/planets/F/MOO_m1011_alternate',        'I_MBARRENXPM',
+'/planets/F/MOO_m1100_alternate',        'I_MBARRENXPM',
+'/planets/F/MOO_m1101_alternate',        'I_MBARRENXPM',
+'/planets/F/MOO_m1110_alternate',        'I_MBARRENXPM',
+'/planets/F/MOO_m1111_alternate',        'I_MBARRENXPM',
+'/planets/F/m0000_alternate',            'I_MBARRENXPM',
+'/planets/F/m0001_alternate',            'I_MBARRENXPM',
+'/planets/F/m0010_alternate',            'I_MBARRENXPM',
+'/planets/F/m0011_alternate',            'I_MBARRENXPM',
+'/planets/F/m0100_alternate',            'I_MBARRENXPM',
+'/planets/F/m0101_alternate',            'I_MBARRENXPM',
+'/planets/F/m0110_alternate',            'I_MBARRENXPM',
+'/planets/F/m0111_alternate',            'I_MBARRENXPM',
+'/planets/F/m1000_alternate',            'I_MBARRENXPM',
+'/planets/F/m1001_alternate',            'I_MBARRENXPM',
+'/planets/F/m1010_alternate',            'I_MBARRENXPM',
+'/planets/F/m1011_alternate',            'I_MBARRENXPM',
+'/planets/F/m1100_alternate',            'I_MBARRENXPM',
+'/planets/F/m1101_alternate',            'I_MBARRENXPM',
+'/planets/F/m1110_alternate',            'I_MBARRENXPM',
+'/planets/F/m1111_alternate',            'I_MBARRENXPM',
+'/planets/F_overlay/0000_alternate',     'I_BARREN_OVERLAY',
+'/planets/F_overlay/0001_alternate',     'I_BARREN_OVERLAY',
+'/planets/F_overlay/0010_alternate',     'I_BARREN_OVERLAY',
+'/planets/F_overlay/0011_alternate',     'I_BARREN_OVERLAY',
+'/planets/F_overlay/0100_alternate',     'I_BARREN_OVERLAY',
+'/planets/F_overlay/0101_alternate',     'I_BARREN_OVERLAY',
+'/planets/F_overlay/0110_alternate',     'I_BARREN_OVERLAY',
+'/planets/F_overlay/0111_alternate',     'I_BARREN_OVERLAY',
+'/planets/F_overlay/1010_alternate',     'I_BARREN_OVERLAY',
+'/planets/F_overlay/1011_alternate',     'I_BARREN_OVERLAY',
+'/planets/F_overlay/1110_alternate',     'I_BARREN_OVERLAY',
+'/planets/F_overlay/1111_alternate',     'I_BARREN_OVERLAY',
+'/planets/F_overlay/m0000_alternate',    'I_MBARREN_OVERLAY',
+'/planets/F_overlay/m0001_alternate',    'I_MBARREN_OVERLAY',
+'/planets/F_overlay/m0010_alternate',    'I_MBARREN_OVERLAY',
+'/planets/F_overlay/m0011_alternate',    'I_MBARREN_OVERLAY',
+'/planets/F_overlay/m0100_alternate',    'I_MBARREN_OVERLAY',
+'/planets/F_overlay/m0101_alternate',    'I_MBARREN_OVERLAY',
+'/planets/F_overlay/m0110_alternate',    'I_MBARREN_OVERLAY',
+'/planets/F_overlay/m0111_alternate',    'I_MBARREN_OVERLAY',
+'/planets/F_overlay/m1000_alternate',    'I_MBARREN_OVERLAY',
+'/planets/F_overlay/m1001_alternate',    'I_MBARREN_OVERLAY',
+'/planets/F_overlay/m1010_alternate',    'I_MBARREN_OVERLAY',
+'/planets/F_overlay/m1011_alternate',    'I_MBARREN_OVERLAY',
+'/planets/F_overlay/m1100_alternate',    'I_MBARREN_OVERLAY',
+'/planets/F_overlay/m1101_alternate',    'I_MBARREN_OVERLAY',
+'/planets/F_overlay/m1110_alternate',    'I_MBARREN_OVERLAY',
+'/planets/F_overlay/m1111_alternate',    'I_MBARREN_OVERLAY',
+'/planets/MOObarren_alternate',          'I_BARREN',
+'/planets/MOOmbarren_alternate',         'I_BARREN',
+'/planets/R/000_alternate',              'I_BARREN',
+'/planets/R/001_alternate',              'I_BARREN',
+'/planets/R/010_alternate',              'I_BARREN',
+'/planets/R/011_alternate',              'I_BARREN',
+'/planets/R/100_alternate',              'I_BARREN',
+'/planets/R/101_alternate',              'I_BARREN',
+'/planets/R/110_alternate',              'I_BARREN',
+'/planets/R/111_alternate',              'I_BARREN',
+'/planets/R/m000_alternate',             'I_MBARRENXPM',
+'/planets/R/m001_alternate',             'I_MBARRENXPM',
+'/planets/R/m010_alternate',             'I_MBARRENXPM',
+'/planets/R/m011_alternate',             'I_MBARRENXPM',
+'/planets/R/m100_alternate',             'I_MBARRENXPM',
+'/planets/R/m101_alternate',             'I_MBARRENXPM',
+'/planets/R/m110_alternate',             'I_MBARRENXPM',
+'/planets/R/m111_alternate',             'I_MBARRENXPM',
+'/planets/R_overlay/000_alternate',      'I_BARREN_OVERLAY',
+'/planets/R_overlay/001_alternate',      'I_BARREN_OVERLAY',
+'/planets/R_overlay/010_alternate',      'I_BARREN_OVERLAY',
+'/planets/R_overlay/011_alternate',      'I_BARREN_OVERLAY',
+'/planets/R_overlay/100_alternate',      'I_BARREN_OVERLAY',
+'/planets/R_overlay/101_alternate',      'I_BARREN_OVERLAY',
+'/planets/R_overlay/110_alternate',      'I_BARREN_OVERLAY',
+'/planets/R_overlay/111_alternate',      'I_BARREN_OVERLAY',
+'/planets/R_overlay/m000_alternate',     'I_MBARREN_OVERLAY',
+'/planets/R_overlay/m001_alternate',     'I_MBARREN_OVERLAY',
+'/planets/R_overlay/m010_alternate',     'I_MBARREN_OVERLAY',
+'/planets/R_overlay/m011_alternate',     'I_MBARREN_OVERLAY',
+'/planets/R_overlay/m100_alternate',     'I_MBARREN_OVERLAY',
+'/planets/R_overlay/m101_alternate',     'I_MBARREN_OVERLAY',
+'/planets/R_overlay/m110_alternate',     'I_MBARREN_OVERLAY',
+'/planets/R_overlay/m111_alternate',     'I_MBARREN_OVERLAY',
+'/planets/S/STND_alternate',             'I_BARREN',
+'/planets/S/THIN_alternate',             'I_BARREN',
+'/planets/S/TNTD_alternate',             'I_BARREN',
+'/planets/S/TOXC_alternate',             'I_BARREN',
+'/planets/S/mSTND_alternate',            'I_MBARRENXPM',
+'/planets/S/mTHIN_alternate',            'I_MBARRENXPM',
+'/planets/S/mTNTD_alternate',            'I_MBARRENXPM',
+'/planets/S/mTOXC_alternate',            'I_MBARRENXPM',
+'/planets/S_overlay/STND_alternate',     'I_BARREN_OVERLAY',
+'/planets/S_overlay/THIN_alternate',     'I_BARREN_OVERLAY',
+'/planets/S_overlay/TNTD_alternate',     'I_BARREN_OVERLAY',
+'/planets/S_overlay/TOXC_alternate',     'I_BARREN_OVERLAY',
+'/planets/S_overlay/mSTND_alternate',    'I_MBARREN_OVERLAY',
+'/planets/S_overlay/mTHIN_alternate',    'I_MBARREN_OVERLAY',
+'/planets/S_overlay/mTNTD_alternate',    'I_MBARREN_OVERLAY',
+'/planets/S_overlay/mTOXC_alternate',    'I_MBARREN_OVERLAY',
+'/planets/T/fedmplanet_alternate',       'I_MBARREN',
+'/planets/T/fedplanet_alternate',        'I_BARREN',
+'/planets/T/indmplanet_alternate',       'I_MBARREN',
+'/planets/T/indplanet_alternate',        'I_BARREN',
+'/planets/T/klimplanet_alternate',       'I_MBARREN',
+'/planets/T/kliplanet_alternate',        'I_BARREN',
+'/planets/T/orimplanet_alternate',       'I_MBARREN',
+'/planets/T/oriplanet_alternate',        'I_BARREN',
+'/planets/T/rommplanet_alternate',       'I_MBARREN',
+'/planets/T/romplanet_alternate',        'I_BARREN',
+'/planets/T_overlay/fedmplanet_alternate', 'I_MBARREN_OVERLAY',
+'/planets/T_overlay/fedplanet_alternate', 'I_BARREN_OVERLAY',
+'/planets/T_overlay/indmplanet_alternate', 'I_MBARREN_OVERLAY',
+'/planets/T_overlay/indplanet_alternate', 'I_BARREN_OVERLAY',
+'/planets/T_overlay/klimplanet_alternate', 'I_MBARREN_OVERLAY',
+'/planets/T_overlay/kliplanet_alternate', 'I_BARREN_OVERLAY',
+'/planets/T_overlay/orimplanet_alternate', 'I_MBARREN_OVERLAY',
+'/planets/T_overlay/oriplanet_alternate', 'I_BARREN_OVERLAY',
+'/planets/T_overlay/rommplanet_alternate', 'I_MBARREN_OVERLAY',
+'/planets/T_overlay/romplanet_alternate', 'I_BARREN_OVERLAY',
+'/planets/age0_alternate',               'I_DEFAULT',
+'/planets/age1_alternate',               'I_DEFAULT',
+'/planets/age2_alternate',               'I_DEFAULT',
+'/planets/age3_alternate',               'I_DEFAULT',
+'/planets/age4_alternate',               'I_DEFAULT',
+'/planets/asteroid_alternate',           'I_DEFAULT',
+'/planets/barren_alternate',             'I_DEFAULT',
+'/planets/barren_overlay_alternate',     'I_DEFAULT',
+'/planets/masteroid_alternate',          'I_DEFAULT',
+'/planets/mbarren_alternate',            'I_DEFAULT',
+'/planets/mbarren_overlay_alternate',    'I_DEFAULT',
+'/planets/mbarrenxpm_alternate',         'I_MBARREN',
+'/planets/mplan_noinfo_alternate',       'I_DEFAULT',
+'/planets/mwormhole_alternate',          'I_DEFAULT',
+'/planets/plan_noinfo_alternate',        'I_DEFAULT',
+'/planets/star_alternate',               'I_DEFAULT',
+'/planets/starm_alternate',              'I_DEFAULT',
+'/planets/wormhole_alternate',           'I_DEFAULT',
+'/rainbow_alternate',                    'I_DEFAULT',
+'/sbexplosion_alternate',                'I_DEFAULT',
+'/warpbeacon_alternate',                 'I_DEFAULT',
+'/warpflash_alternate',                  'I_DEFAULT',
+'/weapons/edrone_alternate',             'I_DEFAULT',
+'/weapons/edronecloud_alternate',        'I_DEFAULT',
+'/weapons/efighter_alternate',           'I_DEFAULT',
+'/weapons/efightercloud_alternate',      'I_DEFAULT',
+'/weapons/eplasmacloud_alternate',       'I_DEFAULT',
+'/weapons/eplasmatorp_alternate',        'I_DEFAULT',
+'/weapons/etorp_alternate',              'I_DEFAULT',
+'/weapons/etorpcloud_alternate',         'I_DEFAULT',
+'/weapons/kitchen_sink_alternate',       'I_DEFAULT',
+'/weapons/mdrone_alternate',             'I_DEFAULT',
+'/weapons/mdronecloud_alternate',        'I_DEFAULT',
+'/weapons/mfighter_alternate',           'I_DEFAULT',
+'/weapons/mfightercloud_alternate',      'I_DEFAULT',
+'/weapons/mplasmacloud_alternate',       'I_DEFAULT',
+'/weapons/mplasmatorp_alternate',        'I_DEFAULT',
+'/weapons/mtorp_alternate',              'I_DEFAULT',
+'/weapons/mtorpcloud_alternate',         'I_DEFAULT');
+}

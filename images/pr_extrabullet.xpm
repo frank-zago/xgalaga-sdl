@@ -1,0 +1,17 @@
+/* XPM */
+static char * pr_extrabullet_xpm[] = {
+"15 10 4 1",
+" 	c None",
+".	c #00000000AFAF",
+"X	c #00000000FFFF",
+"o	c #FFFFFFFFFFFF",
+"  ..XX  XXX..  ",
+" ..XX oo XXXX. ",
+"...XX oo XXXXX.",
+"..XXX oo XXXXXX",
+"...XXX  XXXXXXX",
+"...XXX  XXXXXXX",
+"....X oo XXXXXX",
+"..... oo XXXXX.",
+" .... oo XXXX. ",
+"  ....  .....  "};

@@ -1,0 +1,15 @@
+/* XPM */
+static char *noname_colors[] = {
+   "20 8 3 1",
+   "`	c None",
+   "a	c #909000",
+   "b	c #f0e000",
+"``a```aa```aa```aa``",
+"`aba`abba`abba`abba`",
+"abbaabaababaababaaba",
+"`abaabaababaababaaba",
+"`abaabaababaababaaba",
+"`abaabaababaababaaba",
+"`aba`abba`abba`abba`",
+"``a```aa```aa```aa``"
+};

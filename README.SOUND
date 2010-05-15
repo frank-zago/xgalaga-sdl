@@ -1,0 +1,20 @@
+
+  Sound support is currently supported for Linux, FreeBSD, and Suns
+automatically.  In addition, Paul Kendall (paul@kcbbs.gen.nz) has
+provided an NAS interface, which hopefully will work on any system
+with NAS installed.  In my case (on a Linux machine) the sound with
+NAS is not as smooth as the native sound server, but it does work.
+Paul says on his Sun the NAS method is superior.
+
+  In any case, if you are not using Linux, FreeBSD, or a Sun, and you
+want sound, make sure you have NAS installed, then add "#define
+NAS_SOUND" to the top of the Imakefile.  For most systems, that should
+be all you have to do.  If your libaudio is in a non-standard
+location, you will also have to change the Imakefile that says "NASLIB
+= -laudio" to "NASLIB = -L/path/to/libaudio -laudio"
+
+  Note that for Linux, FreeBSD and Sun, if you do not specify NAS
+sound, native sound will automatically be compiled in.  This shouldn't
+hurt anything even if you don't actually have a sound card - you just
+won't hear anything.
+

@@ -1,0 +1,14 @@
+/* XPM */
+static char * mtorp_xpm[] = {
+"5 7 4 1",
+" 	c None",
+".	c #797979797979",
+"X	c #BCBCBCBCBCBC",
+"o	c #FFFFFFFFFFFF",
+" .X. ",
+".XoX.",
+".XoX.",
+".XoX.",
+" .X. ",
+"  .  ",
+".XoX."};

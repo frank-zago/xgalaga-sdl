@@ -1,0 +1,31 @@
+/* XPM */
+static char *noname[] = {
+/* width height ncolors chars_per_pixel */
+"113 20 4 1",
+/* colors */
+"` c None",
+"a c #600000",
+"b c #E00000",
+"c c #A00000",
+/* pixels */
+"`````````````````````````````````````````````````````````````````````````````````````````````````````````````````",
+"`````````````````````````````````````````````````````````````````````````````````````````````````````````````````",
+"`````````````````````````````````````````````````````````````````````````````````````````````````````````````````",
+"````````````````````aaaaaaa`aa````aa```aaaaaaaa`aaaaaa````aaaaa```````````aaaaaaa`aa```aa`aaaaaa`aaaaaaa`````````",
+"```````````````````acccccccacca`aacca`accccccccacccccca`aaccccca````````aacccccccacca`accaccccccaccccccca````````",
+"``````````````````acbbbbbbbcbbcaccbbcacbbbbbbbbcbbbbbbcaccbbbbbca``````accbbbbbbbcbbcacbbcbbbbbbcbbbbbbbca```````",
+"`````````````````acbbcccccccbbccbbcca`accbbccccbbcccbbccbbcccbbca`````acbbcccccccbbcacbbcacbbcccbbccccbbca```````",
+"````````````````acbbcccaaaacbbbbccaa``acbbcaacbbcccbbccbbcacbbca`````acbbccccaacbbcacbbcacbbcacbbcaacbbca````````",
+"```````````````acbbcbbbcaaccbbccaa```acbbcaacbbccbbcccbbcacbbca``````acbbbbbbccbbbbcbbcacbbcacbbccccbbca`````````",
+"``````````````acbbcacccaccbbbbca````acbbcaacbbcbbbbccbbcacbbca`````aaaaccccbbcbbcccbbcacbbcacbbcbbbbcca``````````",
+"`````````````acbbccccaccbbccbbca```acbbcaacbbcaccbbcbbcacbbca`````acccccccbbcbbcacbbcccbbcacbbcaccccaa```````````",
+"````````````acbbbbbbbcbbccacbbca``acbbcaacbbcaacbbcbbbbcbbca`````acbbbbbbbccbbcacbbcbbbbbbcbbca`aaaa`````````````",
+"`````````````acccccccaccaaacbbca`acbbca``accaacbbcaccccbbca```````acccccccaaccacbbcaccccccbbca```````````````````",
+"``````````````aaaaaaa`aa``acbbcaacbbca````aaacbbca`aacbbca`````````aaaaaaa``aacbbca`aaaacbbca````````````````````",
+"```````````````````````````acca``acca````````acca````acca`````````````````````acca``````acca`````````````````````",
+"````````````````````````````aa````aa``````````aa``````aa```````````````````````aa````````aa``````````````````````",
+"`````````````````````````````````````````````````````````````````````````````````````````````````````````````````",
+"`````````````````````````````````````````````````````````````````````````````````````````````````````````````````",
+"`````````````````````````````````````````````````````````````````````````````````````````````````````````````````",
+"`````````````````````````````````````````````````````````````````````````````````````````````````````````````````"
+};

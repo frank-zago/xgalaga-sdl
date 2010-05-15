@@ -1,0 +1,19 @@
+/* XPM */
+static char * pr_lemon_xpm[] = {
+"15 10 6 1",
+" 	c None",
+".	c #909000008282",
+"X	c #D4D40000BFBF",
+"o	c #FFFFFFFF0000",
+"O	c #999995953E3E",
+"+	c #FFFFFFFFFFFF",
+"  ...X   XX..  ",
+" ..XX ooo XXX. ",
+"...X Ooo+o XXX.",
+"..X Ooooo+o XXX",
+".. OOooooooo XX",
+".. OOOoooooo XX",
+"... OOOoooo XXX",
+".... OOOoO XXX.",
+" .... OOO XXX. ",
+"  ....   ....  "};

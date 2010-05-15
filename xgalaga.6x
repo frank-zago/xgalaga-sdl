@@ -1,0 +1,71 @@
+.TH XGALAGA 6x "8 February 2008" "2.1"
+.SH NAME
+xgalaga \- X11 version of the famous Galaga game
+.SH SYNOPSIS
+.B xgalaga
+[options]
+.P
+.B xgalaga-hyperspace
+[options]
+.SH INSTRUCTIONS
+.LP
+It's Galaga, you know how to play Galaga, stop bothering me.
+(Ship follows the mouse, button fires.  Auto-fire by holding it
+down, so no-one accuses me of breaking their mouse!)
+.P
+The xgalaga-hyperspace version features some new weapons and different
+gameplay.
+.SH OPTIONS
+.TP 8
+.B \-scores
+Prints out the high score file and exits
+.TP 8
+.B \-display \fIhost:dpy\fP
+Set your display
+.TP 8
+.B \-mouse
+Use mouse control (same as 'm').
+.TP 8
+.B \-keyboard
+Use keyboard control (same as 'k').
+If you have a joystick it can also be used if you select keyboard control.
+.TP 8
+.B \-nosound
+Turn sound OFF
+.TP 8
+.B \-level \fIlvl\fP
+Choose starting level (>= 1)
+.TP 8
+.B \-window
+Run in a window, not full screen. Full screen is the default.
+.TP 8
+.B \-winsize \fIwidthxheight\fP
+Set window size.
+.TP 8
+.B \-b
+Turn buffered mode off, use this if it runs too slowly.  Will cause 
+flicker, maybe lots, maybe only a little.
+.SH KEYBOARD COMMANDS
+.TP 8
+p - pauses
+.TP 8
+q - end this game
+.TP 8
+Q - end xgalaga immediately
+.TP 8
+b - Toggle buffering (flicker vs. speed.)
+.TP 8
+m - Use mouse control. Note that you may switch in mid-game.
+.TP 8
+k - Use keyboard control
+.TP 8
+s - Toggle sound
+.TP 8
+x - use your shields (xgalaga-hyperspace only)
+.TP 8
+alt-enter - Toggle full screen node.
+.SH AUTHORS
+Joe Rumsey, <\fIjoe@rumsey.org\fP> (Original author)
+.LP
+Vincent Renardias <\fIvincent@waw.com\fP> (man page)
+

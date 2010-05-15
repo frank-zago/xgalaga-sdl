@@ -1,0 +1,17 @@
+/* XPM */
+static char * pr_trip_xpm[] = {
+"15 10 4 1",
+" 	c None",
+".	c #00000000AFAF",
+"X	c #00000000FFFF",
+"o	c #FFFFFFFFFFFF",
+"  ..XXX XXX..  ",
+" ..XXX o XXXX. ",
+".  XXX o XXX  .",
+". o XX o XX o X",
+".. o X o X o XX",
+"... o  o  o XXX",
+".... o o o XXXX",
+"..... ooo XXXX.",
+" .....   XXXX. ",
+"  ...........  "};

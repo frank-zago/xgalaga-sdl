@@ -1,0 +1,81 @@
+/* config.h.in.  Generated automatically from configure.in by autoheader.  */
+/* NOSCOREHOGS limits each user to one high score in the global list */
+#undef NOSCOREHOGS
+
+/* USE_REAL_NAMES enters user names from the system's user list instead of asking */
+#undef USE_REAL_NAMES
+
+/* Whether to compile with sound support or not */
+#undef SOUND
+
+/* Use NAS instead of a native sound driver */
+#undef NAS_SOUND
+
+/* The sound device to use (E.G. /dev/dsp) */
+#undef SOUNDDEV
+
+/* The directory where sound server is located */
+#undef SOUNDSRVDIR
+
+//* Where to put the global high scores */
+#undef SCOREFILE
+
+/* The CREDITS file */
+#undef CREDITSFILE
+
+/* Where to put the sound files */
+#undef SOUNDDIR
+
+/* Where to put the level files */
+#undef LEVELDIR
+
+/* ----------------------------------------------------
+ * You shouldn't have to touch anything below this line
+ * ----------------------------------------------------
+ */
+#undef IMAGEDIR
+
+/* Define to empty if the keyword does not work.  */
+#undef const
+
+/* Define as the return type of signal handlers (int or void).  */
+#undef RETSIGTYPE
+
+/* Define if you have the ANSI C header files.  */
+#undef STDC_HEADERS
+
+/* Define if you can safely include both <sys/time.h> and <time.h>.  */
+#undef TIME_WITH_SYS_TIME
+
+/* Define if the X Window System is missing or not being used.  */
+#undef X_DISPLAY_MISSING
+
+/* Define if you have the gettimeofday function.  */
+#undef HAVE_GETTIMEOFDAY
+
+/* Define if you have the lrand48 function.  */
+#undef HAVE_LRAND48
+
+/* Define if you have the random function.  */
+#undef HAVE_RANDOM
+
+/* Define if you have the select function.  */
+#undef HAVE_SELECT
+
+/* Define if you have the <fcntl.h> header file.  */
+#undef HAVE_FCNTL_H
+
+/* Define if you have the <malloc.h> header file.  */
+#undef HAVE_MALLOC_H
+
+/* Define if you have the <strings.h> header file.  */
+#undef HAVE_STRINGS_H
+
+/* Define if you have the <sys/ioctl.h> header file.  */
+#undef HAVE_SYS_IOCTL_H
+
+/* Define if you have the <sys/time.h> header file.  */
+#undef HAVE_SYS_TIME_H
+
+/* Define if you have the <unistd.h> header file.  */
+#undef HAVE_UNISTD_H
