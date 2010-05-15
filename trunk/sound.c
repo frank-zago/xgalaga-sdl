@@ -1,135 +1,94 @@
 /*
- * sound.c - Platform Independant Sound Support - Apr. 1995
- *
- * Copyright 1994-1995 Sujal M. Patel (smpatel@wam.umd.edu)
- * Conditions in "copyright.h"          
- */
+Copyright (c) 2000 Andy Tarkinson <atark@thepipeline.net>
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2 
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+*/
 
 #include <config.h>
 
-#ifdef SOUND
+#include <SDL.h>
+#include <SDL_mixer.h>
 
-#include <stdio.h>
-#ifdef STDC_HEADERS
-# include <stdlib.h>
-#endif
-#ifdef HAVE_UNISTD_H
-# include <unistd.h>
-#endif
-#ifdef HAVE_SYS_TIME_H
-# include <sys/time.h>
-#endif
-#ifdef HAVE_FCNTL_H
-# include <fcntl.h>
-#endif
-#include <signal.h>
-#include <sys/stat.h>
-#include <string.h>
-#include "struct.h"
 #include "data.h"
+#include "proto.h"
 
-static int soundfd;
-static char audioOK = 1;
-static char sound_flags[20]; /* Sound Flag for sound 1-19 */
+static int audioOK;
 
+static const char *FILENAME[] = {
+	"explode.wav",
+	"firetorp.wav",
+	"shield.wav",
+	"torphit.wav",
+	"explode_big.wav",
+	"ddloo.wav",
+	"warp.wav",
+	"smart.wav",
+};
+
+#define NUM_SOUNDS  (sizeof(FILENAME)/sizeof(char*))
+
+static Mix_Chunk *sounds[NUM_SOUNDS];
 
 void init_sound ()
 {
-  int i, child,fd[2];
-  char *argv[4];
-  char filename[512];
+	int i;
+	char s[1024];
 
-  signal(SIGPIPE, SIG_IGN);
-  signal(SIGCHLD, SIG_IGN);
+    /* Open the audio device */
+    if (Mix_OpenAudio(11025, AUDIO_U8, 1, 512) < 0 ) {
+        fprintf(stderr,
+				"Warning: Couldn't set 11025 Hz 8-bit audio\n- Reason: %s\n",
+				SDL_GetError());
+		return;
+    }
 
-  /* Do not initialize sound if it is not going to be used -- JEH */
-  if (! playSounds)
-	  return;
+	for (i=0;i<NUM_SOUNDS;i++) {
 
-  if(unixSoundPath[0] == '?')  {
-      audioOK = 0;
-      return;
-  };
+#if 0
+		todo;
+		strcpy(s, SOUNDDIR);
+		strcat(s, "/");
+		strcat(s, FILENAME[i]);
+#else
+		sprintf(s, "sounds/%s", FILENAME[i]);
+#endif
+		sounds[i] = Mix_LoadWAV(s);
 
-  /*  Create a pipe, set the write end to close when we exec the sound server,
-      and set both (is the write end necessary?) ends to non-blocking   */
-  if (pipe(fd)) {
-      audioOK = 0;
-      return;
-  }
-  soundfd=fd[1];
+		if (!sounds[i])
+			fprintf(stderr,
+					"Warning: Couldn't load sound %s\n", s);
+	}
 
-  if( !(child=fork()) )  {
-      close(fd[1]);
-      dup2(fd[0],STDIN_FILENO);
-      close(fd[0]);
-      sprintf (filename, SOUNDSERVER);
-      argv[0] = filename;
-      argv[1] = unixSoundPath;
-      argv[2] = unixSoundDev;
-      argv[3] = NULL;
-      execvp(filename, argv);
-      fprintf (stderr, "Couldn't Execute Sound Server %s!\n", filename);
-      exit (0);
-  };
-  close(fd[0]);
+	audioOK = 1;
+}
 
-  sleep(1);
-
-  if (kill(child, 0))  {
-      audioOK = 0;  
-      close(soundfd);
-  };
-
-  for (i = 0; i < 19; i++) sound_flags[i] = 0;
-} 
-
-void play_sound (k)
-int k;
+void sound_exit(void)
 {
-  char c;
+	int i;
 
-  c = k;
-  if ((playSounds) && (audioOK))
-    if(write (soundfd, &c, sizeof (c)) != sizeof (c))
-      audioOK = 0;
+	if (audioOK) {
+		Mix_CloseAudio();
+		for (i=0;i<NUM_SOUNDS;i++) {
+			Mix_FreeChunk(sounds[i]);
+		}
+		audioOK = 0;
+	}
 }
 
-
-
-void maybe_play_sound (k)
-int k;
+void play_sound (int sound)
 {
-  char c;
-
-  if (sound_flags[k] & 1) return;
-
-  sound_flags[k] |= 1;
-
-  c = (unsigned char)(k);
-  if ((playSounds) && (audioOK))
-    if(write (soundfd, &c, sizeof (c)) != sizeof (c))
-      audioOK = 0;
+	if (audioOK && playSounds)
+		Mix_PlayChannel(sound, sounds[sound], 0);
 }
-
-
-
-void sound_completed (k)
-int k;
-{
-  sound_flags[k] &= ~1;
-}
-
-
-
-void kill_sound ()
-{ 
-  char c;
-
-  c = -1;               
-  if ((playSounds) && (audioOK))
-    if(write (soundfd, &c, sizeof (c)) != sizeof (c))
-      audioOK = 0;
-}
-
-#endif /* SOUND */

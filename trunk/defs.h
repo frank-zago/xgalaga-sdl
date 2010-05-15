@@ -7,7 +7,7 @@
 
 #ifndef ORIGINAL_XGALAGA
 # define ENABLE_SHIP_WRAP
-# define ENABLE_SPREAD_SHOT 1 
+# define ENABLE_SPREAD_SHOT 1
 # define ENABLE_MACHINE_GUN 1
 # define DISABLE_RESET_ON_DEATH
 # define ACTIVATED_SHIELD
@@ -54,7 +54,7 @@
 #endif
 
 #ifdef ORIGINAL_XGALAGA
-  #define NUMWEAPONS 3 
+  #define NUMWEAPONS 3
 #else
  #define NUMWEAPONS 3 + ENABLE_SPREAD_SHOT + ENABLE_MACHINE_GUN
 #endif
@@ -83,3 +83,5 @@
 
 
 #define ALIENSHAPES 17
+
+#define FPS 30

@@ -2,71 +2,64 @@
    data [BDyess] */
 /* automatically created by scripts/mkimgsrc */
 
-#include "Wlib.h"
+struct W_Image {
+	int width, height;
+	int frames;				/* nviews for ships */
+	char *filename;			/* filename without .xpm/.xbm extension*/
+	SDL_Surface *surface;	/* ptr to SDL surface */
+};
 
-W_Image * getImage P((int offset));
-void loadImageByFilename P((char *filename));
-void loadAllImages P((void));
+enum {
+	I_FIRST,
 
-#define I_DEFAULT              0
-#define I_AL                   0
-#define I_ALIEN1               1
-#define I_ALIEN10              2
-#define I_ALIEN11              3
-#define I_ALIEN12              4
-#define I_ALIEN13              5
-#define I_ALIEN14              6
-#define I_ALIEN15              7
-#define I_ALIEN16              8
-#define I_ALIEN17              9
-#define I_ALIEN2               10
-#define I_ALIEN3               11
-#define I_ALIEN4               12
-#define I_ALIEN5               13
-#define I_ALIEN6               14
-#define I_ALIEN7               15
-#define I_ALIEN8               16
-#define I_ALIEN9               17
-#define I_ETORP                18
-#define I_EXPLOSION            19
-#define I_EXTRA                20
-#define I_MINISHIP             21
-#define I_MTORP                22
-#define I_PAUSE                23
-#define I_PLAYER1              24
-#define I_PLAYER2              25
-#define I_PLAYER3              26
-#define I_PR_BLANK             27
-#define I_PR_BRAIN             28
-#define I_PR_DOUB              29
-#define I_PR_EXTRABULLET       30
-#define I_PR_LEMON             31
+	I_AL = I_FIRST,
+	I_ALIEN1,
+	I_ALIEN10,
+	I_ALIEN11,
+	I_ALIEN12,
+	I_ALIEN13,
+	I_ALIEN14,
+	I_ALIEN15,
+	I_ALIEN16,
+	I_ALIEN17,
+	I_ALIEN2,
+	I_ALIEN3,
+	I_ALIEN4,
+	I_ALIEN5,
+	I_ALIEN6,
+	I_ALIEN7,
+	I_ALIEN8,
+	I_ALIEN9,
+	I_ETORP,
+	I_EXPLOSION,
+	I_EXTRA,
+	I_MINISHIP,
+	I_MTORP,
+	I_PAUSE,
+	I_PLAYER1,
+	I_PLAYER2,
+	I_PLAYER3,
+	I_PR_BRAIN,
+	I_PR_DOUB,
+	I_PR_EXTRABULLET,
+	I_PR_LEMON,
+	I_PR_SHIELD,
+	I_PR_SING,
+	I_PR_SPEED,
+	I_PR_TRIP,
+	I_S1000,
+	I_S2000,
+	I_S4000,
+	I_S500,
+	I_SHIELD,
+	I_TITLE,
 
-#ifndef ORIGINAL_XGALAGA
-#define I_PR_MACHINE           32
-#define I_PR_SHIELD            33
-#define I_PR_SING              34
-#define I_PR_SPEED             35
-#define I_PR_SPREAD            36
-#define I_PR_TRIP              37
-#define I_S1000                38
-#define I_S2000                39
-#define I_S4000                40
-#define I_S500                 41
-#define I_SHIELD               42
-#define I_TITLE                43
-#define I_LAST                 44
-#else
-#define I_PR_SHIELD            32
-#define I_PR_SING              33
-#define I_PR_SPEED             34
-#define I_PR_TRIP              35
-#define I_S1000                36
-#define I_S2000                37
-#define I_S4000                38
-#define I_S500                 39
-#define I_SHIELD               40
-#define I_TITLE                41
-#define I_LAST                 42
-#endif /* ORIGINAL_XGALAGA */
+	F_REG_GREEN,
+	F_REG_CYAN,
+	F_REG_YELLOW,
+	F_REG_RED,
+	F_REG_GREY,
+	F_BIG_RED,
 
+	I_LAST = F_BIG_RED,
+};
