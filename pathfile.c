@@ -31,7 +31,6 @@
 
 #include "struct.h"
 #include "paths.h"
-#include "pathfile.h"
 #include "data.h"
 #include "defs.h"
 
