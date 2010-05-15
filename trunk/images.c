@@ -112,10 +112,8 @@ int loadAllImages()
 	int i;
 
 	for (i = I_FIRST; i <= I_LAST; i++)
-		if (!loadImage(i)) {
-			printf("FZ %d\n", i);
+		if (!loadImage(i))
 			return 0;
-		}
 
 	return 1;
 }

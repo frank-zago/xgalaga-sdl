@@ -70,7 +70,7 @@ static void show_points()
 
 static void show_bonuses(int top)
 {
-	
+
 }
 
 static void show_help(int top)
@@ -88,7 +88,7 @@ static void show_help(int top)
 #ifndef ORIGINAL_XGALAGA
     center_text("  x                  toggle shields  ", top+8*dy, fnt_reg_cyan);
 #endif
-	  
+
     center_text("Bonus ships at 20,000, 50,000, then every 50,000.", top+10*dy, fnt_reg_green);
     center_text("XGalaga Home page: http://rumsey.org/xgal.html", top+12*dy, fnt_reg_cyan);
 }
@@ -111,7 +111,6 @@ static void read_credits()
 		return;
 
     hsf = open (CREDITSFILE, O_RDONLY);
-	printf("fz- hsf=%d\n", hsf);
     if (hsf > 0) {
 		l = read (hsf, chFBuf, 8000);
 		chFBuf[l] = 0x00;
@@ -131,7 +130,7 @@ static void read_credits()
 				case 6: case 7: case 8: case 9:
 				case 11: case 12: case 13: case 14:case 15:
 				case 16: case 17: case 18: case 19:
-					// ignore control characters 
+					// ignore control characters
 					break;
 				default:
 					chLBuf[j++] = chFBuf[i];            // visible character
@@ -224,7 +223,7 @@ void do_title()
     if (!(pagetimer % (SFont_TextHeight(fnt_reg_yellow)*SPEEDFACTOR))) {
 		giActCreditLine++;
 		if (giActCreditLine > giCreditLines)
-			giActCreditLine = 0; 
+			giActCreditLine = 0;
     }
 
     if (!pagetimer) {
