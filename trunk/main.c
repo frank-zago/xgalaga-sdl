@@ -774,7 +774,7 @@ static void do_player(int but)
             switch(event.type) {
 			case SDL_QUIT:
 				xgal_exit(0);
-                    break;
+				break;
 
             case SDL_KEYDOWN:
                 switch(event.key.keysym.sym) {
@@ -797,6 +797,14 @@ static void do_player(int but)
 					return;     /* this key must not start the game */
 					break;
 
+				case SDLK_RIGHT:
+					title_page_next();
+					break;
+
+				case SDLK_LEFT:
+					title_page_prev();
+					break;
+
 				default:
                     return;     /* unhandled key must not cause any action */
 					break;
@@ -816,7 +824,7 @@ static void do_player(int but)
             switch(event.type) {
 			case SDL_QUIT:
 				xgal_exit(0);
-                    break;
+				break;
 
             case SDL_KEYDOWN:
                 if (score_key(event.key.keysym.sym))

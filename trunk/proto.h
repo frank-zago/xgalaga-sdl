@@ -35,6 +35,8 @@ void new_alien(int level, int i, struct alien *al);
 void do_pause(void);
 void do_title(void);
 void init_titles(void);
+void title_page_next(void);
+void title_page_prev(void);
 
 /* explosions.c */
 void undo_explosions(void);
@@ -63,6 +65,7 @@ void init_prizes(void);
 void new_prize(int x, int y);
 void undo_prizes(void);
 void do_prizes(void);
+void show_bonuses(int top);
 
 /* sound.c */
 void init_sound(void);

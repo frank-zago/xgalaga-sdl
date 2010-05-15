@@ -86,11 +86,6 @@ static void show_points()
 }
 #endif
 
-static void show_bonuses(int top)
-{
-
-}
-
 static void show_help(int top)
 {
 	int dy = SFont_TextHeight(fnt_reg_red);
@@ -203,6 +198,22 @@ void show_credits()
 	}
 }
 
+void title_page_next(void)
+{
+	title_page++;
+	if (title_page == NUM_TITLE_PAGES)
+		title_page = 0;
+	pagetimer = 299;
+}
+
+void title_page_prev(void)
+{
+	if (title_page == 0)
+		title_page = NUM_TITLE_PAGES - 1;
+	else
+		title_page--;
+	pagetimer = 299;
+}
 
 void do_title()
 {
