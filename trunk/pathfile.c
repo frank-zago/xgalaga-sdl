@@ -1,8 +1,24 @@
-/* $Id: pathfile.c,v 1.3 1998/04/30 05:11:56 mrogre Exp $ */
-/* Copyright (c) 1998 Joe Rumsey (mrogre@mediaone.net) */
-#include "copyright.h"
-#include <config.h>
+/*
+ * XGalaga-SDL - a SDL port of XGalaga, clone of the game Galaga
+ * Copyright (c) 1995-1998 Joe Rumsey (mrogre@mediaone.net)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ */
 
+#include <config.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -67,7 +83,7 @@ get_line(FILE* file, char* buf)
 	    fprintf(stderr, "get_line: Line too long\n");
 	    return -1;
 	}
-	
+
 	strcpy(buf + strlen(buf), nextline);
 
 	if(nextline[strlen(nextline) -1] != '\\')
@@ -86,8 +102,8 @@ get_token(char* line, int* elem, char** data)
     char *datastart;
 
     *elem = -1;
-    
-    if(strncmp(line, "paths:", 6) == 0) {	
+
+    if(strncmp(line, "paths:", 6) == 0) {
 	pt = PF_PATHS;
     } else if (strncmp(line, "path.", 5) == 0) {
 	if(line[5] >= '0' && line[5] <= '9')
@@ -191,7 +207,7 @@ parse_path(int pnum, char* pstr)
 	}
 
 	duration = atoi(fnd);
-	
+
 	epaths[pnum][curentry].dir = gotdir;
 	epaths[pnum][curentry].duration = duration;
 	curentry++;
@@ -321,7 +337,7 @@ read_level(int lev)
     lf = fopen(filename, "r");
     if(!lf) {
 	/* Dont use recursion, to avoid stack overflow if start level is
-	 * very high (or the game is played for a _very_ long time. :-) 
+	 * very high (or the game is played for a _very_ long time. :-)
 	 * -- JEH */
 	for (lev = lev - maxLevel; lev > 0 && ! lf ;lev = lev - maxLevel) {
 		metaLevel++;
@@ -329,7 +345,7 @@ read_level(int lev)
 		sprintf(filename, "%s/level%d.xgl", real_level_path, lev);
 		lf = fopen(filename, "r");
 	}
-	
+
         //fprintf(stderr, "Can't open level file %s\n", filename);
 	//return read_level(lev - maxLevel);
     }
@@ -353,7 +369,7 @@ read_level(int lev)
 	    fclose(lf);
 	    return 0;
 	}
-	
+
 	switch((tok = get_token(readline, &elem, &data))) {
 	case PF_PATHDEF:
 	    parse_path(elem, data);
@@ -373,7 +389,7 @@ read_level(int lev)
     }
 
     fclose(lf);
-    
+
     if(gotShapes && gotPaths && gotDelays) {
 	return 1;
     }

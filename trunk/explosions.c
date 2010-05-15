@@ -1,6 +1,23 @@
-/* $Id: explosions.c,v 1.2 1998/04/30 05:11:54 mrogre Exp $ */
-/* Copyright (c) 1998 Joe Rumsey (mrogre@mediaone.net) */
-#include "copyright.h"
+/*
+ * XGalaga-SDL - a SDL port of XGalaga, clone of the game Galaga
+ * Copyright (c) 1995-1998 Joe Rumsey (mrogre@mediaone.net)
+ * Copyright (c) 2010 Frank Zago
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ */
 
 #include <config.h>
 
@@ -45,8 +62,8 @@ static void do_bubbles()
 			bub->count--;
 			bub->y--;
 		}
-		S_DrawImage(bub->x-(bub->shape->width/2), 
-					bub->y-(bub->shape->height/2), 
+		S_DrawImage(bub->x-(bub->shape->width/2),
+					bub->y-(bub->shape->height/2),
 					0, bub->shape);
 		bub=bub->next;
     }
@@ -77,10 +94,10 @@ void do_explosions()
     struct explosion *exp=first_exp;
 
     while(exp) {
-		S_DrawImage(exp->x-(exp->shape->width/2), 
-					exp->y-(exp->shape->height/2), 
+		S_DrawImage(exp->x-(exp->shape->width/2),
+					exp->y-(exp->shape->height/2),
 					exp->frame, exp->shape);
-		if(gstate == PLAYING) 
+		if(gstate == PLAYING)
 			exp->frame++;
 		exp=exp->next;
     }
