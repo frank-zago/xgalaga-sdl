@@ -19,14 +19,6 @@
  * 02110-1301, USA.
  */
 
-#include <unistd.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/ioctl.h>
-#include <fcntl.h>
-#include <errno.h>
-
 #include "data.h"
 #include "struct.h"
 #include "defs.h"
