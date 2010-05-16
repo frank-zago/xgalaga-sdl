@@ -95,7 +95,3 @@ void S_ClearScreen(void);
 void S_DrawImage (int x, int y, int frame,
 				  struct W_Image *image);
 void toggle_fullscreen(void);
-
-//todo: remove
-#define center_text(buf, y, font) SFont_WriteCenter((font), (y), (buf))
-
