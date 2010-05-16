@@ -20,12 +20,15 @@
  * 02110-1301, USA.
  */
 
+#include "config.h"
+
 #include <SDL/SDL.h>
 #include <SDL_image.h>
 
 #include "images.h"
 #include "struct.h"
 #include "proto.h"
+#include "defs.h"
 
 static struct W_Image imagearray[] = {
 	/* Bitmaps. */
@@ -84,13 +87,14 @@ static struct W_Image *loadImage(int offset)
 {
 	struct W_Image *image = &imagearray[offset];
 	SDL_Surface *simage;
-	char fname[100];
+	char filename[MAXFILENAME];
 
     if (image->surface)
 		return image;
 
-	sprintf(fname, "images/%s.png", image->filename);
-	simage = IMG_Load(fname);
+	snprintf(filename, MAXFILENAME, "%s/%s.png", IMAGEDIR, image->filename);
+	filename[MAXFILENAME-1] = '\0';
+	simage = IMG_Load(filename);
 	if (!simage)
 		return NULL;
 

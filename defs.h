@@ -103,3 +103,5 @@
 #define ALIENSHAPES 17
 
 #define FPS 30
+
+#define MAXFILENAME 1024
