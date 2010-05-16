@@ -34,8 +34,6 @@
 #include "data.h"
 #include "defs.h"
 
-#define MAXFILENAME 1024
-
 #define MAXPATHLEN 50
 #define MAXLINE 1024
 
@@ -314,83 +312,68 @@ read_level(int lev)
     FILE* lf;
     PathfileToken tok;
     static int maxLevel = 1;
-    static char *real_level_path = 0;
-    struct stat statbuf;
 
-    if(!real_level_path)
-    {
-	sprintf(filename, "%s", LEVELDIR);
-	if(stat(filename, &statbuf) != 0 || !(statbuf.st_mode & S_IFDIR)) {
-	    sprintf(filename, "./levels");
-	    if(stat(filename, &statbuf) != 0 || !(statbuf.st_mode & S_IFDIR)) {
-		fprintf(stderr, "Can't find level directory %s OR ./levels\n",
-			XGALAGADIR);
-		return -1;
-	    }
-	}
-	real_level_path = malloc(strlen(filename) + 1);
-	strcpy(real_level_path, filename);
-    }
-
-    sprintf(filename, "%s/level%d.xgl", real_level_path, lev);
+    snprintf(filename, MAXFILENAME, "%s/level%d.xgl", LEVELDIR, lev);
+	filename[MAXFILENAME-1] = '\0';
     lf = fopen(filename, "r");
     if(!lf) {
-	/* Dont use recursion, to avoid stack overflow if start level is
-	 * very high (or the game is played for a _very_ long time. :-)
-	 * -- JEH */
-	for (lev = lev - maxLevel; lev > 0 && ! lf ;lev = lev - maxLevel) {
-		metaLevel++;
-		/* real_level_path is already set, so.. */
-		sprintf(filename, "%s/level%d.xgl", real_level_path, lev);
-		lf = fopen(filename, "r");
-	}
+		/* Dont use recursion, to avoid stack overflow if start level is
+		 * very high (or the game is played for a _very_ long time. :-)
+		 * -- JEH */
+		for (lev = lev - maxLevel; lev > 0 && ! lf ;lev = lev - maxLevel) {
+			metaLevel++;
+			/* real_level_path is already set, so.. */
+			snprintf(filename, MAXFILENAME, "%s/level%d.xgl", LEVELDIR, lev);
+			filename[MAXFILENAME-1] = '\0';
+			lf = fopen(filename, "r");
+		}
 
         //fprintf(stderr, "Can't open level file %s\n", filename);
-	//return read_level(lev - maxLevel);
+		//return read_level(lev - maxLevel);
     }
 
     if(lev > maxLevel)
-	maxLevel = lev;
+		maxLevel = lev;
 
     while(!feof(lf)) {
-	if((rlen = get_line(lf, readline)) <= 0) {
-	    if(gotShapes && gotPaths && gotDelays) {
-		return 1;
-	    }
-	    fprintf(stderr, "Error reading level file %s:\n", filename);
-	    if(!gotShapes)
-		fprintf(stderr, "  Missing shapes\n");
-	    if(!gotPaths)
-		fprintf(stderr, "  Missing paths\n");
-	    if(!gotDelays)
-		fprintf(stderr, "  Missing delays\n");
+		if((rlen = get_line(lf, readline)) <= 0) {
+			if(gotShapes && gotPaths && gotDelays) {
+				return 1;
+			}
+			fprintf(stderr, "Error reading level file %s:\n", filename);
+			if(!gotShapes)
+				fprintf(stderr, "  Missing shapes\n");
+			if(!gotPaths)
+				fprintf(stderr, "  Missing paths\n");
+			if(!gotDelays)
+				fprintf(stderr, "  Missing delays\n");
 
-	    fclose(lf);
-	    return 0;
-	}
+			fclose(lf);
+			return 0;
+		}
 
-	switch((tok = get_token(readline, &elem, &data))) {
-	case PF_PATHDEF:
-	    parse_path(elem, data);
-	    break;
-	case PF_SHAPES:
-	    gotShapes = parse_shapes(data);
-	    break;
-	case PF_PATHS:
-	    gotPaths = parse_paths(data);
-	    break;
-	case PF_DELAYS:
-	    gotDelays = parse_delays(data);
-	    break;
-	default:
-	    break;
-	}
+		switch((tok = get_token(readline, &elem, &data))) {
+		case PF_PATHDEF:
+			parse_path(elem, data);
+			break;
+		case PF_SHAPES:
+			gotShapes = parse_shapes(data);
+			break;
+		case PF_PATHS:
+			gotPaths = parse_paths(data);
+			break;
+		case PF_DELAYS:
+			gotDelays = parse_delays(data);
+			break;
+		default:
+			break;
+		}
     }
 
     fclose(lf);
 
     if(gotShapes && gotPaths && gotDelays) {
-	return 1;
+		return 1;
     }
 
     return 0;

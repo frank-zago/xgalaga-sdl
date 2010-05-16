@@ -1286,8 +1286,6 @@ int main(int argc, char *argv[])
 
     SDL_WM_SetCaption("XGalaga (SDL)", NULL);
 
-// todo fz    W_SetImageDir(IMAGEDIR);
-
 	if (!loadAllImages()) {
 		fprintf(stderr, "Cannot load one or more images\n");
 		return -1;

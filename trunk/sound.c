@@ -28,6 +28,7 @@
 
 #include "data.h"
 #include "proto.h"
+#include "defs.h"
 
 static int audioOK;
 
@@ -49,7 +50,7 @@ static Mix_Chunk *sounds[NUM_SOUNDS];
 void init_sound ()
 {
 	int i;
-	char s[1024];
+	char filename[MAXFILENAME];
 
     /* Open the audio device */
     if (Mix_OpenAudio(11025, AUDIO_U8, 1, 512) < 0 ) {
@@ -59,21 +60,13 @@ void init_sound ()
 		return;
     }
 
-	for (i=0;i<NUM_SOUNDS;i++) {
-
-#if 0
-		todo;
-		strcpy(s, SOUNDDIR);
-		strcat(s, "/");
-		strcat(s, FILENAME[i]);
-#else
-		sprintf(s, "sounds/%s", FILENAME[i]);
-#endif
-		sounds[i] = Mix_LoadWAV(s);
+	for (i=0; i<NUM_SOUNDS; i++) {
+		snprintf(filename, MAXFILENAME, "%s/%s", SOUNDDIR, FILENAME[i]);
+		filename[MAXFILENAME-1] = '\0';
+		sounds[i] = Mix_LoadWAV(filename);
 
 		if (!sounds[i])
-			fprintf(stderr,
-					"Warning: Couldn't load sound %s\n", s);
+			fprintf(stderr, "Warning: Couldn't load sound %s\n", filename);
 	}
 
 	audioOK = 1;
