@@ -81,8 +81,8 @@ static void show_points()
 				   S_Yellow, buf, strlen(buf), W_RegularFont);
     }
     ty = 220+i*21;
-    center_text("Ships in convoy are worth 50 points", ty, S_Green); ty += RegularFont.height;
-    center_text("Bonus ships at 20,000, 50,000, then every 50,000.", ty, S_Green);
+    SFont_WriteCenter("Ships in convoy are worth 50 points", ty, S_Green); ty += RegularFont.height;
+    SFont_WriteCenter("Bonus ships at 20,000, 50,000, then every 50,000.", ty, S_Green);
 }
 #endif
 
@@ -90,20 +90,20 @@ static void show_help(int top)
 {
 	int dy = SFont_TextHeight(fnt_reg_red);
 
-    center_text("         Keyboard controls           ", top, fnt_reg_red);
-    center_text("  left/right arrow   move            ", top+dy, fnt_reg_yellow);
-    center_text("  space bar          fire            ", top+2*dy, fnt_reg_yellow);
-    center_text("  p                  pause           ", top+3*dy, fnt_reg_cyan);
-    center_text("  q                  end game        ", top+4*dy, fnt_reg_cyan);
-    center_text("  Q                  quick quit      ", top+5*dy, fnt_reg_cyan);
-    center_text("  k                  start game      ", top+6*dy, fnt_reg_cyan);
-    center_text("  s                  toggle sound    ", top+7*dy, fnt_reg_cyan);
+    SFont_WriteCenter(fnt_reg_red, top, "         Keyboard controls           ");
+    SFont_WriteCenter(fnt_reg_yellow, top+dy, "  left/right arrow   move            ");
+    SFont_WriteCenter(fnt_reg_yellow, top+2*dy, "  space bar          fire            ");
+    SFont_WriteCenter(fnt_reg_cyan, top+3*dy, "  p                  pause           ");
+	SFont_WriteCenter(fnt_reg_cyan, top+4*dy, "  q                  end game        ");
+	SFont_WriteCenter(fnt_reg_cyan, top+5*dy, "  Q                  quick quit      ");
+	SFont_WriteCenter(fnt_reg_cyan, top+6*dy, "  k                  start game      ");
+	SFont_WriteCenter(fnt_reg_cyan, top+7*dy, "  s                  toggle sound    ");
 #ifndef ORIGINAL_XGALAGA
-    center_text("  x                  toggle shields  ", top+8*dy, fnt_reg_cyan);
+	SFont_WriteCenter(fnt_reg_cyan, top+8*dy, "  x                  toggle shields  ");
 #endif
 
-    center_text("Bonus ships at 20,000, 50,000, then every 50,000.", top+10*dy, fnt_reg_green);
-    center_text("XGalaga Home page: http://rumsey.org/xgal.html", top+12*dy, fnt_reg_cyan);
+    SFont_WriteCenter(fnt_reg_green, top+10*dy, "Bonus ships at 20,000, 50,000, then every 50,000.");
+	SFont_WriteCenter(fnt_reg_cyan, top+12*dy, "XGalaga Home page: http://rumsey.org/xgal.html");
 }
 #include <errno.h>
 static void read_credits()
@@ -194,7 +194,7 @@ void show_credits()
 	else
 	{
 		snprintf (chLBuf, sizeof(chLBuf)-1, "Sorry no CREDITS data");
-		center_text (chLBuf, top+10, fnt_reg_green);
+		SFont_WriteCenter (fnt_reg_green, top+10, chLBuf);
 	}
 }
 
@@ -222,18 +222,18 @@ void do_title()
 
     S_DrawImage(WINWIDTH/2 - titleImage->width/2, top, 0, titleImage);
     sprintf (vbuf, "v%s", VERSION);
-    center_text (vbuf, top + titleImage->height - 10, fnt_reg_yellow);
+    SFont_WriteCenter (fnt_reg_yellow, top + titleImage->height - 10, vbuf);
 
     top += titleImage->height + 15;
     if (gstate == GETTING_NAME)
 		title_page = 0;
 
-	center_text("Copyright (c) 1995-1998   Joe Rumsey", top, fnt_reg_green);
+	SFont_WriteCenter(fnt_reg_green, top, "Copyright (c) 1995-1998   Joe Rumsey");
 	top+= SFont_TextHeight(fnt_reg_green);
-	center_text("Maintenance 2008 by Hermann Riedel", top, fnt_reg_green);
+	SFont_WriteCenter(fnt_reg_green, top, "Maintenance 2008 by Hermann Riedel");
 	top+= 2*SFont_TextHeight(fnt_reg_green);
 #ifndef ORIGINAL_XGALAGA
-	center_text("XGalaga: Hyperspace 0.9", top, fnt_reg_green);
+	SFont_WriteCenter(fnt_reg_green, top, "XGalaga: Hyperspace 0.9");
 	top+= SFont_TextHeight(fnt_reg_green);
 #endif
 
@@ -244,8 +244,8 @@ void do_title()
 	else if (title_page == 2)
 		show_bonuses(top);
 
-	center_text("Press k to start", WINHEIGHT - 2*SFont_TextHeight(fnt_reg_yellow), fnt_reg_yellow);
-    center_text("Or q to quit", WINHEIGHT - SFont_TextHeight(fnt_reg_yellow), fnt_reg_yellow);
+	SFont_WriteCenter(fnt_reg_yellow, WINHEIGHT - 2*SFont_TextHeight(fnt_reg_yellow), "Press k to start");
+	SFont_WriteCenter(fnt_reg_yellow, WINHEIGHT - SFont_TextHeight(fnt_reg_yellow), "Or q to quit");
 
     pagetimer--;
 
