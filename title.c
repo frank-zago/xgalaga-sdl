@@ -112,6 +112,7 @@ static void read_credits()
     int i,j,l,lines;
     int nSize;
     char *chFBuf, chLBuf[LINESIZE+1];
+	char filename[MAXFILENAME];
 
     j = 0;
 	lines = 0;
@@ -123,7 +124,10 @@ static void read_credits()
     if (gchLBuf == 0)
 		return;
 
-    hsf = open (CREDITSFILE, O_RDONLY);
+	snprintf(filename, MAXFILENAME, "%s/CREDITS", DATADIR);
+	filename[MAXFILENAME-1] = '\0';
+
+    hsf = open (filename, O_RDONLY);
     if (hsf > 0) {
 		l = read (hsf, chFBuf, 8000);
 		chFBuf[l] = 0x00;
@@ -218,7 +222,7 @@ void title_page_prev(void)
 void do_title()
 {
     int top = 130;
-    char vbuf[10];
+    char vbuf[50];
 
     S_DrawImage(WINWIDTH/2 - titleImage->width/2, top, 0, titleImage);
     sprintf (vbuf, "v%s", VERSION);

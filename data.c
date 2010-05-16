@@ -74,7 +74,6 @@ int pldead = 0;
 
 int movespeed = MINSPEED;
 
-char *unixSoundPath=SOUNDDIR;
 int playSounds=0;
 
 int plshield = 0;

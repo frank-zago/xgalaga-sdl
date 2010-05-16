@@ -18,11 +18,9 @@
  * 02110-1301, USA.
  */
 
-#define VERSION "2.1.1"
-
 /* Area for setting flags to enable changes by Bryce and Neelix */
 
-/*#define ORIGINAL_XGALAGA */
+#define ORIGINAL_XGALAGA
 /*#define IM_A_BIG_FAT_CHEATER*/
 
 #ifndef ORIGINAL_XGALAGA
