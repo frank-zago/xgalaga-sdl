@@ -92,7 +92,7 @@ static struct W_Image *loadImage(int offset)
     if (image->surface)
 		return image;
 
-	snprintf(filename, MAXFILENAME, "%s/%s.png", IMAGEDIR, image->filename);
+	snprintf(filename, MAXFILENAME, "%s/images/%s.png", DATADIR, image->filename);
 	filename[MAXFILENAME-1] = '\0';
 	simage = IMG_Load(filename);
 	if (!simage)

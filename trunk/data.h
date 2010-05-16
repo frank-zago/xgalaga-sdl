@@ -59,7 +59,6 @@ extern int pldead;
 
 extern int movespeed;
 
-extern char *unixSoundPath;
 extern int playSounds;
 
 extern int plshield;

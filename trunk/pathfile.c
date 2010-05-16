@@ -313,7 +313,7 @@ read_level(int lev)
     PathfileToken tok;
     static int maxLevel = 1;
 
-    snprintf(filename, MAXFILENAME, "%s/level%d.xgl", LEVELDIR, lev);
+    snprintf(filename, MAXFILENAME, "%s/levels/level%d.xgl", DATADIR, lev);
 	filename[MAXFILENAME-1] = '\0';
     lf = fopen(filename, "r");
     if(!lf) {
@@ -323,7 +323,7 @@ read_level(int lev)
 		for (lev = lev - maxLevel; lev > 0 && ! lf ;lev = lev - maxLevel) {
 			metaLevel++;
 			/* real_level_path is already set, so.. */
-			snprintf(filename, MAXFILENAME, "%s/level%d.xgl", LEVELDIR, lev);
+			snprintf(filename, MAXFILENAME, "%s/levels/level%d.xgl", DATADIR, lev);
 			filename[MAXFILENAME-1] = '\0';
 			lf = fopen(filename, "r");
 		}

@@ -61,7 +61,7 @@ void init_sound ()
     }
 
 	for (i=0; i<NUM_SOUNDS; i++) {
-		snprintf(filename, MAXFILENAME, "%s/%s", SOUNDDIR, FILENAME[i]);
+		snprintf(filename, MAXFILENAME, "%s/sounds/%s", DATADIR, FILENAME[i]);
 		filename[MAXFILENAME-1] = '\0';
 		sounds[i] = Mix_LoadWAV(filename);
 
