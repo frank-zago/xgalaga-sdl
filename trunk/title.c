@@ -255,12 +255,8 @@ void do_title()
 			giActCreditLine = 0;
     }
 
-    if (!pagetimer) {
-		title_page++;
-		if (title_page == NUM_TITLE_PAGES)
-			title_page = 0;
-		pagetimer = 299;
-    }
+    if (!pagetimer)
+		title_page_next();
 
     show_credits();
 }
