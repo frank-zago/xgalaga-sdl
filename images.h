@@ -71,6 +71,12 @@ enum {
 	I_SHIELD,
 	I_TITLE,
 
+#ifndef ORIGINAL_XGALAGA
+	/* Put them here, until a brave soul draws them. */
+	I_PR_SPREAD,
+	I_PR_MACHINE,
+#endif
+
 	F_REG_GREEN,
 	F_REG_CYAN,
 	F_REG_YELLOW,
