@@ -196,15 +196,11 @@ static void do_stars(void)
 
 #ifndef ORIGINAL_XGALAGA
 		if (shots > 0) {
-			int x = WINWIDTH/2 - 14 * RegularFont.width;
-			y += W_BigTextheight + 20;
+			y += SFont_TextHeight(fnt_big_red) + 20;
 
-			sprintf(buf, "Torps: %d  Hits: %d", shots, hits);
-			W_MaskText(screen, x, y, S_Yellow, buf, strlen(buf), W_RegularFont);
+			sprintf(buf, "Torps: %d  Hits: %d (%d%%)", shots, hits, (100 * hits) / shots);
 
-			x += 23 * RegularFont.width;
-			sprintf(buf, "(%d%%)", 100 * hits / shots);
-			W_MaskText(screen, x, y, S_Green, buf, strlen(buf), W_RegularFont);
+			SFont_WriteCenter(fnt_reg_yellow, y, buf);
 		}
 #endif
     }
