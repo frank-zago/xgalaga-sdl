@@ -42,10 +42,7 @@
 #include <netinet/in.h>
 #endif
 
-#include "defs.h"
-#include "struct.h"
-#include "proto.h"
-#include "data.h"
+#include "xgalaga.h"
 
 #define NUM_MY_SCORES 10
 
@@ -248,7 +245,6 @@ void show_scores(int top)
 {
     int i;
     char buf[60];
-    SDL_Rect dstrect;
 	int dy = SFont_TextHeight(fnt_reg_yellow);
 	const char *labels = "Rank  Name                      Score   Level";
 	int length;
@@ -259,12 +255,9 @@ void show_scores(int top)
 
 	/* Draw a line. */
 	length = SFont_TextWidth(fnt_reg_yellow, labels);
-
-    dstrect.x = (WINWIDTH-length)/2;
-    dstrect.y = top + 1 + SFont_TextHeight(fnt_reg_yellow);
-    dstrect.w = length;
-    dstrect.h = 1;
-    SDL_FillRect (screen, &dstrect, 0xff0000);
+	S_DrawRect((WINWIDTH-length)/2, top + 1 + SFont_TextHeight(fnt_reg_yellow),
+			   length, 1,
+			   SDL_MapRGB(screen->format, 0xff, 0, 0));
 
     for(i=0;i<NUM_MY_SCORES;i++) {
 		SFont_Font *font = i==my_thisplace ? fnt_reg_red : fnt_reg_grey;

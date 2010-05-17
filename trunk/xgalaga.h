@@ -1,5 +1,6 @@
 /*
  * XGalaga-SDL - a SDL port of XGalaga, clone of the game Galaga
+ * Copyright (c) 1995-1998 Joe Rumsey (mrogre@mediaone.net)
  * Copyright (c) 2010 Frank Zago
  *
  * This program is free software; you can redistribute it and/or
@@ -18,19 +19,13 @@
  * 02110-1301, USA.
  */
 
-#include <SDL/SDL_framerate.h>
+#include <SDL/SDL.h>
 
-#include "xgalaga.h"
-
-static FPSmanager manager;
-
-void init_framerate(void)
-{
-	SDL_initFramerate(&manager);
-	SDL_setFramerate(&manager, FPS);
-}
-
-void do_framerate(void)
-{
-	SDL_framerateDelay(&manager);
-}
+#include "defs.h"
+#include "struct.h"
+#include "images.h"
+#include "SFont.h"
+#include "data.h"
+#include "proto.h"
+#include "sound.h"
+#include "paths.h"

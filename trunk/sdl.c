@@ -20,12 +20,7 @@
  * 02110-1301, USA.
  */
 
-#include <SDL/SDL.h>
-
-#include "data.h"
-#include "defs.h"
-#include "images.h"
-#include "proto.h"
+#include "xgalaga.h"
 
 SDL_Surface *screen;
 
@@ -146,4 +141,15 @@ void S_DrawImage(int x, int y, int frame, struct W_Image *image)
 	srcrect.h = height;
 
 	SDL_BlitSurface (image->surface, &srcrect, screen, &dstrect);
+}
+
+void S_DrawRect(int x, int y, int w, int h, Uint32 color)
+{
+    SDL_Rect dstrect;
+
+    dstrect.x = x;
+    dstrect.y = y;
+    dstrect.w = w;
+    dstrect.h = h;
+    SDL_FillRect (screen, &dstrect, color);
 }

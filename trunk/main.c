@@ -26,15 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "struct.h"
-#include "data.h"
-#include "images.h"
-#include "defs.h"
-#include "paths.h"
-#include "proto.h"
-#include "sound.h"
-
-#include <SDL_image.h>
+#include "xgalaga.h"
 
 static struct torp torps[MAXTORPS];
 static struct star stars[NUMSTARS];

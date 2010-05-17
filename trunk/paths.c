@@ -18,11 +18,7 @@
  * 02110-1301, USA.
  */
 
-#include "struct.h"
-#include "defs.h"
-#include "paths.h"
-#include "data.h"
-#include "proto.h"
+#include "xgalaga.h"
 
 #define MAXPATH 50
 

@@ -259,9 +259,11 @@ data_DATA = \
 	images/pr_doub.png \
 	images/pr_extrabullet.png \
 	images/pr_lemon.png \
+	images/pr_machine.png \
 	images/pr_shield.png \
 	images/pr_sing.png \
 	images/pr_speed.png \
+	images/pr_spread.png \
 	images/pr_trip.png \
 	images/s1000.png \
 	images/s2000.png \

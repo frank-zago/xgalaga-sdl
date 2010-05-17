@@ -21,12 +21,9 @@
  * 02110-1301, USA.
  */
 
-#include <SDL.h>
 #include <SDL_mixer.h>
 
-#include "data.h"
-#include "proto.h"
-#include "defs.h"
+#include "xgalaga.h"
 
 static int audioOK;
 

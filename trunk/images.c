@@ -25,10 +25,7 @@
 #include <SDL/SDL.h>
 #include <SDL_image.h>
 
-#include "images.h"
-#include "struct.h"
-#include "proto.h"
-#include "defs.h"
+#include "xgalaga.h"
 
 static struct W_Image imagearray[] = {
 	/* Bitmaps. */
@@ -75,10 +72,8 @@ static struct W_Image imagearray[] = {
 	{0, 0, 0, "title", NULL },
 
 #ifndef ORIGINAL_XGALAGA
-	/* The pictures for Spread and Machine gun are missing. Use
-	 * something else. */
-	{0, 0, 0, "pr_trip", NULL },
-	{0, 0, 0, "pr_trip", NULL },
+	{0, 0, 0, "pr_spread", NULL },
+	{0, 0, 0, "pr_machine", NULL },
 #endif
 
 	/* Fonts */

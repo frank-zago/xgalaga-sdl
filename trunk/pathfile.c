@@ -29,11 +29,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 
-#include "struct.h"
-#include "paths.h"
-#include "data.h"
-#include "defs.h"
-#include "proto.h"
+#include "xgalaga.h"
 
 #define MAXPATHLEN 50
 #define MAXLINE 1024
