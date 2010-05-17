@@ -18,9 +18,6 @@
  * 02110-1301, USA.
  */
 
-#include "struct.h"
-#include "SFont.h"
-
 extern SDL_Surface *screen;
 
 extern char *imagedir;

@@ -28,11 +28,7 @@
 
 #include <SDL/SDL.h>
 
-#include "defs.h"
-#include "images.h"
-#include "struct.h"
-#include "data.h"
-#include "proto.h"
+#include "xgalaga.h"
 
 /* for scrolling credits */
 static const unsigned int LINESIZE= 70;

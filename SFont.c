@@ -27,12 +27,8 @@
 */
 
 #include <assert.h>
-#include <stdlib.h>
 
-#include <SDL.h>
-
-#include "SFont.h"
-#include "data.h"
+#include "xgalaga.h"
 
 static Uint32 GetPixel(SDL_Surface *Surface, Sint32 X, Sint32 Y)
 {

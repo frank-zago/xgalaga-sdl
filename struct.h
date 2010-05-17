@@ -21,8 +21,6 @@
 #ifndef STRUCT_H
 #define STRUCT_H
 
-#include <SDL/SDL.h>
-
 struct torp {
     struct torp *next, *prev;
     int alive, frame;

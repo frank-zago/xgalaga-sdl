@@ -19,12 +19,7 @@
  * 02110-1301, USA.
  */
 
-#include <SDL/SDL.h>
-
-#include "defs.h"
-#include "data.h"
-#include "struct.h"
-#include "images.h"
+#include "xgalaga.h"
 
 int buttonDown = 0;
 

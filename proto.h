@@ -18,9 +18,6 @@
  * 02110-1301, USA.
  */
 
-#include <string.h>
-#include <SDL/SDL.h>
-
 /* images.c */
 struct W_Image *getImage(int offset);
 int loadAllImages(void);
@@ -95,3 +92,4 @@ void S_ClearScreen(void);
 void S_DrawImage (int x, int y, int frame,
 				  struct W_Image *image);
 void toggle_fullscreen(void);
+void S_DrawRect(int x, int y, int w, int h, Uint32 color);

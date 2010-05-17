@@ -20,12 +20,7 @@
 
 #include <stdlib.h>
 
-#include "struct.h"
-#include "images.h"
-#include "data.h"
-#include "defs.h"
-#include "proto.h"
-#include "sound.h"
+#include "xgalaga.h"
 
 #define PR_SING 0
 #define PR_DOUB 1
@@ -293,7 +288,6 @@ void show_bonuses(int top)
 	int dy = SFont_TextHeight(fnt_reg_yellow);
 	const char *label = "Bonuses";
 	int length;
-    SDL_Rect dstrect;
 
 	if (dy < 22)
 		dy = 22;
@@ -302,12 +296,9 @@ void show_bonuses(int top)
 
 	/* Draw a line. */
 	length = SFont_TextWidth(fnt_reg_yellow, label);
-
-    dstrect.x = (WINWIDTH-length)/2;
-    dstrect.y = top + 1 + SFont_TextHeight(fnt_reg_yellow);
-    dstrect.w = length;
-    dstrect.h = 1;
-    SDL_FillRect (screen, &dstrect, 0xff0000);
+	S_DrawRect((WINWIDTH-length)/2, top + 1 + SFont_TextHeight(fnt_reg_yellow),
+			   length, 1,
+			   SDL_MapRGB(screen->format, 0xff, 0, 0));
 
 	top += dy;
 

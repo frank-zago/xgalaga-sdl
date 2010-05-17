@@ -19,17 +19,15 @@
  * 02110-1301, USA.
  */
 
+#include "config.h"
+
 #include <stdio.h>
 #include <string.h>
 
-#include "struct.h"
-#include "images.h"
-#include "data.h"
-#include "defs.h"
-#include "proto.h"
+#include "xgalaga.h"
 
-struct W_Image *miniship, *extraImage;
-int drawExtra = 0, extrax, extray;
+static struct W_Image *miniship, *extraImage;
+static int drawExtra = 0, extrax, extray;
 
 void do_score()
 {

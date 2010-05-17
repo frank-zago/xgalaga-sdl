@@ -21,11 +21,7 @@
 
 #include <stdlib.h>
 
-#include "struct.h"
-#include "images.h"
-#include "data.h"
-#include "proto.h"
-#include "sound.h"
+#include "xgalaga.h"
 
 static struct explosion *first_exp=0;
 static struct score_bubble *first_bub=0;
