@@ -22,13 +22,14 @@
 #include "data.h"
 #include "struct.h"
 #include "defs.h"
+#include "proto.h"
 
 static SDL_Joystick *js_device;
 
 /*
  * Initialize the joystick device
  */
-void init_joystick()
+void init_joystick(void)
 {
 	SDL_InitSubSystem(SDL_INIT_JOYSTICK);
 
