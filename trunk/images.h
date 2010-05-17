@@ -72,7 +72,6 @@ enum {
 	I_TITLE,
 
 #ifndef ORIGINAL_XGALAGA
-	/* Put them here, until a brave soul draws them. */
 	I_PR_SPREAD,
 	I_PR_MACHINE,
 #endif
