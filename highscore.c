@@ -19,7 +19,7 @@
  * 02110-1301, USA.
  */
 
-#include <config.h>
+#include "config.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -126,7 +126,7 @@ char *getUsersFullName()
     return(fullname);
 }
 
-static void save_scores()
+static void save_scores(void)
 {
     int i;
     int hsf;
@@ -145,10 +145,10 @@ static void save_scores()
 			if(write(hsf, my_scores[i].name, 20) < 20)
 				goto error2;
 			x=htonl(my_scores[i].score);
-			if(write(hsf, &x, sizeof(long)) < sizeof(long))
+			if(write(hsf, &x, sizeof(long)) < (ssize_t)sizeof(long))
 				goto error2;
 			x=htonl(my_scores[i].level);
-			if(write(hsf, &x, sizeof(long)) < sizeof(long))
+			if(write(hsf, &x, sizeof(long)) < (ssize_t)sizeof(long))
 				goto error2;
 		}
         close(hsf);
@@ -295,9 +295,9 @@ void load_scores()
 			for(i=0;i<NUM_MY_SCORES;i++) {
 				if(read(hsf, my_scores[i].name, 20) < 20)
 					goto error2;
-				if(read(hsf, &my_scores[i].score, sizeof(long)) < sizeof(long))
+				if(read(hsf, &my_scores[i].score, sizeof(long)) < (ssize_t)sizeof(long))
 					goto error2;
-				if(read(hsf, &my_scores[i].level, sizeof(long)) < sizeof(long))
+				if(read(hsf, &my_scores[i].level, sizeof(long)) < (ssize_t)sizeof(long))
 					goto error2;
 				my_scores[i].score = ntohl(my_scores[i].score);
 				my_scores[i].level = ntohl(my_scores[i].level);

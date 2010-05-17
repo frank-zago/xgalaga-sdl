@@ -20,7 +20,7 @@
  * 02110-1301, USA.
  */
 
-#include <config.h>
+#include "config.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -86,7 +86,7 @@ static void xgal_exit(int v)
     exit(v);
 }
 
-static void print_usage()
+static void print_usage(void)
 {
     printf("XGalaga v%s\n"
 		   "Copyright (c) 1995-1998 Joe Rumsey\n"
@@ -111,13 +111,13 @@ static void print_usage()
 		   "  p - pauses\n"
 		   "  q - end this game\n"
 		   "  alt + enter - Toggle fullscreen - window\n",
- VERSION);
+		   VERSION);
 }
 
 /*------------------stars-----------------*/
 
 /* Pick a random color, except black. */
-static Uint32 get_random_star_color()
+static Uint32 get_random_star_color(void)
 {
 	switch(random() % 5) {
 	case 0:
@@ -133,7 +133,7 @@ static Uint32 get_random_star_color()
 	}
 }
 
-static void init_stars()
+static void init_stars(void)
 {
     int i;
 
@@ -145,7 +145,7 @@ static void init_stars()
     }
 }
 
-static void do_stars()
+static void do_stars(void)
 {
     int i;
 
@@ -212,7 +212,7 @@ static void do_stars()
 
 /*-------------------aliens---------------*/
 
-static void delete_etorps()
+static void delete_etorps(void)
 {
     struct torp *tmp;
 
@@ -246,7 +246,7 @@ static void init_aliens(int level)
 
     for(i=0;i<MAXALIENS;i++) {
         livecount++;
-        new_alien(level, i, &aliens[i]);
+        new_alien(i, &aliens[i]);
     }
 
     for(i=0;i<MAXTORPS;i++)
@@ -254,7 +254,7 @@ static void init_aliens(int level)
 }
 
 
-static void undo_aliens()
+static void undo_aliens(void)
 {
     int i;
 
@@ -426,7 +426,7 @@ static void do_enter(int i)
     }
 }
 
-static void do_aliens()
+static void do_aliens(void)
 {
     int i, j;
     int tc;
@@ -605,7 +605,7 @@ static void do_aliens()
 }
 
 /*------------------player----------------*/
-static void init_player()
+static void init_player(void)
 {
     int i;
     for(i=0;i<MAXTORPS;i++)
@@ -630,7 +630,7 @@ static void new_torp(int x, int y, int xs, int ys)
     }
 }
 
-static void do_torps()
+static void do_torps(void)
 {
     int i,j,k, ne;
 
@@ -696,7 +696,7 @@ static void do_torps()
     }
 }
 
-static void do_etorps()
+static void do_etorps(void)
 {
     struct torp *t = first_etorp, *nextt;
 
@@ -736,7 +736,7 @@ static void do_etorps()
     }
 }
 
-static void start_game()
+static void start_game(void)
 {
 	gstate = PLAYING;
 	maxtorps = MINTORPS;

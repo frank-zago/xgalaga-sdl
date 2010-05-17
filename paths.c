@@ -18,8 +18,6 @@
  * 02110-1301, USA.
  */
 
-#include <config.h>
-
 #include "struct.h"
 #include "defs.h"
 #include "paths.h"
@@ -486,7 +484,7 @@ void start_path(int path, struct alien *al)
     al->steer = paths[path][i][1];
 }
 
-void new_alien(int level, int anum, struct alien *al)
+void new_alien(int anum, struct alien *al)
 {
     if(get_shape(anum) >= 0) {
 		al->alive = 1;

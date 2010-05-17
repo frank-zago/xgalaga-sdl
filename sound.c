@@ -21,8 +21,6 @@
  * 02110-1301, USA.
  */
 
-#include <config.h>
-
 #include <SDL.h>
 #include <SDL_mixer.h>
 
@@ -49,7 +47,7 @@ static Mix_Chunk *sounds[NUM_SOUNDS];
 
 void init_sound ()
 {
-	int i;
+	unsigned int i;
 	char filename[MAXFILENAME];
 
     /* Open the audio device */
@@ -74,7 +72,7 @@ void init_sound ()
 
 void sound_exit(void)
 {
-	int i;
+	unsigned int i;
 
 	if (audioOK) {
 		Mix_CloseAudio();
