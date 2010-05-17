@@ -19,8 +19,6 @@
  * 02110-1301, USA.
  */
 
-#include <config.h>
-
 #include <stdlib.h>
 
 #include "struct.h"
@@ -34,7 +32,7 @@ static struct score_bubble *first_bub=0;
 
 struct W_Image *expImage, *bubbleImages[4];
 
-static void undo_bubbles()
+static void undo_bubbles(void)
 {
     struct score_bubble *bub=first_bub, *nextbub;
 
@@ -53,7 +51,7 @@ static void undo_bubbles()
     }
 }
 
-static void do_bubbles()
+static void do_bubbles(void)
 {
     struct score_bubble *bub=first_bub;
 

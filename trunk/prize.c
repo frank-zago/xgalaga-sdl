@@ -18,8 +18,6 @@
  * 02110-1301, USA.
  */
 
-#include <config.h>
-
 #include <stdlib.h>
 
 #include "struct.h"

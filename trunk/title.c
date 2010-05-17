@@ -19,7 +19,7 @@
  * 02110-1301, USA.
  */
 
-#include <config.h>
+#include "config.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -105,11 +105,12 @@ static void show_help(int top)
     SFont_WriteCenter(fnt_reg_green, top+10*dy, "Bonus ships at 20,000, 50,000, then every 50,000.");
 	SFont_WriteCenter(fnt_reg_cyan, top+12*dy, "XGalaga Home page: http://rumsey.org/xgal.html");
 }
-#include <errno.h>
-static void read_credits()
+
+static void read_credits(void)
 {
     int hsf;
-    int i,j,l,lines;
+    int i,l,lines;
+	unsigned int j;
     int nSize;
     char *chFBuf, chLBuf[LINESIZE+1];
 	char filename[MAXFILENAME];
@@ -177,14 +178,15 @@ static void read_credits()
 }
 
 
-void show_credits()
+static void show_credits(void)
 {
-	int i,j,lines;
+	int i,j;
+	unsigned int lines;
 	int top = 460;
 	char chLBuf[LINESIZE+1];
 	int font_height = SFont_TextHeight(fnt_reg_red);
 
-	if ( gchLBuf > 0 ) {
+	if (gchLBuf) {
 		j = 0; lines = 0;
 		for ( i=giActCreditLine; i<giCreditLines; i++ )
 		{

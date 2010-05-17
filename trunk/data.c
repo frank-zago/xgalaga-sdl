@@ -19,7 +19,6 @@
  * 02110-1301, USA.
  */
 
-#include <config.h>
 #include <SDL/SDL.h>
 
 #include "defs.h"
@@ -80,7 +79,7 @@ int plshield = 0;
 int shieldsleft = 0;
 int shieldon = 0;
 
-int title_page=0, pagetimer=300;
+unsigned int title_page=0, pagetimer=300;
 
 int gotlemon = 0;
 

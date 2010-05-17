@@ -21,6 +21,8 @@
 #include <SDL/SDL_framerate.h>
 
 #include "defs.h"
+#include "struct.h"
+#include "proto.h"
 
 static FPSmanager manager;
 

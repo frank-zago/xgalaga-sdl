@@ -63,7 +63,7 @@ extern int playSounds;
 
 extern int plshield;
 
-extern int title_page, pagetimer;
+extern unsigned int title_page, pagetimer;
 
 extern int gotlemon;
 

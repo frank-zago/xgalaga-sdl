@@ -29,7 +29,7 @@ int loadAllImages(void);
 void path_dir(int path, int pos, int *dir, int *steer);
 void enter_path_dir(int path, int pos, int *dir, int *steer);
 void start_path(int path, struct alien *al);
-void new_alien(int level, int i, struct alien *al);
+void new_alien(int i, struct alien *al);
 
 /* title.c */
 void do_pause(void);

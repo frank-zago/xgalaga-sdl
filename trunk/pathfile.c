@@ -18,7 +18,7 @@
  * 02110-1301, USA.
  */
 
-#include <config.h>
+#include "config.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -33,6 +33,7 @@
 #include "paths.h"
 #include "data.h"
 #include "defs.h"
+#include "proto.h"
 
 #define MAXPATHLEN 50
 #define MAXLINE 1024
@@ -61,8 +62,7 @@ int al_shapes[MAXALIENS];
 int al_delays[MAXALIENS];
 int al_paths[MAXALIENS];
 
-int
-get_line(FILE* file, char* buf)
+static int get_line(FILE* file, char* buf)
 {
     int done = 0;
     char nextline[MAXLINE];
@@ -92,8 +92,7 @@ get_line(FILE* file, char* buf)
     return 1;
 }
 
-PathfileToken
-get_token(char* line, int* elem, char** data)
+static PathfileToken get_token(char* line, int* elem, char** data)
 {
     PathfileToken pt;
     char *datastart;
@@ -300,8 +299,7 @@ parse_delays(char* data)
     return 1;
 }
 
-int
-read_level(int lev)
+int read_level(int lev)
 {
     char filename[MAXFILENAME];
     char readline[MAXLINE];
