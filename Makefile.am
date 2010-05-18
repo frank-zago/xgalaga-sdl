@@ -1,35 +1,10 @@
-bin_PROGRAMS = xgalaga-sdl
+SUBDIRS = src
 
-xgalaga_sdl_LDADD = @SDL_LIBS@
-xgalaga_sdl_CFLAGS = -DDATADIR=\"@datadir@\" @SDL_CPPFLAGS@
+AUTOMAKE_OPTIONS=dist-bzip2
 
-xgalaga_sdl_SOURCES = \
-	SFont.c \
-	SFont.h \
-	config.h \
-	data.c \
-	data.h \
-	defs.h \
-	explosions.c \
-	frate.c \
-	highscore.c \
-	images.c \
-	images.h \
-	joystick.c \
-	main.c \
-	pathfile.c \
-	paths.c \
-	paths.h \
-	prize.c \
-	proto.h \
-	score.c \
-	sdl.c \
-	sound.c \
-	sound.h \
-	struct.h \
-	title.c
+dist_man_MANS = xgalaga-sdl.6x
 
-data_DATA = \
+nobase_dist_data_DATA = \
 	CREDITS \
 	images/al.png \
 	images/alien1.png \
@@ -80,6 +55,14 @@ data_DATA = \
 	images/sfont_reg_yellow.png \
 	images/shield.png \
 	images/title.png \
+	sounds/ddloo.wav \
+	sounds/explode.wav \
+	sounds/explode_big.wav \
+	sounds/firetorp.wav \
+	sounds/shield.wav \
+	sounds/smart.wav \
+	sounds/torphit.wav \
+	sounds/warp.wav \
 	levels/level1.xgl \
 	levels/level10.xgl \
 	levels/level11.xgl \
@@ -94,12 +77,4 @@ data_DATA = \
 	levels/level6.xgl \
 	levels/level7.xgl \
 	levels/level8.xgl \
-	levels/level9.xgl \
-	sounds/ddloo.wav \
-	sounds/explode.wav \
-	sounds/explode_big.wav \
-	sounds/firetorp.wav \
-	sounds/shield.wav \
-	sounds/smart.wav \
-	sounds/torphit.wav \
-	sounds/warp.wav
+	levels/level9.xgl

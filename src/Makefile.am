@@ -1,0 +1,30 @@
+bin_PROGRAMS = xgalaga-sdl
+
+xgalaga_sdl_LDADD = @SDL_LIBS@
+xgalaga_sdl_CFLAGS = -DDATADIR=\"@datadir@\" @SDL_CPPFLAGS@
+
+xgalaga_sdl_SOURCES = \
+	SFont.c \
+	SFont.h \
+	data.c \
+	data.h \
+	defs.h \
+	explosions.c \
+	frate.c \
+	highscore.c \
+	images.c \
+	images.h \
+	joystick.c \
+	main.c \
+	pathfile.c \
+	paths.c \
+	paths.h \
+	prize.c \
+	proto.h \
+	score.c \
+	sdl.c \
+	sound.c \
+	sound.h \
+	struct.h \
+	title.c \
+	xgalaga.h
