@@ -37,11 +37,13 @@ void init_joystick(void)
 		js_device = SDL_JoystickOpen(0);
 
 		if (js_device) {
+#if 0
 			printf("Opened Joystick 0\n");
 			printf("Name: %s\n", SDL_JoystickName(0));
 			printf("Number of Axes: %d\n", SDL_JoystickNumAxes(js_device));
 			printf("Number of Buttons: %d\n", SDL_JoystickNumButtons(js_device));
 			printf("Number of Balls: %d\n", SDL_JoystickNumBalls(js_device));
+#endif
 		}
 		else
 			printf("Couldn't open Joystick 0\n");

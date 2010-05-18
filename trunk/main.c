@@ -953,19 +953,17 @@ static void do_player(int but)
 			break;
 
 		case SDL_JOYBUTTONDOWN:
-			/* todo: right now test only button 3. */
-			if (event.jbutton.button == 2) {
+			/* Test buttons 0 to 3. */
+			if (event.jbutton.button >= 0 && event.jbutton.button <= 3) {
 				keys |= FIREKEY;
 			}
-//			printf("FZ-  got jbutton %d\n", event.jbutton.button);
 			break;
 
 		case SDL_JOYBUTTONUP:
-			/* todo: right now test only button 3. */
-			if (event.jbutton.button == 2) {
+			/* Test buttons 0 to 3. */
+			if (event.jbutton.button >= 0 && event.jbutton.button <= 3) {
 				keys &= ~FIREKEY;
 			}
-//			printf("FZ-  got jbutton %d\n", event.jbutton.button);
 			break;
 
 		case SDL_JOYHATMOTION:
@@ -982,7 +980,7 @@ static void do_player(int but)
 			break;
 
 		case SDL_JOYAXISMOTION:
-			// todo: good for that joystick
+			/* My gamepad has 2 analog input, with X being axis 0 and 3. */
 			if (event.jaxis.axis == 0 || event.jaxis.axis == 3)  {
 				if (event.jaxis.value < -10000) {
 					keys |= LEFTKEY;
