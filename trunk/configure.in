@@ -49,6 +49,6 @@ AC_SUBST(SDL_LIBS)
 AC_SUBST(SDL_CPPFLAGS)
 AC_SUBST(datadir)
 
-AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_HEADERS([src/config.h])
 
-AC_OUTPUT(Makefile)
+AC_OUTPUT(Makefile src/Makefile)
