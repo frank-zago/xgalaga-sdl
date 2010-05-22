@@ -954,16 +954,14 @@ static void do_player(int but)
 
 		case SDL_JOYBUTTONDOWN:
 			/* Test buttons 0 to 3. */
-			if (event.jbutton.button >= 0 && event.jbutton.button <= 3) {
+			if (event.jbutton.button <= 3)
 				keys |= FIREKEY;
-			}
 			break;
 
 		case SDL_JOYBUTTONUP:
 			/* Test buttons 0 to 3. */
-			if (event.jbutton.button >= 0 && event.jbutton.button <= 3) {
+			if (event.jbutton.button <= 3)
 				keys &= ~FIREKEY;
-			}
 			break;
 
 		case SDL_JOYHATMOTION:
