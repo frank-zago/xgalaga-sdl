@@ -85,7 +85,6 @@ static void print_usage(void)
 		   "Contributions by Hermann Riedel\n"
 		   "Command line options:\n"
 		   "  -scores              Prints out the high score files and exits\n"
-		   "  -display <display>   Set your display\n"
 		   "  -nosound             Turn sound OFF\n"
 		   "  -level <number>      Choose starting level (>= 1)\n"
 		   "  -window              Start in windowed mode instead of fullscreen\n"
@@ -1222,7 +1221,6 @@ static int init_fonts(void)
 int main(int argc, char *argv[])
 {
     int ac;
-    char *dpyname = 0;
     int but;
 
 	but = 0;
@@ -1233,10 +1231,6 @@ int main(int argc, char *argv[])
             if(strcmp(argv[ac], "-scores") == 0) {
                 print_scores();
                 exit(0);
-            }
-            if(strcmp(argv[ac], "-display") == 0 && (ac+1 < argc)) {
-                dpyname = argv[ac+1];
-                ac++;
             } else if (strcmp(argv[ac], "-nosound") == 0) {
                 playSounds = 0;
 				/* '-level' option defined here */
