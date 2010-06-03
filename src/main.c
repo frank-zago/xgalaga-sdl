@@ -762,6 +762,12 @@ static void do_player(int but)
 				xgal_exit(0);
 				break;
 
+			case SDL_JOYBUTTONDOWN:
+				/* Test buttons 0 to 3. */
+				if (event.jbutton.button <= 3)
+					start_game();
+				break;
+
             case SDL_KEYDOWN:
                 switch(event.key.keysym.sym) {
 				case SDLK_ESCAPE:
@@ -769,7 +775,7 @@ static void do_player(int but)
                     xgal_exit(0);
                     break;
 
-				case SDLK_k:
+				case SDLK_SPACE:
 					start_game();
 					break;
 
