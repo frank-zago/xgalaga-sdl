@@ -301,10 +301,8 @@ int read_level(int lev)
     char readline[MAXLINE];
     char *data;
     int  gotPaths = 0, gotShapes = 0, gotDelays = 0;
-    int rlen;
     int elem;
     FILE* lf;
-    PathfileToken tok;
     static int maxLevel = 1;
 
     snprintf(filename, MAXFILENAME, "%s/levels/level%d.xgl", DATADIR, lev);
@@ -330,7 +328,7 @@ int read_level(int lev)
 		maxLevel = lev;
 
     while(!feof(lf)) {
-		if((rlen = get_line(lf, readline)) <= 0) {
+		if(get_line(lf, readline) <= 0) {
 			if(gotShapes && gotPaths && gotDelays) {
 				return 1;
 			}
@@ -346,7 +344,7 @@ int read_level(int lev)
 			return 0;
 		}
 
-		switch((tok = get_token(readline, &elem, &data))) {
+		switch((get_token(readline, &elem, &data))) {
 		case PF_PATHDEF:
 			parse_path(elem, data);
 			break;
