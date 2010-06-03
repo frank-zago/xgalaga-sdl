@@ -246,7 +246,7 @@ void do_title()
 	else if (title_page == 2)
 		show_bonuses(top);
 
-	SFont_WriteCenter(fnt_reg_yellow, WINHEIGHT - 2*SFont_TextHeight(fnt_reg_yellow), "Press k to start");
+	SFont_WriteCenter(fnt_reg_yellow, WINHEIGHT - 2*SFont_TextHeight(fnt_reg_yellow), "Press space to start");
 	SFont_WriteCenter(fnt_reg_yellow, WINHEIGHT - SFont_TextHeight(fnt_reg_yellow), "Or q to quit");
 
     pagetimer--;
