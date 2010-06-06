@@ -68,6 +68,8 @@ void S_Initialize(int fullscreen)
         fprintf(stderr, "Couldn't get video mode: %s\n", SDL_GetError());
         exit(1);
     }
+
+	SDL_ShowCursor(SDL_DISABLE);
 }
 
 /* Draw a point. Surface must be locked with SDL_LockSurface(). */
