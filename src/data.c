@@ -90,4 +90,4 @@ SFont_Font *fnt_big_red;
 
 enum gstate gstate;
 
-int fullscreen = 0;				/* windowed = 0, fullscreen != 0 */
+int fullscreen = 1;				/* windowed = 0, fullscreen != 0 */
