@@ -48,7 +48,7 @@
 
 static char new_name[20];
 static int nnpos=0;
-static int thisplace = -1, my_thisplace = -1;
+static int my_thisplace = -1;
 
 static struct high_score {
     char name[20];
@@ -161,8 +161,6 @@ void add_score(char *name, int score)
 {
     int i,j ; /* ,k; */
 
-    thisplace = my_thisplace = -1;
-
     load_scores();
 
     for(i=0;i<NUM_MY_SCORES;i++) {
@@ -236,7 +234,6 @@ int check_score(int score)
     }
 
     my_thisplace = -1;
-    thisplace = -1;
     return 0;
 }
 
