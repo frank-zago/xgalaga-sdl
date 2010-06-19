@@ -54,9 +54,9 @@ struct path_info
 struct path_entry epaths[NUMPATHS][MAXPATHLEN];
 struct path_info  pathinfo[NUMPATHS];
 
-int al_shapes[MAXALIENS];
-int al_delays[MAXALIENS];
-int al_paths[MAXALIENS];
+static int al_shapes[MAXALIENS];
+static int al_delays[MAXALIENS];
+static int al_paths[MAXALIENS];
 
 static int get_line(FILE* file, char* buf)
 {
