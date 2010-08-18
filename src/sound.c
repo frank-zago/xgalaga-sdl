@@ -21,6 +21,13 @@
  * 02110-1301, USA.
  */
 
+#ifdef NOSOUND
+
+void init_sound () {}
+void sound_exit(void) {}
+void play_sound (int sound) {}
+
+#else
 #include <SDL_mixer.h>
 
 #include "xgalaga.h"
@@ -85,3 +92,5 @@ void play_sound (int sound)
 	if (audioOK && playSounds)
 		Mix_PlayChannel(sound, sounds[sound], 0);
 }
+
+#endif	/* NOSOUND */
