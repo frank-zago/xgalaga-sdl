@@ -1,6 +1,6 @@
-.TH XGALAGA 6x "8 February 2008" "2.1"
+.TH XGALAGA-SDL 6x "2 June 2008" "2.1.1.0"
 .SH NAME
-xgalaga \- X11 version of the famous Galaga game
+xgalaga-sdl \- SDL port of XGalaga, version of the famous Galaga game
 .SH SYNOPSIS
 .B xgalaga
 [options]
@@ -9,9 +9,7 @@ xgalaga \- X11 version of the famous Galaga game
 [options]
 .SH INSTRUCTIONS
 .LP
-It's Galaga, you know how to play Galaga, stop bothering me.
-(Ship follows the mouse, button fires.  Auto-fire by holding it
-down, so no-one accuses me of breaking their mouse!)
+Use the arrows on a keyboard, or a joystick to move the ship, and the space bar or a button to fire. Destroy the alien wave and move on to the next.
 .P
 The xgalaga-hyperspace version features some new weapons and different
 gameplay.
@@ -19,16 +17,6 @@ gameplay.
 .TP 8
 .B \-scores
 Prints out the high score file and exits
-.TP 8
-.B \-display \fIhost:dpy\fP
-Set your display
-.TP 8
-.B \-mouse
-Use mouse control (same as 'm').
-.TP 8
-.B \-keyboard
-Use keyboard control (same as 'k').
-If you have a joystick it can also be used if you select keyboard control.
 .TP 8
 .B \-nosound
 Turn sound OFF
@@ -41,27 +29,17 @@ Run in a window, not full screen. Full screen is the default.
 .TP 8
 .B \-winsize \fIwidthxheight\fP
 Set window size.
-.TP 8
-.B \-b
-Turn buffered mode off, use this if it runs too slowly.  Will cause 
-flicker, maybe lots, maybe only a little.
 .SH KEYBOARD COMMANDS
 .TP 8
-p - pauses
+p      - Pause
 .TP 8
-q - end this game
+ESC, q - End game and exit xgalaga
 .TP 8
-Q - end xgalaga immediately
+space  - Start game, fire
 .TP 8
-b - Toggle buffering (flicker vs. speed.)
+s      - Toggle sound
 .TP 8
-m - Use mouse control. Note that you may switch in mid-game.
-.TP 8
-k - Use keyboard control
-.TP 8
-s - Toggle sound
-.TP 8
-x - use your shields (xgalaga-hyperspace only)
+x      - Use your shields (xgalaga-hyperspace only)
 .TP 8
 alt-enter - Toggle full screen node.
 .SH AUTHORS
