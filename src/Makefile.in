@@ -62,10 +62,25 @@ DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 am__mv = mv -f
+AM_V_lt = $(am__v_lt_$(V))
+am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
+am__v_lt_0 = --silent
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+AM_V_CC = $(am__v_CC_$(V))
+am__v_CC_ = $(am__v_CC_$(AM_DEFAULT_VERBOSITY))
+am__v_CC_0 = @echo "  CC    " $@;
+AM_V_at = $(am__v_at_$(V))
+am__v_at_ = $(am__v_at_$(AM_DEFAULT_VERBOSITY))
+am__v_at_0 = @
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+AM_V_CCLD = $(am__v_CCLD_$(V))
+am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
+am__v_CCLD_0 = @echo "  CCLD  " $@;
+AM_V_GEN = $(am__v_GEN_$(V))
+am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
+am__v_GEN_0 = @echo "  GEN   " $@;
 SOURCES = $(xgalaga_sdl_SOURCES)
 DIST_SOURCES = $(xgalaga_sdl_SOURCES)
 ETAGS = etags
@@ -73,6 +88,7 @@ CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
+AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -279,7 +295,7 @@ clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 xgalaga-sdl$(EXEEXT): $(xgalaga_sdl_OBJECTS) $(xgalaga_sdl_DEPENDENCIES) 
 	@rm -f xgalaga-sdl$(EXEEXT)
-	$(xgalaga_sdl_LINK) $(xgalaga_sdl_OBJECTS) $(xgalaga_sdl_LDADD) $(LIBS)
+	$(AM_V_CCLD)$(xgalaga_sdl_LINK) $(xgalaga_sdl_OBJECTS) $(xgalaga_sdl_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -304,225 +320,257 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xgalaga_sdl-title.Po@am__quote@
 
 .c.o:
-@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(COMPILE) -c $<
 
 .c.obj:
-@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(COMPILE) -c `$(CYGPATH_W) '$<'`
 
 xgalaga_sdl-SFont.o: SFont.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-SFont.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-SFont.Tpo -c -o xgalaga_sdl-SFont.o `test -f 'SFont.c' || echo '$(srcdir)/'`SFont.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-SFont.Tpo $(DEPDIR)/xgalaga_sdl-SFont.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-SFont.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-SFont.Tpo -c -o xgalaga_sdl-SFont.o `test -f 'SFont.c' || echo '$(srcdir)/'`SFont.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-SFont.Tpo $(DEPDIR)/xgalaga_sdl-SFont.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='SFont.c' object='xgalaga_sdl-SFont.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-SFont.o `test -f 'SFont.c' || echo '$(srcdir)/'`SFont.c
 
 xgalaga_sdl-SFont.obj: SFont.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-SFont.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-SFont.Tpo -c -o xgalaga_sdl-SFont.obj `if test -f 'SFont.c'; then $(CYGPATH_W) 'SFont.c'; else $(CYGPATH_W) '$(srcdir)/SFont.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-SFont.Tpo $(DEPDIR)/xgalaga_sdl-SFont.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-SFont.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-SFont.Tpo -c -o xgalaga_sdl-SFont.obj `if test -f 'SFont.c'; then $(CYGPATH_W) 'SFont.c'; else $(CYGPATH_W) '$(srcdir)/SFont.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-SFont.Tpo $(DEPDIR)/xgalaga_sdl-SFont.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='SFont.c' object='xgalaga_sdl-SFont.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-SFont.obj `if test -f 'SFont.c'; then $(CYGPATH_W) 'SFont.c'; else $(CYGPATH_W) '$(srcdir)/SFont.c'; fi`
 
 xgalaga_sdl-data.o: data.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-data.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-data.Tpo -c -o xgalaga_sdl-data.o `test -f 'data.c' || echo '$(srcdir)/'`data.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-data.Tpo $(DEPDIR)/xgalaga_sdl-data.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-data.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-data.Tpo -c -o xgalaga_sdl-data.o `test -f 'data.c' || echo '$(srcdir)/'`data.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-data.Tpo $(DEPDIR)/xgalaga_sdl-data.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='data.c' object='xgalaga_sdl-data.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-data.o `test -f 'data.c' || echo '$(srcdir)/'`data.c
 
 xgalaga_sdl-data.obj: data.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-data.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-data.Tpo -c -o xgalaga_sdl-data.obj `if test -f 'data.c'; then $(CYGPATH_W) 'data.c'; else $(CYGPATH_W) '$(srcdir)/data.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-data.Tpo $(DEPDIR)/xgalaga_sdl-data.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-data.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-data.Tpo -c -o xgalaga_sdl-data.obj `if test -f 'data.c'; then $(CYGPATH_W) 'data.c'; else $(CYGPATH_W) '$(srcdir)/data.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-data.Tpo $(DEPDIR)/xgalaga_sdl-data.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='data.c' object='xgalaga_sdl-data.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-data.obj `if test -f 'data.c'; then $(CYGPATH_W) 'data.c'; else $(CYGPATH_W) '$(srcdir)/data.c'; fi`
 
 xgalaga_sdl-explosions.o: explosions.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-explosions.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-explosions.Tpo -c -o xgalaga_sdl-explosions.o `test -f 'explosions.c' || echo '$(srcdir)/'`explosions.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-explosions.Tpo $(DEPDIR)/xgalaga_sdl-explosions.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-explosions.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-explosions.Tpo -c -o xgalaga_sdl-explosions.o `test -f 'explosions.c' || echo '$(srcdir)/'`explosions.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-explosions.Tpo $(DEPDIR)/xgalaga_sdl-explosions.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='explosions.c' object='xgalaga_sdl-explosions.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-explosions.o `test -f 'explosions.c' || echo '$(srcdir)/'`explosions.c
 
 xgalaga_sdl-explosions.obj: explosions.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-explosions.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-explosions.Tpo -c -o xgalaga_sdl-explosions.obj `if test -f 'explosions.c'; then $(CYGPATH_W) 'explosions.c'; else $(CYGPATH_W) '$(srcdir)/explosions.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-explosions.Tpo $(DEPDIR)/xgalaga_sdl-explosions.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-explosions.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-explosions.Tpo -c -o xgalaga_sdl-explosions.obj `if test -f 'explosions.c'; then $(CYGPATH_W) 'explosions.c'; else $(CYGPATH_W) '$(srcdir)/explosions.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-explosions.Tpo $(DEPDIR)/xgalaga_sdl-explosions.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='explosions.c' object='xgalaga_sdl-explosions.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-explosions.obj `if test -f 'explosions.c'; then $(CYGPATH_W) 'explosions.c'; else $(CYGPATH_W) '$(srcdir)/explosions.c'; fi`
 
 xgalaga_sdl-frate.o: frate.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-frate.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-frate.Tpo -c -o xgalaga_sdl-frate.o `test -f 'frate.c' || echo '$(srcdir)/'`frate.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-frate.Tpo $(DEPDIR)/xgalaga_sdl-frate.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-frate.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-frate.Tpo -c -o xgalaga_sdl-frate.o `test -f 'frate.c' || echo '$(srcdir)/'`frate.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-frate.Tpo $(DEPDIR)/xgalaga_sdl-frate.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='frate.c' object='xgalaga_sdl-frate.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-frate.o `test -f 'frate.c' || echo '$(srcdir)/'`frate.c
 
 xgalaga_sdl-frate.obj: frate.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-frate.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-frate.Tpo -c -o xgalaga_sdl-frate.obj `if test -f 'frate.c'; then $(CYGPATH_W) 'frate.c'; else $(CYGPATH_W) '$(srcdir)/frate.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-frate.Tpo $(DEPDIR)/xgalaga_sdl-frate.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-frate.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-frate.Tpo -c -o xgalaga_sdl-frate.obj `if test -f 'frate.c'; then $(CYGPATH_W) 'frate.c'; else $(CYGPATH_W) '$(srcdir)/frate.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-frate.Tpo $(DEPDIR)/xgalaga_sdl-frate.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='frate.c' object='xgalaga_sdl-frate.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-frate.obj `if test -f 'frate.c'; then $(CYGPATH_W) 'frate.c'; else $(CYGPATH_W) '$(srcdir)/frate.c'; fi`
 
 xgalaga_sdl-highscore.o: highscore.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-highscore.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-highscore.Tpo -c -o xgalaga_sdl-highscore.o `test -f 'highscore.c' || echo '$(srcdir)/'`highscore.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-highscore.Tpo $(DEPDIR)/xgalaga_sdl-highscore.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-highscore.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-highscore.Tpo -c -o xgalaga_sdl-highscore.o `test -f 'highscore.c' || echo '$(srcdir)/'`highscore.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-highscore.Tpo $(DEPDIR)/xgalaga_sdl-highscore.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='highscore.c' object='xgalaga_sdl-highscore.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-highscore.o `test -f 'highscore.c' || echo '$(srcdir)/'`highscore.c
 
 xgalaga_sdl-highscore.obj: highscore.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-highscore.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-highscore.Tpo -c -o xgalaga_sdl-highscore.obj `if test -f 'highscore.c'; then $(CYGPATH_W) 'highscore.c'; else $(CYGPATH_W) '$(srcdir)/highscore.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-highscore.Tpo $(DEPDIR)/xgalaga_sdl-highscore.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-highscore.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-highscore.Tpo -c -o xgalaga_sdl-highscore.obj `if test -f 'highscore.c'; then $(CYGPATH_W) 'highscore.c'; else $(CYGPATH_W) '$(srcdir)/highscore.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-highscore.Tpo $(DEPDIR)/xgalaga_sdl-highscore.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='highscore.c' object='xgalaga_sdl-highscore.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-highscore.obj `if test -f 'highscore.c'; then $(CYGPATH_W) 'highscore.c'; else $(CYGPATH_W) '$(srcdir)/highscore.c'; fi`
 
 xgalaga_sdl-images.o: images.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-images.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-images.Tpo -c -o xgalaga_sdl-images.o `test -f 'images.c' || echo '$(srcdir)/'`images.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-images.Tpo $(DEPDIR)/xgalaga_sdl-images.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-images.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-images.Tpo -c -o xgalaga_sdl-images.o `test -f 'images.c' || echo '$(srcdir)/'`images.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-images.Tpo $(DEPDIR)/xgalaga_sdl-images.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='images.c' object='xgalaga_sdl-images.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-images.o `test -f 'images.c' || echo '$(srcdir)/'`images.c
 
 xgalaga_sdl-images.obj: images.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-images.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-images.Tpo -c -o xgalaga_sdl-images.obj `if test -f 'images.c'; then $(CYGPATH_W) 'images.c'; else $(CYGPATH_W) '$(srcdir)/images.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-images.Tpo $(DEPDIR)/xgalaga_sdl-images.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-images.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-images.Tpo -c -o xgalaga_sdl-images.obj `if test -f 'images.c'; then $(CYGPATH_W) 'images.c'; else $(CYGPATH_W) '$(srcdir)/images.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-images.Tpo $(DEPDIR)/xgalaga_sdl-images.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='images.c' object='xgalaga_sdl-images.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-images.obj `if test -f 'images.c'; then $(CYGPATH_W) 'images.c'; else $(CYGPATH_W) '$(srcdir)/images.c'; fi`
 
 xgalaga_sdl-joystick.o: joystick.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-joystick.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-joystick.Tpo -c -o xgalaga_sdl-joystick.o `test -f 'joystick.c' || echo '$(srcdir)/'`joystick.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-joystick.Tpo $(DEPDIR)/xgalaga_sdl-joystick.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-joystick.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-joystick.Tpo -c -o xgalaga_sdl-joystick.o `test -f 'joystick.c' || echo '$(srcdir)/'`joystick.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-joystick.Tpo $(DEPDIR)/xgalaga_sdl-joystick.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='joystick.c' object='xgalaga_sdl-joystick.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-joystick.o `test -f 'joystick.c' || echo '$(srcdir)/'`joystick.c
 
 xgalaga_sdl-joystick.obj: joystick.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-joystick.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-joystick.Tpo -c -o xgalaga_sdl-joystick.obj `if test -f 'joystick.c'; then $(CYGPATH_W) 'joystick.c'; else $(CYGPATH_W) '$(srcdir)/joystick.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-joystick.Tpo $(DEPDIR)/xgalaga_sdl-joystick.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-joystick.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-joystick.Tpo -c -o xgalaga_sdl-joystick.obj `if test -f 'joystick.c'; then $(CYGPATH_W) 'joystick.c'; else $(CYGPATH_W) '$(srcdir)/joystick.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-joystick.Tpo $(DEPDIR)/xgalaga_sdl-joystick.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='joystick.c' object='xgalaga_sdl-joystick.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-joystick.obj `if test -f 'joystick.c'; then $(CYGPATH_W) 'joystick.c'; else $(CYGPATH_W) '$(srcdir)/joystick.c'; fi`
 
 xgalaga_sdl-main.o: main.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-main.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-main.Tpo -c -o xgalaga_sdl-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-main.Tpo $(DEPDIR)/xgalaga_sdl-main.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-main.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-main.Tpo -c -o xgalaga_sdl-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-main.Tpo $(DEPDIR)/xgalaga_sdl-main.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='main.c' object='xgalaga_sdl-main.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
 
 xgalaga_sdl-main.obj: main.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-main.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-main.Tpo -c -o xgalaga_sdl-main.obj `if test -f 'main.c'; then $(CYGPATH_W) 'main.c'; else $(CYGPATH_W) '$(srcdir)/main.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-main.Tpo $(DEPDIR)/xgalaga_sdl-main.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-main.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-main.Tpo -c -o xgalaga_sdl-main.obj `if test -f 'main.c'; then $(CYGPATH_W) 'main.c'; else $(CYGPATH_W) '$(srcdir)/main.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-main.Tpo $(DEPDIR)/xgalaga_sdl-main.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='main.c' object='xgalaga_sdl-main.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-main.obj `if test -f 'main.c'; then $(CYGPATH_W) 'main.c'; else $(CYGPATH_W) '$(srcdir)/main.c'; fi`
 
 xgalaga_sdl-pathfile.o: pathfile.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-pathfile.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-pathfile.Tpo -c -o xgalaga_sdl-pathfile.o `test -f 'pathfile.c' || echo '$(srcdir)/'`pathfile.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-pathfile.Tpo $(DEPDIR)/xgalaga_sdl-pathfile.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-pathfile.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-pathfile.Tpo -c -o xgalaga_sdl-pathfile.o `test -f 'pathfile.c' || echo '$(srcdir)/'`pathfile.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-pathfile.Tpo $(DEPDIR)/xgalaga_sdl-pathfile.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='pathfile.c' object='xgalaga_sdl-pathfile.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-pathfile.o `test -f 'pathfile.c' || echo '$(srcdir)/'`pathfile.c
 
 xgalaga_sdl-pathfile.obj: pathfile.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-pathfile.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-pathfile.Tpo -c -o xgalaga_sdl-pathfile.obj `if test -f 'pathfile.c'; then $(CYGPATH_W) 'pathfile.c'; else $(CYGPATH_W) '$(srcdir)/pathfile.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-pathfile.Tpo $(DEPDIR)/xgalaga_sdl-pathfile.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-pathfile.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-pathfile.Tpo -c -o xgalaga_sdl-pathfile.obj `if test -f 'pathfile.c'; then $(CYGPATH_W) 'pathfile.c'; else $(CYGPATH_W) '$(srcdir)/pathfile.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-pathfile.Tpo $(DEPDIR)/xgalaga_sdl-pathfile.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='pathfile.c' object='xgalaga_sdl-pathfile.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-pathfile.obj `if test -f 'pathfile.c'; then $(CYGPATH_W) 'pathfile.c'; else $(CYGPATH_W) '$(srcdir)/pathfile.c'; fi`
 
 xgalaga_sdl-paths.o: paths.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-paths.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-paths.Tpo -c -o xgalaga_sdl-paths.o `test -f 'paths.c' || echo '$(srcdir)/'`paths.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-paths.Tpo $(DEPDIR)/xgalaga_sdl-paths.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-paths.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-paths.Tpo -c -o xgalaga_sdl-paths.o `test -f 'paths.c' || echo '$(srcdir)/'`paths.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-paths.Tpo $(DEPDIR)/xgalaga_sdl-paths.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='paths.c' object='xgalaga_sdl-paths.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-paths.o `test -f 'paths.c' || echo '$(srcdir)/'`paths.c
 
 xgalaga_sdl-paths.obj: paths.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-paths.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-paths.Tpo -c -o xgalaga_sdl-paths.obj `if test -f 'paths.c'; then $(CYGPATH_W) 'paths.c'; else $(CYGPATH_W) '$(srcdir)/paths.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-paths.Tpo $(DEPDIR)/xgalaga_sdl-paths.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-paths.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-paths.Tpo -c -o xgalaga_sdl-paths.obj `if test -f 'paths.c'; then $(CYGPATH_W) 'paths.c'; else $(CYGPATH_W) '$(srcdir)/paths.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-paths.Tpo $(DEPDIR)/xgalaga_sdl-paths.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='paths.c' object='xgalaga_sdl-paths.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-paths.obj `if test -f 'paths.c'; then $(CYGPATH_W) 'paths.c'; else $(CYGPATH_W) '$(srcdir)/paths.c'; fi`
 
 xgalaga_sdl-prize.o: prize.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-prize.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-prize.Tpo -c -o xgalaga_sdl-prize.o `test -f 'prize.c' || echo '$(srcdir)/'`prize.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-prize.Tpo $(DEPDIR)/xgalaga_sdl-prize.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-prize.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-prize.Tpo -c -o xgalaga_sdl-prize.o `test -f 'prize.c' || echo '$(srcdir)/'`prize.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-prize.Tpo $(DEPDIR)/xgalaga_sdl-prize.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='prize.c' object='xgalaga_sdl-prize.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-prize.o `test -f 'prize.c' || echo '$(srcdir)/'`prize.c
 
 xgalaga_sdl-prize.obj: prize.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-prize.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-prize.Tpo -c -o xgalaga_sdl-prize.obj `if test -f 'prize.c'; then $(CYGPATH_W) 'prize.c'; else $(CYGPATH_W) '$(srcdir)/prize.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-prize.Tpo $(DEPDIR)/xgalaga_sdl-prize.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-prize.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-prize.Tpo -c -o xgalaga_sdl-prize.obj `if test -f 'prize.c'; then $(CYGPATH_W) 'prize.c'; else $(CYGPATH_W) '$(srcdir)/prize.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-prize.Tpo $(DEPDIR)/xgalaga_sdl-prize.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='prize.c' object='xgalaga_sdl-prize.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-prize.obj `if test -f 'prize.c'; then $(CYGPATH_W) 'prize.c'; else $(CYGPATH_W) '$(srcdir)/prize.c'; fi`
 
 xgalaga_sdl-score.o: score.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-score.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-score.Tpo -c -o xgalaga_sdl-score.o `test -f 'score.c' || echo '$(srcdir)/'`score.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-score.Tpo $(DEPDIR)/xgalaga_sdl-score.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-score.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-score.Tpo -c -o xgalaga_sdl-score.o `test -f 'score.c' || echo '$(srcdir)/'`score.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-score.Tpo $(DEPDIR)/xgalaga_sdl-score.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='score.c' object='xgalaga_sdl-score.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-score.o `test -f 'score.c' || echo '$(srcdir)/'`score.c
 
 xgalaga_sdl-score.obj: score.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-score.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-score.Tpo -c -o xgalaga_sdl-score.obj `if test -f 'score.c'; then $(CYGPATH_W) 'score.c'; else $(CYGPATH_W) '$(srcdir)/score.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-score.Tpo $(DEPDIR)/xgalaga_sdl-score.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-score.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-score.Tpo -c -o xgalaga_sdl-score.obj `if test -f 'score.c'; then $(CYGPATH_W) 'score.c'; else $(CYGPATH_W) '$(srcdir)/score.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-score.Tpo $(DEPDIR)/xgalaga_sdl-score.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='score.c' object='xgalaga_sdl-score.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-score.obj `if test -f 'score.c'; then $(CYGPATH_W) 'score.c'; else $(CYGPATH_W) '$(srcdir)/score.c'; fi`
 
 xgalaga_sdl-sdl.o: sdl.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-sdl.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-sdl.Tpo -c -o xgalaga_sdl-sdl.o `test -f 'sdl.c' || echo '$(srcdir)/'`sdl.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-sdl.Tpo $(DEPDIR)/xgalaga_sdl-sdl.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-sdl.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-sdl.Tpo -c -o xgalaga_sdl-sdl.o `test -f 'sdl.c' || echo '$(srcdir)/'`sdl.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-sdl.Tpo $(DEPDIR)/xgalaga_sdl-sdl.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='sdl.c' object='xgalaga_sdl-sdl.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-sdl.o `test -f 'sdl.c' || echo '$(srcdir)/'`sdl.c
 
 xgalaga_sdl-sdl.obj: sdl.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-sdl.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-sdl.Tpo -c -o xgalaga_sdl-sdl.obj `if test -f 'sdl.c'; then $(CYGPATH_W) 'sdl.c'; else $(CYGPATH_W) '$(srcdir)/sdl.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-sdl.Tpo $(DEPDIR)/xgalaga_sdl-sdl.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-sdl.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-sdl.Tpo -c -o xgalaga_sdl-sdl.obj `if test -f 'sdl.c'; then $(CYGPATH_W) 'sdl.c'; else $(CYGPATH_W) '$(srcdir)/sdl.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-sdl.Tpo $(DEPDIR)/xgalaga_sdl-sdl.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='sdl.c' object='xgalaga_sdl-sdl.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-sdl.obj `if test -f 'sdl.c'; then $(CYGPATH_W) 'sdl.c'; else $(CYGPATH_W) '$(srcdir)/sdl.c'; fi`
 
 xgalaga_sdl-sound.o: sound.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-sound.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-sound.Tpo -c -o xgalaga_sdl-sound.o `test -f 'sound.c' || echo '$(srcdir)/'`sound.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-sound.Tpo $(DEPDIR)/xgalaga_sdl-sound.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-sound.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-sound.Tpo -c -o xgalaga_sdl-sound.o `test -f 'sound.c' || echo '$(srcdir)/'`sound.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-sound.Tpo $(DEPDIR)/xgalaga_sdl-sound.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='sound.c' object='xgalaga_sdl-sound.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-sound.o `test -f 'sound.c' || echo '$(srcdir)/'`sound.c
 
 xgalaga_sdl-sound.obj: sound.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-sound.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-sound.Tpo -c -o xgalaga_sdl-sound.obj `if test -f 'sound.c'; then $(CYGPATH_W) 'sound.c'; else $(CYGPATH_W) '$(srcdir)/sound.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-sound.Tpo $(DEPDIR)/xgalaga_sdl-sound.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-sound.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-sound.Tpo -c -o xgalaga_sdl-sound.obj `if test -f 'sound.c'; then $(CYGPATH_W) 'sound.c'; else $(CYGPATH_W) '$(srcdir)/sound.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-sound.Tpo $(DEPDIR)/xgalaga_sdl-sound.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='sound.c' object='xgalaga_sdl-sound.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-sound.obj `if test -f 'sound.c'; then $(CYGPATH_W) 'sound.c'; else $(CYGPATH_W) '$(srcdir)/sound.c'; fi`
 
 xgalaga_sdl-title.o: title.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-title.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-title.Tpo -c -o xgalaga_sdl-title.o `test -f 'title.c' || echo '$(srcdir)/'`title.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-title.Tpo $(DEPDIR)/xgalaga_sdl-title.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-title.o -MD -MP -MF $(DEPDIR)/xgalaga_sdl-title.Tpo -c -o xgalaga_sdl-title.o `test -f 'title.c' || echo '$(srcdir)/'`title.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-title.Tpo $(DEPDIR)/xgalaga_sdl-title.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='title.c' object='xgalaga_sdl-title.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-title.o `test -f 'title.c' || echo '$(srcdir)/'`title.c
 
 xgalaga_sdl-title.obj: title.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-title.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-title.Tpo -c -o xgalaga_sdl-title.obj `if test -f 'title.c'; then $(CYGPATH_W) 'title.c'; else $(CYGPATH_W) '$(srcdir)/title.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/xgalaga_sdl-title.Tpo $(DEPDIR)/xgalaga_sdl-title.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -MT xgalaga_sdl-title.obj -MD -MP -MF $(DEPDIR)/xgalaga_sdl-title.Tpo -c -o xgalaga_sdl-title.obj `if test -f 'title.c'; then $(CYGPATH_W) 'title.c'; else $(CYGPATH_W) '$(srcdir)/title.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/xgalaga_sdl-title.Tpo $(DEPDIR)/xgalaga_sdl-title.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='title.c' object='xgalaga_sdl-title.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xgalaga_sdl_CFLAGS) $(CFLAGS) -c -o xgalaga_sdl-title.obj `if test -f 'title.c'; then $(CYGPATH_W) 'title.c'; else $(CYGPATH_W) '$(srcdir)/title.c'; fi`
