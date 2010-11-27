@@ -22,6 +22,9 @@ if test "${ac_cv_c_compiler_gnu}" = "yes"; then
     "
 fi # ac_cv_c_compiler_gnu
 
+# Silent rules; but check if supported.
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
+
 # Check for SDL libraries
 saved_LIBS=$LIBS
 AC_CHECK_PROG(HAVE_SDL_CONFIG, sdl-config, yes, no)
