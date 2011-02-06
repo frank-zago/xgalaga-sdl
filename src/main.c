@@ -128,8 +128,8 @@ static void init_stars(void)
     int i;
 
     for(i=0;i<NUMSTARS;i++) {
-        stars[i].x = random()%WINWIDTH;
-        stars[i].y = random()%WINHEIGHT;
+        stars[i].x = random()%winwidth;
+        stars[i].y = random()%winheight;
         stars[i].speed = (random()%3)+1;
 		stars[i].pixel = get_random_star_color();
     }
@@ -146,9 +146,9 @@ static void do_stars(void)
 
         for(i=0;i<NUMSTARS;i++) {
 			stars[i].y+=stars[i].speed*((starspeed < 20) ? ABS(starspeed) : 20);
-            if(stars[i].y >= WINHEIGHT) {
-                stars[i].y-=WINHEIGHT-ABS(starspeed);
-                stars[i].x = random() % WINWIDTH;
+            if(stars[i].y >= winheight) {
+                stars[i].y-=winheight-ABS(starspeed);
+                stars[i].x = random() % winwidth;
 				stars[i].pixel = get_random_star_color();
             }
 			S_DrawPoint(stars[i].x, stars[i].y, stars[i].pixel);
@@ -160,11 +160,11 @@ static void do_stars(void)
 			while (total_shields > 0) {
 				shieldcount++;
 				total_shields -= 19;
-				S_DrawImage(WINWIDTH - 20 * shieldcount, 0, 0, shieldImage);
+				S_DrawImage(winwidth - 20 * shieldcount, 0, 0, shieldImage);
 			}
 			while (total_shields < 0) {
 				int column;
-				column = WINWIDTH - 20 * shieldcount - total_shields++;
+				column = winwidth - 20 * shieldcount - total_shields++;
 				W_MakeLine(screen, column, 0, column, 20, S_Black);
 				W_MakeLine(screen, column - 1, 0, column - 1, 20, S_Black);
 			}
@@ -181,7 +181,7 @@ static void do_stars(void)
 
         sprintf(buf, "LEVEL %d", level+1);
 
-		y = (WINHEIGHT - SFont_TextHeight(fnt_big_red))/2;
+		y = (winheight - SFont_TextHeight(fnt_big_red))/2;
 		SFont_WriteCenter(fnt_big_red, y, buf);
 
 #ifndef ORIGINAL_XGALAGA
@@ -422,8 +422,8 @@ static void do_aliens(void)
         if(convoyx <= 0) {
             convoyx=0;
             convoymove = -convoymove;
-        } else if(convoyx >= (WINWIDTH-180)) {
-            convoyx = WINWIDTH - 180;
+        } else if(convoyx >= (winwidth-180)) {
+            convoyx = winwidth - 180;
             convoymove = -convoymove;
         }
     }
@@ -460,12 +460,12 @@ static void do_aliens(void)
                 } else {
                     aliens[i].x += moves[aliens[i].dir][0];
                     aliens[i].y += moves[aliens[i].dir][1];
-                    if(aliens[i].x > WINWIDTH+20)
+                    if(aliens[i].x > winwidth+20)
                         aliens[i].x = -20;
                     else if(aliens[i].x < -20)
-                        aliens[i].x = WINWIDTH+20;
+                        aliens[i].x = winwidth+20;
 
-                    if(aliens[i].y > WINHEIGHT) {
+                    if(aliens[i].y > winheight) {
                         aliens[i].x = 20 * (i - 10 * (i/10)) + convoyx + convoymove;
                         aliens[i].y = -30;
                         aliens[i].dir = -2;
@@ -664,7 +664,7 @@ static void do_torps(void)
                 }
                 if(torps[i].y < -torps[i].yspeed ||
                    torps[i].x < ABS(torps[i].xspeed) ||
-                   torps[i].x > WINWIDTH-ABS(torps[i].xspeed)) {
+                   torps[i].x > winwidth-ABS(torps[i].xspeed)) {
                     torps[i].alive = 0;
                     numtorps--;
                 } else
@@ -693,7 +693,7 @@ static void do_etorps(void)
                 t->y+=t->yspeed;
                 t->x+=t->xspeed;
                 t->frame++;
-                if(t->y > WINHEIGHT || t->x < 0 || t->x > WINWIDTH) {
+                if(t->y > winheight || t->x < 0 || t->x > winwidth) {
                     if(t->next)
                         t->next->prev = t->prev;
                     if(t->prev)
@@ -704,9 +704,9 @@ static void do_etorps(void)
                     numetorps--;
                 } else if(!pldead && !plflash && !plshield &&
                           (ABS(t->x - plx) < 8) &&
-                          (ABS(t->y - (WINHEIGHT - (int)playerShip->height / 2)) < 8)) { /* DEAD! */
+                          (ABS(t->y - (winheight - (int)playerShip->height / 2)) < 8)) { /* DEAD! */
                     pldead = 1;
-                    new_explosion(plx, WINHEIGHT - playerShip->height/2, 2);
+                    new_explosion(plx, winheight - playerShip->height/2, 2);
                 } else {
                     S_DrawImage(t->x-(enemyTorp->width/2),
                                 t->y-(enemyTorp->height/2),
@@ -741,7 +741,7 @@ static void start_game(void)
 	pldead = 0;
 	score = 0;
 	nextBonus = 20000;
-	plx = WINWIDTH/2;
+	plx = winwidth/2;
 	mx = plx;
 }
 
@@ -884,7 +884,7 @@ static void do_player(int but)
 
             case SDLK_g:
                 if(!pldead  && (gstate != PAUSED)) {
-                    new_explosion(plx, WINHEIGHT - ((playerShip->height)/2), 2);
+                    new_explosion(plx, winheight - ((playerShip->height)/2), 2);
                     ships = 0;
                     pldead = 1;
                 }
@@ -1005,7 +1005,7 @@ static void do_player(int but)
 		if(keys & LEFTKEY)
 			mx = 0;
 		else if(keys & RIGHTKEY)
-			mx = WINWIDTH;
+			mx = winwidth;
 		else
 			mx = plx;
 
@@ -1077,7 +1077,7 @@ static void do_player(int but)
 #endif /* DISABLE_RESET_ON_DEATH */
                     pldead = 0;
                     plflash = 50;
-                    plx = WINWIDTH/2;
+                    plx = winwidth/2;
                 }
             }
             return;
@@ -1087,21 +1087,21 @@ static void do_player(int but)
             switch(weapon) {
             case SINGLESHOT:
                 if(numtorps < maxtorps)
-                    new_torp(plx, WINHEIGHT - playerShip->height, 0, -TORPSPEED);
+                    new_torp(plx, winheight - playerShip->height, 0, -TORPSPEED);
 				torpok = TORPDELAY;
                 break;
             case DOUBLESHOT:
                 if(numtorps < maxtorps-1) {
-                    new_torp(plx-5, WINHEIGHT - playerShip->height, 0, -TORPSPEED);
-                    new_torp(plx+5, WINHEIGHT - playerShip->height, 0, -TORPSPEED);
+                    new_torp(plx-5, winheight - playerShip->height, 0, -TORPSPEED);
+                    new_torp(plx+5, winheight - playerShip->height, 0, -TORPSPEED);
 					torpok = TORPDELAY;
                 }
                 break;
             case TRIPLESHOT:
                 if(numtorps < maxtorps-2) {
-                    new_torp(plx-5, WINHEIGHT - playerShip->height, -2, 1-TORPSPEED);
-                    new_torp(plx,   WINHEIGHT - playerShip->height, 0,   -TORPSPEED);
-                    new_torp(plx+5, WINHEIGHT - playerShip->height, 2, 1-TORPSPEED);
+                    new_torp(plx-5, winheight - playerShip->height, -2, 1-TORPSPEED);
+                    new_torp(plx,   winheight - playerShip->height, 0,   -TORPSPEED);
+                    new_torp(plx+5, winheight - playerShip->height, 2, 1-TORPSPEED);
 					torpok = TORPDELAY;
                 }
                 break;
@@ -1110,36 +1110,36 @@ static void do_player(int but)
             	if (numtorps == 0)
                 {
 					if ((maxtorps % 2) == 1)
-						new_torp(plx, WINHEIGHT - playerShip->height, 0, -TORPSPEED*1.15);
+						new_torp(plx, winheight - playerShip->height, 0, -TORPSPEED*1.15);
 					else
 					{
-						new_torp(plx - 5, WINHEIGHT - playerShip->height, 0, -TORPSPEED*1.15);
-						new_torp(plx + 5, WINHEIGHT - playerShip->height, 0, -TORPSPEED*1.15);
+						new_torp(plx - 5, winheight - playerShip->height, 0, -TORPSPEED*1.15);
+						new_torp(plx + 5, winheight - playerShip->height, 0, -TORPSPEED*1.15);
 					}
 					if (maxtorps > 2)
 					{
-						new_torp(plx, WINHEIGHT - playerShip->height - 15, -2, -TORPSPEED*1.15);
-						new_torp(plx, WINHEIGHT - playerShip->height - 15, 2, -TORPSPEED*1.15);
+						new_torp(plx, winheight - playerShip->height - 15, -2, -TORPSPEED*1.15);
+						new_torp(plx, winheight - playerShip->height - 15, 2, -TORPSPEED*1.15);
 					}
 					if (maxtorps > 4)
 					{
-						new_torp(plx, WINHEIGHT - playerShip->height - 25, -4, -TORPSPEED*1.15);
-						new_torp(plx, WINHEIGHT - playerShip->height - 25, 4, -TORPSPEED*1.15);
+						new_torp(plx, winheight - playerShip->height - 25, -4, -TORPSPEED*1.15);
+						new_torp(plx, winheight - playerShip->height - 25, 4, -TORPSPEED*1.15);
 					}
 					if (maxtorps > 6)
 					{
-						new_torp(plx, WINHEIGHT - playerShip->height - 35, -6, -TORPSPEED*1.15);
-						new_torp(plx, WINHEIGHT - playerShip->height - 35, 6, -TORPSPEED*1.15);
+						new_torp(plx, winheight - playerShip->height - 35, -6, -TORPSPEED*1.15);
+						new_torp(plx, winheight - playerShip->height - 35, 6, -TORPSPEED*1.15);
 					}
 					if (maxtorps > 8)
 					{
-						new_torp(plx, WINHEIGHT - playerShip->height - 50, -8, -TORPSPEED*1.15);
-						new_torp(plx, WINHEIGHT - playerShip->height - 50, 8, -TORPSPEED*1.15);
+						new_torp(plx, winheight - playerShip->height - 50, -8, -TORPSPEED*1.15);
+						new_torp(plx, winheight - playerShip->height - 50, 8, -TORPSPEED*1.15);
 					}
 					if (maxtorps > 10)
 					{
-						new_torp(plx, WINHEIGHT - playerShip->height - 60, -10, -TORPSPEED*1.15);
-						new_torp(plx, WINHEIGHT - playerShip->height - 60, 10, -TORPSPEED*1.15);
+						new_torp(plx, winheight - playerShip->height - 60, -10, -TORPSPEED*1.15);
+						new_torp(plx, winheight - playerShip->height - 60, 10, -TORPSPEED*1.15);
 					}
 					torpok = TORPDELAY;
 				}
@@ -1150,7 +1150,7 @@ static void do_player(int but)
 				if(numtorps < maxtorps)
 				{
 					shotside = (shotside == -15) ? 15 : -15;
-					new_torp(plx + shotside, WINHEIGHT - playerShip->height, 0, -TORPSPEED * 1.3);
+					new_torp(plx + shotside, winheight - playerShip->height, 0, -TORPSPEED * 1.3);
 					torpok = TORPDELAY - 2;
 				}
 				break;
@@ -1169,28 +1169,28 @@ static void do_player(int but)
 #ifdef ENABLE_SHIP_WRAP
 
         if(plx < 10)
-        	plx=WINWIDTH - 10;
-        if(plx > WINWIDTH - 10)
+        	plx=winwidth - 10;
+        if(plx > winwidth - 10)
 			plx=10;
 #else
 
         if(plx < playerShip->width/2)
             plx=playerShip->width/2;
-        if(plx> WINWIDTH - playerShip->width/2)
-            plx=WINWIDTH - playerShip->width/2;
+        if(plx> winwidth - playerShip->width/2)
+            plx=winwidth - playerShip->width/2;
 #endif
 
         if(plflash > 0)
             plflash--;
         if(!(plflash % 2))
-            S_DrawImage(plx-(playerShip->width/2), WINHEIGHT - playerShip->height, counter, playerShip);
+            S_DrawImage(plx-(playerShip->width/2), winheight - playerShip->height, counter, playerShip);
         if(plshield > 0)
             plshield--;
         if(plshield && ((plshield > SHIELDTIME/4) || plshield % 2)) {
-            S_DrawImage(plx-(shieldImage->width/2), WINHEIGHT - shieldImage->height - 3, 0, shieldImage);
+            S_DrawImage(plx-(shieldImage->width/2), winheight - shieldImage->height - 3, 0, shieldImage);
         }
     } else if (!pldead) { /* paused */
-        S_DrawImage(plx-(playerShip->width/2), WINHEIGHT - playerShip->height, counter, playerShip);
+        S_DrawImage(plx-(playerShip->width/2), winheight - playerShip->height, counter, playerShip);
     }
 }
 
@@ -1253,8 +1253,8 @@ int main(int argc, char *argv[])
                 fullscreen = 0;
             } else if ((strcmp(argv[ac], "-winsize") == 0) && (++ac < argc) &&
                        (sscanf(argv[ac], "%dx%d", &w, &h) == 2)) {
-                WINWIDTH  = w;
-                WINHEIGHT = h;
+                winwidth  = w;
+                winheight = h;
             } else {
                 print_usage();
                 exit(0);
@@ -1301,7 +1301,7 @@ int main(int argc, char *argv[])
     ships = 2;
     nextBonus = 20000;
 	gstate = INTRO;
-	plx = WINWIDTH/2;
+	plx = winwidth/2;
 
     while(1) {
         counter++;

@@ -57,13 +57,13 @@ void S_Initialize(int fullscreen)
 		exit(1);
     }
 
-    bpp = SDL_VideoModeOK(WINWIDTH, WINHEIGHT, 8, flags);
+    bpp = SDL_VideoModeOK(winwidth, winheight, 8, flags);
     if (bpp == 0) {
         fprintf(stderr, "Couldn't get a video mode: %s\n", SDL_GetError());
 		exit(1);
     }
 
-    screen = SDL_SetVideoMode(WINWIDTH, WINHEIGHT, bpp, flags);
+    screen = SDL_SetVideoMode(winwidth, winheight, bpp, flags);
     if (screen == NULL) {
         fprintf(stderr, "Couldn't get video mode: %s\n", SDL_GetError());
         exit(1);

@@ -247,7 +247,7 @@ void show_scores(int top)
 
 	/* Draw a line. */
 	length = SFont_TextWidth(fnt_reg_yellow, labels);
-	S_DrawRect((WINWIDTH-length)/2, top + 1 + SFont_TextHeight(fnt_reg_yellow),
+	S_DrawRect((winwidth-length)/2, top + 1 + SFont_TextHeight(fnt_reg_yellow),
 			   length, 1,
 			   SDL_MapRGB(screen->format, 0xff, 0, 0));
 

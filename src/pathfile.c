@@ -378,8 +378,8 @@ int get_path(int anum)
 
 void get_xy(int anum, int* x, int* y)
 {
-    *x = (WINWIDTH  * pathinfo[al_paths[anum]].startx) / 400;
-    *y = (WINHEIGHT * pathinfo[al_paths[anum]].starty) / 500;
+    *x = (winwidth  * pathinfo[al_paths[anum]].startx) / 400;
+    *y = (winheight * pathinfo[al_paths[anum]].starty) / 500;
 }
 
 int get_delay(int anum)
