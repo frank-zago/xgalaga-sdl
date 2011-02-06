@@ -50,9 +50,9 @@ void init_score(void);
 /* highscore.c */
 void do_name(void);
 char *getUsersFullName(void);
-void add_score(char *name, int score);
+void add_score(char *name, unsigned int score);
 int score_key(SDLKey key);
-int check_score(int score);
+int check_score(unsigned int score);
 void show_scores(int top);
 void load_scores(void);
 void print_scores(void);

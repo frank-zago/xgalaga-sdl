@@ -34,15 +34,10 @@
 #include <ctype.h>
 #include <pwd.h>
 #include <string.h>
-#ifdef _AIX
-#include <net/nh.h>
-#else /* This is for ntohl, htonl.
-	 This file is correct for hpux and linux for sure,
-	 probably others as well. */
-#include <netinet/in.h>
-#endif
 
 #include "xgalaga.h"
+
+#include <SDL/SDL_endian.h>
 
 #define NUM_MY_SCORES 10
 
@@ -52,8 +47,8 @@ static int my_thisplace = -1;
 
 static struct high_score {
     char name[20];
-    long score;
-    long level;
+    Uint32 score;
+    Uint32 level;
 } my_scores[NUM_MY_SCORES];
 
 void do_name()
@@ -141,11 +136,11 @@ static void save_scores(void)
 		for(i=0;i<NUM_MY_SCORES;i++) {
 			if(write(hsf, my_scores[i].name, 20) < 20)
 				goto error2;
-			x=htonl(my_scores[i].score);
-			if(write(hsf, &x, sizeof(long)) < (ssize_t)sizeof(long))
+			x=SDL_SwapBE32(my_scores[i].score);
+			if(write(hsf, &x, sizeof(Uint32)) < (ssize_t)sizeof(Uint32))
 				goto error2;
-			x=htonl(my_scores[i].level);
-			if(write(hsf, &x, sizeof(long)) < (ssize_t)sizeof(long))
+			x=SDL_SwapBE32(my_scores[i].level);
+			if(write(hsf, &x, sizeof(Uint32)) < (ssize_t)sizeof(Uint32))
 				goto error2;
 		}
         close(hsf);
@@ -157,7 +152,7 @@ error2:
     return;
 }
 
-void add_score(char *name, int score)
+void add_score(char *name, unsigned int score)
 {
     int i,j ; /* ,k; */
 
@@ -222,7 +217,7 @@ int score_key(SDLKey key)
 }
 
 
-int check_score(int score)
+int check_score(unsigned int score)
 {
     int i;
 
@@ -259,8 +254,10 @@ void show_scores(int top)
     for(i=0;i<NUM_MY_SCORES;i++) {
 		SFont_Font *font = i==my_thisplace ? fnt_reg_red : fnt_reg_grey;
 
-		sprintf(buf, "  %2d. %-20s     %7ld %5ld", i+1,
-				my_scores[i].name, my_scores[i].score,my_scores[i].level);
+		sprintf(buf, "  %2d. %-20s     %7lu %5lu",
+				i+1, my_scores[i].name, 
+				(unsigned long)my_scores[i].score,
+				(unsigned long)my_scores[i].level);
 		SFont_WriteCenter(font, top+(3+i)*dy, buf);
     }
 }
@@ -285,12 +282,12 @@ void load_scores()
 			for(i=0;i<NUM_MY_SCORES;i++) {
 				if(read(hsf, my_scores[i].name, 20) < 20)
 					goto error2;
-				if(read(hsf, &my_scores[i].score, sizeof(long)) < (ssize_t)sizeof(long))
+				if(read(hsf, &my_scores[i].score, sizeof(Uint32)) < (ssize_t)sizeof(Uint32))
 					goto error2;
-				if(read(hsf, &my_scores[i].level, sizeof(long)) < (ssize_t)sizeof(long))
+				if(read(hsf, &my_scores[i].level, sizeof(Uint32)) < (ssize_t)sizeof(Uint32))
 					goto error2;
-				my_scores[i].score = ntohl(my_scores[i].score);
-				my_scores[i].level = ntohl(my_scores[i].level);
+				my_scores[i].score = SDL_SwapBE32(my_scores[i].score);
+				my_scores[i].level = SDL_SwapBE32(my_scores[i].level);
 			}
 		}
 		close(hsf);
@@ -328,8 +325,8 @@ void print_scores() {
     for(i=0;i<NUM_MY_SCORES;i++) {
 	if(my_scores[i].score == 0)
 	    break;
-	printf("%-20s %8ld %8ld\n", my_scores[i].name,
-	       my_scores[i].score, my_scores[i].level);
+	printf("%-20s %8lu %8lu\n", my_scores[i].name,
+	       (unsigned long)my_scores[i].score, (unsigned long)my_scores[i].level);
     }
     printf("--------------------------------------\n");
 }
