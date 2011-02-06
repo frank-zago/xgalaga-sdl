@@ -49,7 +49,7 @@ static const char *FILENAME[] = {
 
 static Mix_Chunk *sounds[NUM_SOUNDS];
 
-void init_sound ()
+void init_sound (void)
 {
 	unsigned int i;
 	char filename[MAXFILENAME];

@@ -134,7 +134,7 @@ static struct W_Image *loadImage(int offset)
     return image;
 }
 
-int loadAllImages()
+int loadAllImages(void)
 {
 	int i;
 

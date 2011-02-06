@@ -81,6 +81,6 @@ extern const SDL_Color S_Yellow;
 extern const SDL_Color S_Black;
 extern const SDL_Color S_Grey;
 
-enum gstate gstate;
+extern enum gstate gstate;
 
 extern int fullscreen;

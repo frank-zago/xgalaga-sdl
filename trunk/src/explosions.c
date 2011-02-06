@@ -23,10 +23,10 @@
 
 #include "xgalaga.h"
 
-static struct explosion *first_exp=0;
-static struct score_bubble *first_bub=0;
+static struct explosion *first_exp;
+static struct score_bubble *first_bub;
 
-struct W_Image *expImage, *bubbleImages[4];
+static struct W_Image *expImage, *bubbleImages[4];
 
 static void undo_bubbles(void)
 {
@@ -40,7 +40,7 @@ static void undo_bubbles(void)
 			if(bub->next)
 				bub->next->prev = bub->prev;
 			if(first_bub == bub)
-				first_bub = 0;
+				first_bub = NULL;
 			free(bub);
 		}
 		bub=nextbub;
@@ -63,7 +63,7 @@ static void do_bubbles(void)
     }
 }
 
-void undo_explosions()
+void undo_explosions(void)
 {
     struct explosion *exp=first_exp, *nextexp;
 
@@ -75,7 +75,7 @@ void undo_explosions()
 			if(exp->next)
 				exp->next->prev = exp->prev;
 			if(first_exp == exp)
-				first_exp = 0;
+				first_exp = NULL;
 			free(exp);
 		}
 		exp=nextexp;
@@ -83,7 +83,7 @@ void undo_explosions()
     undo_bubbles();
 }
 
-void do_explosions()
+void do_explosions(void)
 {
     struct explosion *exp=first_exp;
 
@@ -104,7 +104,7 @@ void new_explosion(int x, int y, int type)
 
     exp = malloc(sizeof(struct explosion));
     exp->next = first_exp;
-    exp->prev = 0;
+    exp->prev = NULL;
     if(exp->next)
 		exp->next->prev = exp;
     first_exp = exp;
@@ -134,7 +134,7 @@ void score_flagship(int x, int y, int ne)
 
     bub = malloc(sizeof(struct score_bubble));
     bub->next = first_bub;
-    bub->prev = 0;
+    bub->prev = NULL;
     if(bub->next)
 		bub->next->prev = bub;
     first_bub = bub;
@@ -159,7 +159,7 @@ void score_flagship(int x, int y, int ne)
     }
 }
 
-void init_explosions()
+void init_explosions(void)
 {
     expImage = getImage(I_EXPLOSION);
 

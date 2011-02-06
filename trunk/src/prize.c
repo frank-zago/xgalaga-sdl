@@ -59,12 +59,12 @@ static struct {
 	const char *desc;
 } prizes[NUMPRIZES];
 
-struct prize {
+static struct prize {
     struct prize *next, *prev;
     int x, y, type, dying;
 } *first_prize; /* 8-) */
 
-void init_prizes()
+void init_prizes(void)
 {
     prizes[0].image = getImage(I_PR_SING);
 	prizes[0].desc = "Shot single torpedo";
@@ -107,7 +107,7 @@ void new_prize(int x, int y)
 
     p = malloc(sizeof(struct prize));
     p->next = first_prize;
-    p->prev = 0;
+    p->prev = NULL;
     if(first_prize)
 		first_prize->prev = p;
     first_prize = p;
@@ -117,7 +117,7 @@ void new_prize(int x, int y)
     p->dying = 0;
 }
 
-void undo_prizes()
+void undo_prizes(void)
 {
     struct prize *p = first_prize, *nextp;
 
@@ -137,7 +137,7 @@ void undo_prizes()
     }
 }
 
-void do_prizes()
+void do_prizes(void)
 {
     struct prize *p = first_prize;
     int i,k, ne;

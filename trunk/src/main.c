@@ -30,7 +30,7 @@
 
 static struct torp torps[MAXTORPS];
 static struct star stars[NUMSTARS];
-static struct torp *first_etorp=0;
+static struct torp *first_etorp;
 
 static int convoyx = 0, convoymove = 1;
 static int livecount = 0;
@@ -309,7 +309,7 @@ static void new_etorp(int x, int y, int xs, int ys)
     t->next = first_etorp;
     if(t->next)
         t->next->prev = t;
-    t->prev = 0;
+    t->prev = NULL;
     first_etorp = t;
 
     t->x = x;
