@@ -39,7 +39,7 @@ void do_score()
         {
 			ships++;
 			extrax = 0 - extraImage->width/2;
-			extray = WINHEIGHT/2;
+			extray = winheight/2;
 			drawExtra = 1;
 			if (nextBonus < BONUSSHIPSCORE)
 				nextBonus = BONUSSHIPSCORE;
@@ -55,7 +55,7 @@ void do_score()
     {
 		extrax += 4;
 		S_DrawImage(extrax-(extraImage->width/2), extray-(extraImage->height/2), 0, extraImage);
-		if((extrax-(int)extraImage->width/2) > WINWIDTH)
+		if((extrax-(int)extraImage->width/2) > winwidth)
 			drawExtra = 0;
     }
 }

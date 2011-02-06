@@ -36,9 +36,8 @@ int counter;
 
 int wantStars = 1;
 
-/* Modified slightly to better fit on 800x600 in fullscreen mode */
-int winwidth  = 468; /* was 400 */
-int winheight = 596; /* was 511 */
+int winwidth  = WINWIDTH;
+int winheight = WINHEIGHT;
 
 int alien_shape[ALIENSHAPES] = {
     I_ALIEN1,

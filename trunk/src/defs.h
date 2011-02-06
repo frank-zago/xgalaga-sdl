@@ -44,8 +44,9 @@
 
 #define TORPDELAY 5
 
-#define WINWIDTH  winwidth  /* was 400 */
-#define WINHEIGHT winheight /* was 500 */
+/* Modified slightly to better fit on 800x600 in fullscreen mode */
+#define WINWIDTH  468
+#define WINHEIGHT 596
 
 #define NUMSTARS 30
 

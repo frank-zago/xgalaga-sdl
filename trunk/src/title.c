@@ -44,7 +44,7 @@ static int pausex, pausey, pauseyspeed=1;
 
 void do_pause()
 {
-    if((pausey < pauseImage->height/2) || ((pausey+(pauseImage->height/2)) >= WINHEIGHT))
+    if((pausey < pauseImage->height/2) || ((pausey+(pauseImage->height/2)) >= winheight))
 	pauseyspeed = -pauseyspeed;
     pausey+=pauseyspeed;
 
@@ -67,13 +67,13 @@ static void show_points()
     char buf[40];
 
     for (i=0;i<6;i++) {
-		S_DrawImage(WINWIDTH/2 - 30, 220+i*21,
+		S_DrawImage(winwidth/2 - 30, 220+i*21,
 					0, getImage(a_images[5-i]));
 		if(i < 5)
 			sprintf(buf, "- %d", (i+1)*100);
 		else
 			sprintf(buf, "- ???");
-		W_MaskText(screen, WINWIDTH/2, 225+i*21,
+		W_MaskText(screen, winwidth/2, 225+i*21,
 				   S_Yellow, buf, strlen(buf), W_RegularFont);
     }
     ty = 220+i*21;
@@ -222,7 +222,7 @@ void do_title()
     int top = 130;
     char vbuf[50];
 
-    S_DrawImage(WINWIDTH/2 - titleImage->width/2, top, 0, titleImage);
+    S_DrawImage(winwidth/2 - titleImage->width/2, top, 0, titleImage);
     sprintf (vbuf, "v%s", VERSION);
     SFont_WriteCenter (fnt_reg_yellow, top + titleImage->height - 10, vbuf);
 
@@ -246,8 +246,8 @@ void do_title()
 	else if (title_page == 2)
 		show_bonuses(top);
 
-	SFont_WriteCenter(fnt_reg_yellow, WINHEIGHT - 2*SFont_TextHeight(fnt_reg_yellow), "Press space to start");
-	SFont_WriteCenter(fnt_reg_yellow, WINHEIGHT - SFont_TextHeight(fnt_reg_yellow), "Or q to quit");
+	SFont_WriteCenter(fnt_reg_yellow, winheight - 2*SFont_TextHeight(fnt_reg_yellow), "Press space to start");
+	SFont_WriteCenter(fnt_reg_yellow, winheight - SFont_TextHeight(fnt_reg_yellow), "Or q to quit");
 
     pagetimer--;
 
@@ -267,8 +267,8 @@ void init_titles()
 {
     titleImage = getImage(I_TITLE);
     pauseImage = getImage(I_PAUSE);
-    pausex = WINWIDTH/2;
-    pausey = WINHEIGHT/2;
+    pausex = winwidth/2;
+    pausey = winheight/2;
     pauseyspeed = 3;
     read_credits();
 }

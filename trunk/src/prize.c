@@ -149,7 +149,7 @@ void do_prizes()
 		S_DrawImage(p->x-prizes[p->type].image->width/2, p->y-prizes[p->type].image->width/2,
 					0, prizes[p->type].image);
 
-		if(p->y > (WINHEIGHT-20) && (ABS(p->x - plx) < 15)
+		if(p->y > (winheight-20) && (ABS(p->x - plx) < 15)
 #ifdef NO_PRIZE_WHILE_DEAD
 		   && !pldead
 #endif
@@ -275,7 +275,7 @@ void do_prizes()
 			}
 			if(maxtorps > MAXTORPS)
 				maxtorps = MAXTORPS;
-		} else if(p->y > WINHEIGHT) {
+		} else if(p->y > winheight) {
 			p->dying = 1;
 		}
 		p=p->next;
@@ -296,7 +296,7 @@ void show_bonuses(int top)
 
 	/* Draw a line. */
 	length = SFont_TextWidth(fnt_reg_yellow, label);
-	S_DrawRect((WINWIDTH-length)/2, top + 1 + SFont_TextHeight(fnt_reg_yellow),
+	S_DrawRect((winwidth-length)/2, top + 1 + SFont_TextHeight(fnt_reg_yellow),
 			   length, 1,
 			   SDL_MapRGB(screen->format, 0xff, 0, 0));
 
