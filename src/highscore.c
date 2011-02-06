@@ -130,7 +130,7 @@ static void save_scores(void)
 		hsf = open(my_file_name, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 
 		if(hsf < 0) {
-			printf("Couldn't write scores file %s\n", my_file_name);
+			fprintf(stderr, "Couldn't write scores file %s\n", my_file_name);
 			return;
 		}
 		for(i=0;i<NUM_MY_SCORES;i++) {
@@ -148,7 +148,7 @@ static void save_scores(void)
 
     return;
 error2:
-    printf("Error saving high scores file %s\n", my_file_name);
+    fprintf(stderr, "Error saving high scores file %s\n", my_file_name);
     return;
 }
 
@@ -272,7 +272,7 @@ void load_scores()
 		snprintf(my_file_name, sizeof(my_file_name)-1, "%s/.xgalscores", home);
 		hsf = open(my_file_name, O_RDONLY);
 		if(hsf <0 ) {
-			printf("Trouble opening high scores file '%s'\n", my_file_name);
+			fprintf(stderr, "Trouble opening high scores file '%s'\n", my_file_name);
 			for(i=0;i<NUM_MY_SCORES;i++) {
 				my_scores[i].name[0]=0;
 				my_scores[i].score = 0;
@@ -292,7 +292,7 @@ void load_scores()
 		}
 		close(hsf);
     } else {
-		printf("No HOME variable, so no personal score file.\n");
+		fprintf(stderr, "No HOME variable, so no personal score file.\n");
 		for(i=0;i<NUM_MY_SCORES;i++) {
 			my_scores[i].name[0]=0;
 			my_scores[i].score = 0;
@@ -303,7 +303,7 @@ void load_scores()
 
 error2:
     if(i>0)
-		printf("Error reading high scores file '%s'\n", my_file_name);
+		fprintf(stderr, "Error reading high scores file '%s'\n", my_file_name);
     for(i=0;i<NUM_MY_SCORES;i++) {
 		my_scores[i].name[0]=0;
 		my_scores[i].score = 0;
