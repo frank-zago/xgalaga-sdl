@@ -51,8 +51,8 @@ struct path_info
     int startx, starty, len;
 };
 
-struct path_entry epaths[NUMPATHS][MAXPATHLEN];
-struct path_info  pathinfo[NUMPATHS];
+static struct path_entry epaths[NUMPATHS][MAXPATHLEN];
+static struct path_info  pathinfo[NUMPATHS];
 
 static int al_shapes[MAXALIENS];
 static int al_delays[MAXALIENS];

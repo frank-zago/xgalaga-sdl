@@ -42,7 +42,7 @@ static const unsigned int NUM_TITLE_PAGES = 3;
 static struct W_Image *pauseImage, *titleImage;
 static int pausex, pausey, pauseyspeed=1;
 
-void do_pause()
+void do_pause(void)
 {
     if((pausey < pauseImage->height/2) || ((pausey+(pauseImage->height/2)) >= winheight))
 	pauseyspeed = -pauseyspeed;
@@ -217,7 +217,7 @@ void title_page_prev(void)
 	pagetimer = 299;
 }
 
-void do_title()
+void do_title(void)
 {
     int top = 130;
     char vbuf[50];
@@ -263,7 +263,7 @@ void do_title()
     show_credits();
 }
 
-void init_titles()
+void init_titles(void)
 {
     titleImage = getImage(I_TITLE);
     pauseImage = getImage(I_PAUSE);

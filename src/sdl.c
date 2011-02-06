@@ -24,7 +24,7 @@
 
 SDL_Surface *screen;
 
-void toggle_fullscreen()
+void toggle_fullscreen(void)
 {
 	Uint32 flags = SDL_SWSURFACE;
 	Uint32 old_flags = screen->flags;

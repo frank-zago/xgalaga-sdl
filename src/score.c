@@ -29,7 +29,7 @@
 static struct W_Image *miniship, *extraImage;
 static int drawExtra = 0, extrax, extray;
 
-void do_score()
+void do_score(void)
 {
     static int lastscore;
 
@@ -60,7 +60,7 @@ void do_score()
     }
 }
 
-void draw_score()
+void draw_score(void)
 {
     int i;
 	char str[20];
@@ -81,7 +81,7 @@ void draw_score()
     }
 }
 
-void init_score()
+void init_score(void)
 {
     miniship = getImage(I_MINISHIP);
     extraImage = getImage(I_EXTRA);

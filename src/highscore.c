@@ -51,7 +51,7 @@ static struct high_score {
     Uint32 level;
 } my_scores[NUM_MY_SCORES];
 
-void do_name()
+void do_name(void)
 {
     char buf[21];
     static int init = 0;
@@ -66,7 +66,7 @@ void do_name()
     SFont_WriteCenter(fnt_reg_cyan, 250 + SFont_TextHeight(fnt_reg_cyan), buf);
 }
 
-char *getUsersFullName()
+char *getUsersFullName(void)
 {
     struct passwd *pass;
     char *comma;
@@ -262,7 +262,7 @@ void show_scores(int top)
     }
 }
 
-void load_scores()
+void load_scores(void)
 {
     int i;
     int hsf;
@@ -312,7 +312,8 @@ error2:
     close(hsf);
 }
 
-void print_scores() {
+void print_scores(void)
+{
     int i;
 
     load_scores();
