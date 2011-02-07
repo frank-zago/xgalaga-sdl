@@ -44,9 +44,14 @@
 
 #define TORPDELAY 5
 
+#ifdef __WII__
+#define WINWIDTH  640
+#define WINHEIGHT 480
+#else
 /* Modified slightly to better fit on 800x600 in fullscreen mode */
 #define WINWIDTH  468
 #define WINHEIGHT 596
+#endif
 
 #define NUMSTARS 30
 

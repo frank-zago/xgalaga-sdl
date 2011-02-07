@@ -1,0 +1,29 @@
+XGalaga for Wii
+
+-= This is a work in progress =-
+The sounds doesn't work, and the picture is missing both the top and
+bottom, at least on my setup.
+
+The toolchain for Wii (PPC) must be installed as well as the
+necessary SDL libraries.
+See http://devkitpro.org/ and http://wiibrew.org/wiki/SDL_Wii
+
+To compile:
+  make -f Makefile.wii
+
+To run under the homwbrew channel:
+  make -f Makefile.wii run
+
+The data files must be on the sd card. Copy the images, levels and
+sounds directories into apps/xgalaga.
+The directory structure will be something like:
+  .../apps/xgalaga/images/pr_trip.png
+  .../apps/xgalaga/images/pr_trip.png
+  .../apps/xgalaga/images/alien5.png
+  .../apps/xgalaga/images/s500.png
+  .../apps/xgalaga/levels
+  .../apps/xgalaga/levels/level2.xgl
+  .../apps/xgalaga/sounds/smart.wav
+  .../apps/xgalaga/sounds/shield.wav
+
+
