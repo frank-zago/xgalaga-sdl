@@ -64,7 +64,13 @@ void do_name(void)
     SFont_WriteCenter(fnt_reg_cyan, 250 + SFont_TextHeight(fnt_reg_cyan), buf);
 }
 
+#ifdef __WII__
 char *getUsersFullName(void)
+{
+	return "Player";
+}
+#else
+char *getUsersFullName()
 {
     struct passwd *pass;
     char *comma;
@@ -115,6 +121,7 @@ char *getUsersFullName(void)
     /* Return their name without any trailing stuff */
     return(fullname);
 }
+#endif
 
 static void save_scores(void)
 {
@@ -123,7 +130,13 @@ static void save_scores(void)
     long x;
     char my_file_name [256], *home;
 
-    if((home = getenv("HOME"))) {
+#ifdef __WII__
+	home = DATADIR;
+#else
+	home = getenv("HOME");
+#endif
+
+    if (home) {
 		snprintf(my_file_name, sizeof(my_file_name)-1, "%s/.xgalscores", home);
 		hsf = open(my_file_name, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 
@@ -266,7 +279,13 @@ void load_scores(void)
     int hsf;
     char my_file_name[256], *home;
 
-    if((home = getenv("HOME"))) {
+#ifdef __WII__
+	home = DATADIR;
+#else
+	home = getenv("HOME");
+#endif
+
+	if (home) {
 		snprintf(my_file_name, sizeof(my_file_name)-1, "%s/.xgalscores", home);
 		hsf = open(my_file_name, O_RDONLY);
 		if(hsf <0 ) {
@@ -310,6 +329,7 @@ error2:
     close(hsf);
 }
 
+#ifndef __WII_
 void print_scores(void)
 {
     int i;
@@ -329,3 +349,4 @@ void print_scores(void)
     }
     printf("--------------------------------------\n");
 }
+#endif

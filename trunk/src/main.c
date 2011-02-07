@@ -76,6 +76,7 @@ static void xgal_exit(int v)
     exit(v);
 }
 
+#ifndef __WII__
 static void print_usage(void)
 {
     printf("XGalaga v%s\n"
@@ -101,6 +102,7 @@ static void print_usage(void)
 		   "  alt + enter - Toggle fullscreen - window\n",
 		   VERSION);
 }
+#endif
 
 /*------------------stars-----------------*/
 
@@ -764,6 +766,13 @@ static void do_player(int but)
 				/* Test buttons 0 to 3. */
 				if (event.jbutton.button <= 3)
 					start_game();
+#ifdef __WII__
+				else if ((event.jbutton.button == 6) ||
+						 (event.jbutton.button == 19)) {
+					/* Home button on wiimote or classic controller */
+					xgal_exit(0);
+				}
+#endif
 				break;
 
             case SDL_KEYDOWN:
@@ -815,6 +824,16 @@ static void do_player(int but)
 			case SDL_QUIT:
 				xgal_exit(0);
 				break;
+
+#ifdef __WII__
+			case SDL_JOYBUTTONDOWN:
+				if ((event.jbutton.button == 6) ||
+					(event.jbutton.button == 19)) {
+					/* Home button on wiimote or classic controller */
+					xgal_exit(0);
+				}
+				break;
+#endif
 
             case SDL_KEYDOWN:
                 if (score_key(event.key.keysym.sym))
@@ -958,6 +977,13 @@ static void do_player(int but)
 			/* Test buttons 0 to 3. */
 			if (event.jbutton.button <= 3)
 				keys |= FIREKEY;
+#ifdef __WII__
+			else if ((event.jbutton.button == 6) ||
+					 (event.jbutton.button == 19)) {
+				/* Home button on wiimote or classic controller */
+				xgal_exit(0);
+			}
+#endif
 			break;
 
 		case SDL_JOYBUTTONUP:
@@ -1228,6 +1254,7 @@ int main(int argc, char *argv[])
 
 	but = 0;
 
+#ifndef __WII__
     for(ac = 1; ac < argc; ac++) {
         if(*argv[ac] == '-') {
             int w, h;
@@ -1262,6 +1289,7 @@ int main(int argc, char *argv[])
             exit(0);
         }
     }
+#endif
 
     S_Initialize(fullscreen);
 
