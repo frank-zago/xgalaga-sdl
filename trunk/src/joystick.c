@@ -19,8 +19,6 @@
  * 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include "xgalaga.h"
 
 static SDL_Joystick *js_device;

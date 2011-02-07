@@ -20,8 +20,6 @@
  * 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 
