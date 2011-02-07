@@ -18,8 +18,6 @@
  * 02110-1301, USA.
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <string.h>
 #ifdef HAVE_STRINGS_H
