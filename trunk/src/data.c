@@ -67,7 +67,7 @@ int pldead = 0;
 
 int movespeed = MINSPEED;
 
-int playSounds=0;
+int playSounds=1;
 
 int plshield = 0;
 int shieldsleft = 0;
