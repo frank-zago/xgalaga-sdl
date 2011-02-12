@@ -48,6 +48,7 @@ void S_Initialize(int fullscreen)
 {
 	int bpp;
 	Uint32 flags = SDL_SWSURFACE;
+	const int screen_height = winheight+WINTOPOV+WINBOTOV;
 
 	if (fullscreen)
 		flags |= SDL_FULLSCREEN;
@@ -57,13 +58,13 @@ void S_Initialize(int fullscreen)
 		exit(1);
     }
 
-    bpp = SDL_VideoModeOK(winwidth, winheight, 8, flags);
+    bpp = SDL_VideoModeOK(winwidth, screen_height, 8, flags);
     if (bpp == 0) {
         fprintf(stderr, "Couldn't get a video mode: %s\n", SDL_GetError());
 		exit(1);
     }
 
-    screen = SDL_SetVideoMode(winwidth, winheight, bpp, flags);
+    screen = SDL_SetVideoMode(winwidth, screen_height, bpp, flags);
     if (screen == NULL) {
         fprintf(stderr, "Couldn't get video mode: %s\n", SDL_GetError());
         exit(1);
@@ -77,6 +78,8 @@ void S_DrawPoint(unsigned int x, unsigned int y, Uint32 pixel)
 {
 	Uint8 *bits, bpp;
 	Uint8 r, g, b;
+
+	y+= WINTOPOV;
 
 	/* Calculate the framebuffer offset of the center of the screen */
 	bpp = screen->format->BytesPerPixel;
@@ -121,6 +124,8 @@ void S_DrawImage(int x, int y, int frame, struct W_Image *image)
 	int height, width;
 	SDL_Rect srcrect, dstrect;
 
+	y+= WINTOPOV;
+
 	if (frame < 0) {
 		/* Draw the whole thing regardless of frames. */
 		height = image->height * image->frames;
@@ -148,6 +153,8 @@ void S_DrawImage(int x, int y, int frame, struct W_Image *image)
 void S_DrawRect(int x, int y, int w, int h, Uint32 color)
 {
     SDL_Rect dstrect;
+
+	y+= WINTOPOV;
 
     dstrect.x = x;
     dstrect.y = y;
