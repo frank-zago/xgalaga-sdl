@@ -51,6 +51,8 @@
 #define WINHEIGHT (480-WINTOPOV-WINBOTOV)
 #else
 /* Modified slightly to better fit on 800x600 in fullscreen mode */
+#define WINTOPOV    0
+#define WINBOTOV    0
 #define WINWIDTH  468
 #define WINHEIGHT 596
 #endif
