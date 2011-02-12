@@ -116,7 +116,7 @@ void SFont_Write(const SFont_Font *Font, int x, int y, const char *text)
 
     // these values won't change in the loop
     srcrect.y = 1;
-    dstrect.y = y;
+    dstrect.y = y+WINTOPOV;
     srcrect.h = dstrect.h = Font->Surface->h - 1;
 
     for(c = text; *c != '\0' && x <= screen->w ; c++) {
