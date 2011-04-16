@@ -23,6 +23,7 @@
 #include "xgalaga.h"
 
 SDL_Surface *screen;
+static Uint32 background_color;
 
 void toggle_fullscreen(void)
 {
@@ -42,6 +43,8 @@ void toggle_fullscreen(void)
 		fprintf(stderr, "Couldn't toggle screen\n");
 		exit(1);
     }
+
+	background_color = SDL_MapRGBA(screen->format, 0, 0, 0, 255);
 }
 
 void S_Initialize(int fullscreen)
@@ -114,9 +117,7 @@ void S_DrawPoint(unsigned int x, unsigned int y, Uint32 pixel)
 
 void S_ClearScreen(void)
 {
-    Uint32 color = 0x000000;
-
-    SDL_FillRect (screen, NULL, color);
+    SDL_FillRect (screen, NULL, background_color);
 }
 
 void S_DrawImage(int x, int y, int frame, struct W_Image *image)
