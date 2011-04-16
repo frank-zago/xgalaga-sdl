@@ -174,22 +174,25 @@ static void read_credits(void)
 
 static void show_credits(void)
 {
-	int i,j;
+	int i;
 	unsigned int lines;
 	int top = 460;
 	char chLBuf[LINESIZE+1];
 	int font_height = SFont_TextHeight(fnt_reg_red);
 
 	if (gchLBuf) {
-		j = 0; lines = 0;
-		for ( i=giActCreditLine; i<giCreditLines; i++ )
-		{
-			strncpy (chLBuf, gchLBuf+i*(LINESIZE+1), LINESIZE);
+		lines = 0;
+
+		for (i=giActCreditLine; i<giCreditLines; i++) {
+			int j;
+
+			strncpy(chLBuf, gchLBuf+i*(LINESIZE+1), LINESIZE);
 			j = top + lines*font_height + ((pagetimer-1) % (font_height*SPEEDFACTOR))/SPEEDFACTOR;
 			SFont_WriteCenter(fnt_reg_green, j, chLBuf);
 			lines++;
-			if ( lines > VISIBLELINES ) break;
-		} // end for
+			if (lines > VISIBLELINES)
+				break;
+		}
 	}
 	else
 	{
