@@ -46,9 +46,8 @@ typedef struct {
 } SFont_Font;
 
 // Initializes the font
-// Font: this contains the suface with the font.
-//       The Surface must be loaded before calling this function
-SFont_Font* SFont_InitFont (SDL_Surface *Font);
+// Font: this contains the index of the font.
+SFont_Font* SFont_InitFont (int which);
 
 // Frees the font
 // Font: The font to free
