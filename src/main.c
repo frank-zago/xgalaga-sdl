@@ -1220,25 +1220,12 @@ static void do_player(int but)
 
 static int init_fonts(void)
 {
-	struct W_Image *img;
-
-	if ((img = getImage(F_REG_GREEN)))
-		fnt_reg_green = SFont_InitFont(img->surface);
-
-	if ((img = getImage(F_REG_CYAN)))
-		fnt_reg_cyan = SFont_InitFont(img->surface);
-
-	if ((img = getImage(F_REG_YELLOW)))
-		fnt_reg_yellow = SFont_InitFont(img->surface);
-
-	if ((img = getImage(F_REG_RED)))
-		fnt_reg_red = SFont_InitFont(img->surface);
-
-	if ((img = getImage(F_REG_GREY)))
-		fnt_reg_grey = SFont_InitFont(img->surface);
-
-	if ((img = getImage(F_BIG_RED)))
-		fnt_big_red = SFont_InitFont(img->surface);
+	fnt_reg_green = SFont_InitFont(F_REG_GREEN);
+	fnt_reg_cyan = SFont_InitFont(F_REG_CYAN);
+	fnt_reg_yellow = SFont_InitFont(F_REG_YELLOW);
+	fnt_reg_red = SFont_InitFont(F_REG_RED);
+	fnt_reg_grey = SFont_InitFont(F_REG_GREY);
+	fnt_big_red = SFont_InitFont(F_BIG_RED);
 
     if (!fnt_reg_green || !fnt_reg_cyan || !fnt_reg_yellow ||
 		!fnt_reg_red || !fnt_reg_grey || !fnt_big_red)

@@ -65,18 +65,27 @@ static Uint32 GetPixel(SDL_Surface *Surface, Sint32 X, Sint32 Y)
 	return -1;
 }
 
-SFont_Font* SFont_InitFont(SDL_Surface* Surface)
+SFont_Font* SFont_InitFont(int which)
 {
     int x = 0, i = 0;
     Uint32 pixel;
     SFont_Font* Font;
     Uint32 pink;
+	struct W_Image *img;
+	SDL_Surface *Surface;
 
-    if (Surface == NULL)
+	if (which < F_REG_GREEN ||
+		which > F_BIG_RED)
 		return NULL;
 
-    Font = (SFont_Font *) malloc(sizeof(SFont_Font));
-    Font->Surface = Surface;
+	img = getImage(which);
+
+    if (img == NULL)
+		return NULL;
+
+    Font = malloc(sizeof(SFont_Font));
+    Font->Surface = img->surface;
+	Surface = Font->Surface;
 
     SDL_LockSurface(Surface);
 
@@ -101,7 +110,6 @@ SFont_Font* SFont_InitFont(SDL_Surface* Surface)
 
 void SFont_FreeFont(SFont_Font* FontInfo)
 {
-    SDL_FreeSurface(FontInfo->Surface);
     free(FontInfo);
 }
 
