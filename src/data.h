@@ -73,14 +73,6 @@ extern SFont_Font *fnt_reg_red;
 extern SFont_Font *fnt_reg_grey;
 extern SFont_Font *fnt_big_red;
 
-extern const SDL_Color S_White;
-extern const SDL_Color S_Green;
-extern const SDL_Color S_Cyan;
-extern const SDL_Color S_Red;
-extern const SDL_Color S_Yellow;
-extern const SDL_Color S_Black;
-extern const SDL_Color S_Grey;
-
 extern enum gstate gstate;
 
 extern int fullscreen;

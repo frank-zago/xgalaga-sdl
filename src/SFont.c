@@ -26,6 +26,8 @@
     karlb@gmx.net
 */
 
+#ifndef HAVE_LIBSDL_TTF
+
 #include <assert.h>
 
 #include "xgalaga.h"
@@ -188,3 +190,4 @@ void SFont_WriteRight(const SFont_Font *Font,
     SFont_Write(Font, screen->w - SFont_TextWidth(Font, text), y, text);
 }
 
+#endif /* HAVE_LIBSDL_TTF */

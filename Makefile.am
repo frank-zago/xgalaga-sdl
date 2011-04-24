@@ -6,6 +6,8 @@ dist_man_MANS = xgalaga-sdl.6x
 
 nobase_dist_data_DATA = \
 	CREDITS \
+	fonts/LiberationMono-Bold.ttf \
+	fonts/copyright \
 	images/al.png \
 	images/alien1.png \
 	images/alien10.png \

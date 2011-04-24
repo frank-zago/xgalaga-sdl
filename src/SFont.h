@@ -40,9 +40,15 @@
 // To load the fonts, load the font image into YourFont->Surface
 // and call InitFont( YourFont );
 typedef struct {
+#ifdef HAVE_LIBSDL_TTF
+#define MAXCHARS 128-32
+	SDL_Surface *CharSurf[MAXCHARS];
+	int CharWid[MAXCHARS];
+#else
 	SDL_Surface *Surface;
 	int CharPos[512];
 	int MaxPos;
+#endif
 } SFont_Font;
 
 // Initializes the font

@@ -6,6 +6,7 @@ xgalaga_sdl_CFLAGS = -include config.h -DDATADIR=\"@datadir@\" @SDL_CPPFLAGS@
 xgalaga_sdl_SOURCES = \
 	SFont.c \
 	SFont.h \
+	TFont.c \
 	data.c \
 	data.h \
 	defs.h \
