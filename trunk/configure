@@ -684,6 +684,7 @@ ac_user_opts='
 enable_option_checking
 enable_dependency_tracking
 enable_silent_rules
+enable_ttf
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1314,6 +1315,7 @@ Optional Features:
   --enable-dependency-tracking   do not reject slow dependency extractors
   --enable-silent-rules          less verbose build output (undo: `make V=1')
   --disable-silent-rules         verbose build output (undo: `make V=0')
+  --disable-ttf           disable use of ttf fonts
 
 Some influential environment variables:
   CC          C compiler command
@@ -3975,6 +3977,70 @@ else
   as_fn_error $? "SDL_gfx library not found." "$LINENO" 5
 fi
 
+
+
+# Check whether --enable-ttf was given.
+if test "${enable_ttf+set}" = set; then :
+  enableval=$enable_ttf;  if test x"$enableval" = xyes; then
+    with_ttf="yes, check"
+  else
+    with_ttf="no"
+    problem_ttf=": Explicitly disabled"
+  fi
+else
+   with_ttf="not specified, check"
+
+fi
+
+if ! test x"$with_ttf" = xno; then
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for TTF_Init in -lSDL_ttf" >&5
+$as_echo_n "checking for TTF_Init in -lSDL_ttf... " >&6; }
+if test "${ac_cv_lib_SDL_ttf_TTF_Init+set}" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lSDL_ttf  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char TTF_Init ();
+int
+main ()
+{
+return TTF_Init ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_SDL_ttf_TTF_Init=yes
+else
+  ac_cv_lib_SDL_ttf_TTF_Init=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_SDL_ttf_TTF_Init" >&5
+$as_echo "$ac_cv_lib_SDL_ttf_TTF_Init" >&6; }
+if test "x$ac_cv_lib_SDL_ttf_TTF_Init" = x""yes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBSDL_TTF 1
+_ACEOF
+
+  LIBS="-lSDL_ttf $LIBS"
+
+else
+  as_fn_error $? "SDL_ttf library not found." "$LINENO" 5
+fi
+
+fi
 
 SDL_CPPFLAGS=`sdl-config --cflags`
 SDL_LIBS="`sdl-config --libs` $LIBS"
