@@ -33,6 +33,7 @@
 #define MAXLINE 1024
 
 typedef enum {
+	PF_IGNORE,
     PF_PATHDEF,
     PF_PATHS,
     PF_SHAPES,
@@ -94,37 +95,37 @@ static PathfileToken get_token(char* line, int* elem, char** data)
     *elem = -1;
 
     if(strncmp(line, "paths:", 6) == 0) {
-	pt = PF_PATHS;
+		pt = PF_PATHS;
     } else if (strncmp(line, "path.", 5) == 0) {
-	if(line[5] >= '0' && line[5] <= '9')
-	    *elem = line[5] - '0';
-	else if(line[5] >= 'a' && line[5] <= 'z')
-	    *elem = line[5] - 'a' + 10;
-	else if(line[5] >= 'A' && line[5] <= 'Z')
-	    *elem = line[5] - 'A' + 36;
-	else {
-	    fprintf(stderr, "%c is not a valid path identifier\n", line[5]);
-	    return -1;
-	}
-	pt = PF_PATHDEF;
+		if(line[5] >= '0' && line[5] <= '9')
+			*elem = line[5] - '0';
+		else if(line[5] >= 'a' && line[5] <= 'z')
+			*elem = line[5] - 'a' + 10;
+		else if(line[5] >= 'A' && line[5] <= 'Z')
+			*elem = line[5] - 'A' + 36;
+		else {
+			fprintf(stderr, "%c is not a valid path identifier\n", line[5]);
+			return PF_IGNORE;
+		}
+		pt = PF_PATHDEF;
     } else if (strncmp(line, "delays:", 7) == 0) {
-	pt = PF_DELAYS;
+		pt = PF_DELAYS;
     } else if (strncmp(line, "shapes:", 7) == 0) {
-	pt = PF_SHAPES;
+		pt = PF_SHAPES;
     } else {
-	return -1;
+		return PF_IGNORE;
     }
 
     datastart = strchr(line, ':');
     if(!datastart)
-	return -1;
+		return PF_IGNORE;
     datastart++;
 
     while(isspace(*datastart))
-	datastart++;
+		datastart++;
 
     if(!(*datastart))
-	return -1;
+		return PF_IGNORE;
 
     *data = datastart;
     return pt;
