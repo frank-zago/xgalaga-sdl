@@ -97,7 +97,7 @@ static void show_help(int top)
 #endif
 
     SFont_WriteCenter(fnt_reg_green, top+10*dy, "Bonus ships at 20,000, 50,000, then every 50,000.");
-	SFont_WriteCenter(fnt_reg_cyan, top+12*dy, "XGalaga Home page: http://rumsey.org/xgal.html");
+	SFont_WriteCenter(fnt_reg_cyan, top+12*dy, "XGalaga-SDL Home page: http://sourceforge.net/projects/xgalaga-sdl/");
 }
 
 static void read_credits(void)
