@@ -1,13 +1,20 @@
 
-If you've installed XGalaga before v2.0, forget what you learned.
-With XGalaga 2.0, GNU autoconfigure is used.  This means that most
-people should be able to do:
+Most people should be able to do:
 
-./configure
-make
-make install
+  ./configure
+  make
 
-and be done. Make sure to have root privileges for make install.
+As root,
+  make install
+
+or if your system supports sudo:
+  sudo make install
+
+
+If you do not want install the game, you can run it in place:
+  ./configure --datadir=`pwd`
+and start it with:
+  src/xgalaga-sdl  
 
 
 

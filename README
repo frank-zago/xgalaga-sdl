@@ -26,6 +26,8 @@ Command line options:
   -scores              Print out the high score tables and exit
   -nosound             Turn sound off on platforms with sound support
   -level <level>       Set the starting level to <level>
+  -window              Start in windowed mode instead of fullscreen
+  -winsize <WxH>       Window size (default 468x596)
   <anything else>      print usage and version.
 
 Basic instructions:
@@ -38,11 +40,10 @@ Keyboard commands:
   p - pauses
   q - end this game
   s - toggle sound if your system supports it
-  m - Turn mouse control on     (also works to start the game)
-  k - Turn keyboard controls on (also works to start the game)
-      Controls: left_arrow  - move left
-        right_arrow - move right
-        space_bar   - fire
+
+  Controls: left_arrow  - move left
+            right_arrow - move right
+            space_bar   - fire
 
 Credits:
    Galaga code:
@@ -53,12 +54,17 @@ Credits:
             and about a million others.
 
    Sound server/interface:
-        Sujal Patel (smpatel@wam.umd.edu)
-        Paul Kendall (paul@kcbbs.gen.nz) (Sun and NAS support)
+            Sujal Patel (smpatel@wam.umd.edu)
+            Paul Kendall (paul@kcbbs.gen.nz) (Sun and NAS support)
 
    Pixmaps:
             Joe Rumsey (ogre@atomic.com)
             Mike McGrath (mcgrath@epx.cis.umn.edu)
+
+   SDL port:
+            Andy Tarkinson
+            Frank Zago
+            Dan Espen
 
    Thanks: Alec Habig for mirroring it at indiana
        Johnathan Hardwick for testing on many
