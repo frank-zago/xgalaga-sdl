@@ -137,7 +137,7 @@ static void save_scores(void)
 #endif
 
     if (home) {
-		snprintf(my_file_name, sizeof(my_file_name)-1, "%s/.xgalscores", home);
+		snprintf(my_file_name, sizeof(my_file_name)-1, "%s/%s", home, SCORE_FILE_NAME);
 		hsf = open(my_file_name, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 
 		if(hsf < 0) {
@@ -286,7 +286,7 @@ void load_scores(void)
 #endif
 
 	if (home) {
-		snprintf(my_file_name, sizeof(my_file_name)-1, "%s/.xgalscores", home);
+		snprintf(my_file_name, sizeof(my_file_name)-1, "%s/%s", home, SCORE_FILE_NAME);
 		hsf = open(my_file_name, O_RDONLY);
 		if(hsf <0 ) {
 			fprintf(stderr, "Trouble opening high scores file '%s'\n", my_file_name);

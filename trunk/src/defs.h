@@ -113,3 +113,5 @@
 #define FPS 30
 
 #define MAXFILENAME 1024
+
+#define SCORE_FILE_NAME ".xgalaga-sdl"
