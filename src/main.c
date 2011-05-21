@@ -1349,6 +1349,7 @@ int main(int argc, char *argv[])
 
 		case GETTING_NAME:
 			do_name();
+			draw_score();
 			break;
 
 		case PAUSED:
