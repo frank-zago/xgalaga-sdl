@@ -1,7 +1,7 @@
 /*
  * XGalaga-SDL - a SDL port of XGalaga, clone of the game Galaga
  * Copyright (c) 1995-1998 Joe Rumsey (mrogre@mediaone.net)
- * Copyright (c) 2010 Frank Zago
+ * Copyright (c) 2010,2011 Frank Zago
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -251,6 +251,7 @@ void show_scores(int top)
 	int dy = SFont_TextHeight(fnt_reg_yellow);
 	const char *labels = "Rank  Name                      Score   Level";
 	int length;
+	struct color color;
 
     SFont_WriteCenter(fnt_reg_yellow, top, "High scores");
 	top += dy;
@@ -258,9 +259,16 @@ void show_scores(int top)
 
 	/* Draw a line. */
 	length = SFont_TextWidth(fnt_reg_yellow, labels);
+#if SDL_VERSION_ATLEAST(1,3,0)
+	color.r = 0xff;
+	color.g = 0x00;
+	color.b = 0x00;
+#else
+	color.rgb = SDL_MapRGB(screen->format, 0xff, 0, 0);
+#endif
 	S_DrawRect((winwidth-length)/2, top + 1 + SFont_TextHeight(fnt_reg_yellow),
 			   length, 1,
-			   SDL_MapRGB(screen->format, 0xff, 0, 0));
+			   color);
 
     for(i=0;i<NUM_MY_SCORES;i++) {
 		SFont_Font *font = i==my_thisplace ? fnt_reg_red : fnt_reg_grey;

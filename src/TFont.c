@@ -107,13 +107,20 @@ SFont_Font* SFont_InitFont(int which)
 		return NULL;
 
     for (i=32;i<127;i++) {
-		int hi, wi;
 		char ca[2];
+		SDL_Surface *surface;
 		ca[0]=i;
 		ca[1]=0;
-		Font->CharSurf[i-32]=TTF_RenderText_Blended(tmpfont, ca, Color);
-		hi = Font->CharSurf[i-32]->h;
-		wi = Font->CharSurf[i-32]->w;
+
+		surface = TTF_RenderText_Blended(tmpfont, ca, Color);
+		Font->CharW[i-32] = surface->w;
+		Font->CharH = surface->h;
+#if SDL_VERSION_ATLEAST(1,3,0)
+		Font->CharSurf[i-32] = SDL_CreateTextureFromSurface(renderer, surface);
+		SDL_FreeSurface(surface);
+#else
+		Font->CharSurf[i-32] = surface;
+#endif
     }
 
 	TTF_CloseFont(tmpfont);
@@ -132,13 +139,17 @@ void SFont_Write(const SFont_Font *Font, int x, int y, const char *text)
 
     srcrect.y = 0;
     dstrect.y = y+WINTOPOV;
-    srcrect.h = dstrect.h = Font->CharSurf[0]->h;
-    for(i=0; text[i] != '\0' && x <= screen->w ; i++) {
+    srcrect.h = dstrect.h = Font->CharH;
+    for(i=0; text[i] != '\0' && x <= winwidth ; i++) {
 		charoffset = text[i] - 32;
-		srcrect.w = dstrect.w = Font->CharSurf[charoffset]->w;
+		srcrect.w = dstrect.w = Font->CharW[charoffset];
 		srcrect.x = 0;
 		dstrect.x = x;
+#if SDL_VERSION_ATLEAST(1,3,0)
+		SDL_RenderCopy(renderer, Font->CharSurf[charoffset], &srcrect, &dstrect);
+#else
 		SDL_BlitSurface(Font->CharSurf[charoffset], &srcrect, screen, &dstrect);
+#endif
 		dstrect.h=srcrect.h;              /* changed by blit */
 		x += dstrect.w;
     }
@@ -155,7 +166,7 @@ int SFont_TextWidth(const SFont_Font *Font, const char *text)
 
     for(i=0; text[i] != '\0'; i++) {
 		charoffset = text[i] - 32;
-		width += Font->CharSurf[charoffset]->w;
+		width += Font->CharW[charoffset];
     }
 
     return width;
@@ -163,17 +174,17 @@ int SFont_TextWidth(const SFont_Font *Font, const char *text)
 
 int SFont_TextHeight(const SFont_Font* Font)
 {
-    return Font->CharSurf[0]->h;
+    return Font->CharH;
 }
 void SFont_WriteCenter(const SFont_Font *Font,
 					   int y, const char *text)
 {
-	SFont_Write(Font, (screen->w - SFont_TextWidth(Font, text))/2, y, text);
+	SFont_Write(Font, (winwidth - SFont_TextWidth(Font, text))/2, y, text);
 }
 
 void SFont_WriteRight(const SFont_Font *Font,
 					  int y, const char *text)
 {
-	SFont_Write(Font, screen->w - SFont_TextWidth(Font, text), y, text);
+	SFont_Write(Font, winwidth - SFont_TextWidth(Font, text), y, text);
 }
 #endif

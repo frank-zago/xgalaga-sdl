@@ -288,6 +288,7 @@ void show_bonuses(int top)
 	int dy = SFont_TextHeight(fnt_reg_yellow);
 	const char *label = "Bonuses";
 	int length;
+	struct color color;
 
 	if (dy < 22)
 		dy = 22;
@@ -296,9 +297,18 @@ void show_bonuses(int top)
 
 	/* Draw a line. */
 	length = SFont_TextWidth(fnt_reg_yellow, label);
+	// todo: make that a global set in sdl.c. see other use of S_DrawRect
+#if SDL_VERSION_ATLEAST(1,3,0)
+	color.r = 0xff;
+	color.g = 0x00;
+	color.b = 0x00;
+#else
+	color.rgb = SDL_MapRGB(screen->format, 0xff, 0, 0);
+#endif
+
 	S_DrawRect((winwidth-length)/2, top + 1 + SFont_TextHeight(fnt_reg_yellow),
 			   length, 1,
-			   SDL_MapRGB(screen->format, 0xff, 0, 0));
+			   color);
 
 	top += dy;
 

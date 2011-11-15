@@ -2,7 +2,7 @@
  * XGalaga-SDL - a SDL port of XGalaga, clone of the game Galaga
  * Copyright (c) 1995-1998 Joe Rumsey (mrogre@mediaone.net)
  * Copyright (c) 2000 Andy Tarkinson <atark@thepipeline.net>
- * Copyright (c) 2010 Frank Zago
+ * Copyright (c) 2010,2011 Frank Zago
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -107,20 +107,30 @@ static void print_usage(void)
 /*------------------stars-----------------*/
 
 /* Pick a random color, except black. */
-static Uint32 get_random_star_color(void)
+static void get_random_star_color(struct star *star)
 {
+	Uint8 r, g, b;
+
 	switch(random() % 5) {
 	case 0:
-		return SDL_MapRGB(screen->format, 0xFF, 0xFF, 0xFF);
+		r = 0xFF; g = 0xFF; b = 0xFF; break;
 	case 1:
-		return SDL_MapRGB(screen->format, 0x00, 0xFF, 0x00);
+		r = 0x00; g = 0xFF; b = 0x00; break;
 	case 2:
-		return SDL_MapRGB(screen->format, 0x00, 0xFF, 0xFF);
+		r = 0x00; g = 0xFF; b = 0xFF; break;
 	case 3:
-		return SDL_MapRGB(screen->format, 0xFF, 0x00, 0x00);
+		r = 0xFF; g = 0x00; b = 0x00; break;
 	default:
-		return SDL_MapRGB(screen->format, 0xFF, 0xFF, 0x00);
+		r = 0xFF; g = 0xFF; b = 0x00; break;
 	}
+
+#if SDL_VERSION_ATLEAST(1,3,0)
+	star->pixel.r = r;
+	star->pixel.g = g;
+	star->pixel.b = b;
+#else
+	star->pixel.rgb = SDL_MapRGB(screen->format, r, g, b);
+#endif
 }
 
 static void init_stars(void)
@@ -131,7 +141,7 @@ static void init_stars(void)
         stars[i].x = random()%winwidth;
         stars[i].y = random()%winheight;
         stars[i].speed = (random()%3)+1;
-		stars[i].pixel = get_random_star_color();
+		get_random_star_color(&stars[i]);
     }
 }
 
@@ -141,16 +151,19 @@ static void do_stars(void)
 
     if(wantStars) {
 
+#if 0
 		if (SDL_MUSTLOCK(screen))
 			SDL_LockSurface(screen);
+#endif
 
         for(i=0;i<NUMSTARS;i++) {
 			stars[i].y+=stars[i].speed*((starspeed < 20) ? ABS(starspeed) : 20);
             if(stars[i].y >= winheight) {
                 stars[i].y-=winheight-ABS(starspeed);
                 stars[i].x = random() % winwidth;
-				stars[i].pixel = get_random_star_color();
+				get_random_star_color(&stars[i]);
             }
+
 			S_DrawPoint(stars[i].x, stars[i].y, stars[i].pixel);
         }
 #ifdef SHOW_SHIELD_BAR
@@ -171,8 +184,10 @@ static void do_stars(void)
 		}
 #endif /* SHOW_SHIELD_BAR */
 
+#if 0
 		if (SDL_MUSTLOCK(screen))
 			SDL_UnlockSurface(screen);
+#endif
     }
 
     if(starspeed != 1) {
@@ -1280,7 +1295,9 @@ int main(int argc, char *argv[])
 
     S_Initialize(fullscreen);
 
+#if !SDL_VERSION_ATLEAST(1,3,0)
     SDL_WM_SetCaption("XGalaga (SDL)", NULL);
+#endif
 
 	if (!loadAllImages()) {
 		fprintf(stderr, "Cannot load one or more images\n");
@@ -1361,7 +1378,7 @@ int main(int argc, char *argv[])
 		}
 
         /* Update the display */
-		SDL_Flip(screen);
+		S_UpdateDisplay();
 
         do_framerate();
     }

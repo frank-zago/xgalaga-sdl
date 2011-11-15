@@ -51,6 +51,10 @@ void init_score(void);
 void do_name(void);
 char *getUsersFullName(void);
 void add_score(char *name, unsigned int score);
+#if SDL_VERSION_ATLEAST(1,3,0)
+#define SDLKey SDL_Keycode
+#define SDLK_KP4 SDLK_KP_4
+#endif
 int score_key(SDLKey key);
 int check_score(unsigned int score);
 void show_scores(int top);
@@ -87,9 +91,10 @@ void init_joystick(void);
 
 /* sdl.c */
 void S_Initialize(int fullscreen);
-void S_DrawPoint (unsigned int x, unsigned int y, Uint32 pixel);
+void S_DrawPoint (unsigned int x, unsigned int y, struct color color);
 void S_ClearScreen(void);
+void S_UpdateDisplay(void);
 void S_DrawImage (int x, int y, int frame,
 				  struct W_Image *image);
 void toggle_fullscreen(void);
-void S_DrawRect(int x, int y, int w, int h, Uint32 color);
+void S_DrawRect(int x, int y, int w, int h, struct color color);

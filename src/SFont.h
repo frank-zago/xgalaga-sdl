@@ -42,8 +42,13 @@
 typedef struct {
 #ifdef HAVE_LIBSDL_TTF
 #define MAXCHARS 128-32
+#if SDL_VERSION_ATLEAST(1,3,0)
+	SDL_Texture *CharSurf[MAXCHARS];
+#else
 	SDL_Surface *CharSurf[MAXCHARS];
-	int CharWid[MAXCHARS];
+#endif
+	int CharW[MAXCHARS];
+	int CharH;
 #else
 	SDL_Surface *Surface;
 	int CharPos[512];
