@@ -18,9 +18,9 @@
  * 02110-1301, USA.
  */
 
-#include <SDL/SDL_framerate.h>
-
 #include "xgalaga.h"
+
+#include <SDL/SDL_framerate.h>
 
 static FPSmanager manager;
 
@@ -32,5 +32,10 @@ void init_framerate(void)
 
 void do_framerate(void)
 {
+#if SDL_VERSION_ATLEAST(1,3,0)
+	// todo - SDL_framerateDelay not compatible or libs mixed up.
+	SDL_Delay(30);
+#else
 	SDL_framerateDelay(&manager);
+#endif
 }

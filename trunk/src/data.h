@@ -18,7 +18,12 @@
  * 02110-1301, USA.
  */
 
+#if SDL_VERSION_ATLEAST(1,3,0)
+extern SDL_Window *screen;
+extern SDL_Renderer* renderer;
+#else
 extern SDL_Surface *screen;
+#endif
 
 extern char *imagedir;
 extern int verbose_image_loading;

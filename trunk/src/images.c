@@ -2,7 +2,7 @@
  * XGalaga-SDL - a SDL port of XGalaga, clone of the game Galaga
  * Copyright (c) 1995-1998 Joe Rumsey (mrogre@mediaone.net)
  * Copyright (c) 2000 Andy Tarkinson <atark@thepipeline.net>
- * Copyright (c) 2010 Frank Zago
+ * Copyright (c) 2010,2011 Frank Zago
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -88,6 +88,12 @@ static struct W_Image *loadImage(int offset)
 	struct W_Image *image = &imagearray[offset];
 	SDL_Surface *simage;
 	char filename[MAXFILENAME];
+	int w;
+	int h;
+#if SDL_VERSION_ATLEAST(1,3,0)
+	Uint32 format;
+	int access;
+#endif
 
     if (image->surface)
 		return image;
@@ -98,6 +104,10 @@ static struct W_Image *loadImage(int offset)
 	if (!simage)
 		return NULL;
 
+#if SDL_VERSION_ATLEAST(1,3,0)
+	image->surface = SDL_CreateTextureFromSurface(renderer, simage);
+	SDL_FreeSurface(simage);
+#else
 #if 0
 	/* Somehow this gives bad graphics. To fix. */
 	image->surface = SDL_DisplayFormat(simage);
@@ -106,28 +116,38 @@ static struct W_Image *loadImage(int offset)
 	image->surface = simage;
 	simage = NULL;
 #endif
+#endif
 
 	if (!image->surface)
 		return NULL;
 
+#if !SDL_VERSION_ATLEAST(1,3,0)
 	/* Set transparent background. */
-    SDL_SetColorKey(image->surface, (SDL_SRCCOLORKEY),
+    SDL_SetColorKey(image->surface, 1,
 					SDL_MapRGB(image->surface->format, 0x00, 0x00, 0x00));
+#endif
+
+#if SDL_VERSION_ATLEAST(1,3,0)
+	SDL_QueryTexture(image->surface, &format, &access, &w, &h);
+#else
+	w = image->surface->w;
+	h = image->surface->h;
+#endif
 
 	if (image->frames == 0) {
 		/* if an image doesn't have a number of frames, then guess how
 		 * many there are by assuming that a frame is square. This is
 		 * easily overriden by setting frames = 1. */
-		if ((image->surface->h % image->surface->w) == 0) {
+		if ((h % w) == 0) {
 			/* even multiple */
-			image->frames = image->surface->h / image->surface->w;
+			image->frames = h / w;
 		} else {
 			image->frames = 1;
 		}
     }
 
-    image->height = image->surface->h / image->frames;
-    image->width = image->surface->w;
+    image->height = h / image->frames;
+    image->width = w;
 
     return image;
 }

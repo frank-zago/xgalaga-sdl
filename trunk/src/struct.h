@@ -21,6 +21,18 @@
 #ifndef STRUCT_H
 #define STRUCT_H
 
+/* SDL 1.2 and 1.3 represent colors differently.
+ * Alpha channel is always opaque. */
+struct color {
+#if SDL_VERSION_ATLEAST(1,3,0)
+	Uint8 r;
+	Uint8 g;
+	Uint8 b;
+#else
+	Uint32 rgb;
+#endif
+};
+
 struct torp {
     struct torp *next, *prev;
     int alive, frame;
@@ -31,7 +43,7 @@ struct torp {
 struct star {
     int x, y;
     int speed;
-	Uint32 pixel;       /* pixel color */
+	struct color pixel;
 };
 
 struct alien {

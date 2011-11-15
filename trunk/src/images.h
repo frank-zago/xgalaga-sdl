@@ -23,7 +23,11 @@ struct W_Image {
 	int width, height;
 	int frames;				/* nviews for ships */
 	char *filename;			/* filename without .xpm/.xbm extension*/
+#if SDL_VERSION_ATLEAST(1,3,0)
+	SDL_Texture *surface;	/* ptr to SDL texture */
+#else
 	SDL_Surface *surface;	/* ptr to SDL surface */
+#endif
 };
 
 enum {
