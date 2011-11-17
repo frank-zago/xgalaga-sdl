@@ -1,7 +1,7 @@
 bin_PROGRAMS = xgalaga-sdl
 
 xgalaga_sdl_LDADD = @SDL_LIBS@
-xgalaga_sdl_CFLAGS = -include config.h -DDATADIR=\"@datadir@\" @SDL_CPPFLAGS@
+xgalaga_sdl_CFLAGS = -include config.h -DDATADIR=\"@datadir@\" @SDL_CFLAGS@
 
 xgalaga_sdl_SOURCES = \
 	SFont.c \

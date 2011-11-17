@@ -108,7 +108,6 @@ ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 GREP = @GREP@
-HAVE_SDL_CONFIG = @HAVE_SDL_CONFIG@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -129,7 +128,8 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
-SDL_CPPFLAGS = @SDL_CPPFLAGS@
+SDL_CFLAGS = @SDL_CFLAGS@
+SDL_CONFIG = @SDL_CONFIG@
 SDL_LIBS = @SDL_LIBS@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
@@ -178,7 +178,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 xgalaga_sdl_LDADD = @SDL_LIBS@
-xgalaga_sdl_CFLAGS = -include config.h -DDATADIR=\"@datadir@\" @SDL_CPPFLAGS@
+xgalaga_sdl_CFLAGS = -include config.h -DDATADIR=\"@datadir@\" @SDL_CFLAGS@
 xgalaga_sdl_SOURCES = \
 	SFont.c \
 	SFont.h \
