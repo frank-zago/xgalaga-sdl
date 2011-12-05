@@ -1,7 +1,7 @@
 XGalaga for Wii
 
 -= This is a work in progress =-
-The sounds doesn't work, and the picture is missing both the top and
+The sounds don't work, and the picture is missing both the top and
 bottom, at least on my setup.
 
 The toolchain for Wii (PPC) must be installed as well as the
@@ -11,7 +11,7 @@ See http://devkitpro.org/ and http://wiibrew.org/wiki/SDL_Wii
 To compile:
   make -f Makefile.wii
 
-To run under the homwbrew channel:
+To run under the homebrew channel:
   make -f Makefile.wii run
 
 The data files must be on the sd card. Copy the images, levels and
