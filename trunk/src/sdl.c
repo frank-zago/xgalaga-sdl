@@ -63,7 +63,7 @@ void S_Initialize(int fullscreen)
         exit(1);
     }
 
-	screen = SDL_CreateWindow("Xgalaga SDL", 
+	screen = SDL_CreateWindow("Xgalaga SDL",
 							  SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 							  winwidth, screen_height,
 							  0);

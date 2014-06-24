@@ -30,13 +30,13 @@
 
 /* If NOT using TTF Fonts, this file does nothing,
    check Sfont.c. */
-#ifdef HAVE_LIBSDL_TTF
+#if defined HAVE_LIBSDL_TTF || defined HAVE_LIBSDL2_TTF
 #include <assert.h>
 
 #include "xgalaga.h"
 
 #include <sys/param.h>
-#include <SDL/SDL_ttf.h>
+#include <SDL_ttf.h>
 
 static const SDL_Color S_White  = {0xFF, 0xFF, 0xFF, 0};
 static const SDL_Color S_Green  = {0x00, 0xFF, 0x00, 0};

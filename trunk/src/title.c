@@ -24,7 +24,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 #include "xgalaga.h"
 
@@ -273,4 +273,3 @@ void init_titles(void)
     pauseyspeed = 3;
     read_credits();
 }
-
