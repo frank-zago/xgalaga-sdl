@@ -26,7 +26,7 @@
     karlb@gmx.net
 */
 
-#ifndef HAVE_LIBSDL_TTF
+#if !defined HAVE_LIBSDL_TTF && !defined HAVE_LIBSDL2_TTF
 
 #include <assert.h>
 

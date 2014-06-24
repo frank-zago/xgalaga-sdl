@@ -35,7 +35,7 @@
 
 #include "xgalaga.h"
 
-#include <SDL/SDL_endian.h>
+#include <SDL_endian.h>
 
 #define NUM_MY_SCORES 10
 
@@ -274,7 +274,7 @@ void show_scores(int top)
 		SFont_Font *font = i==my_thisplace ? fnt_reg_red : fnt_reg_grey;
 
 		sprintf(buf, "  %2d. %-20s     %7lu %5lu",
-				i+1, my_scores[i].name, 
+				i+1, my_scores[i].name,
 				(unsigned long)my_scores[i].score,
 				(unsigned long)my_scores[i].level);
 		SFont_WriteCenter(font, top+(3+i)*dy, buf);

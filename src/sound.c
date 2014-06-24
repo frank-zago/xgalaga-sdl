@@ -28,7 +28,7 @@ void sound_exit(void) {}
 void play_sound (int sound) {}
 
 #else
-#include <SDL/SDL_mixer.h>
+#include <SDL_mixer.h>
 
 #include "xgalaga.h"
 

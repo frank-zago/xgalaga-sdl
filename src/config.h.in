@@ -1,4 +1,4 @@
-/* src/config.h.in.  Generated from configure.in by autoheader.  */
+/* src/config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* Define to 1 if you have the <fcntl.h> header file. */
 #undef HAVE_FCNTL_H
@@ -8,6 +8,21 @@
 
 /* Define to 1 if you have the `SDL' library (-lSDL). */
 #undef HAVE_LIBSDL
+
+/* Define to 1 if you have the `SDL2' library (-lSDL2). */
+#undef HAVE_LIBSDL2
+
+/* Define to 1 if you have the `SDL2_gfx' library (-lSDL2_gfx). */
+#undef HAVE_LIBSDL2_GFX
+
+/* Define to 1 if you have the `SDL2_image' library (-lSDL2_image). */
+#undef HAVE_LIBSDL2_IMAGE
+
+/* Define to 1 if you have the `SDL2_mixer' library (-lSDL2_mixer). */
+#undef HAVE_LIBSDL2_MIXER
+
+/* Define to 1 if you have the `SDL2_ttf' library (-lSDL2_ttf). */
+#undef HAVE_LIBSDL2_TTF
 
 /* Define to 1 if you have the `SDL_gfx' library (-lSDL_gfx). */
 #undef HAVE_LIBSDL_GFX
@@ -53,9 +68,6 @@
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
-
-/* Define to 1 if your C compiler doesn't accept -c and -o together. */
-#undef NO_MINUS_C_MINUS_O
 
 /* Name of package */
 #undef PACKAGE
