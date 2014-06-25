@@ -112,12 +112,14 @@ static void read_credits(void)
     j = 0;
 	lines = 0;
     chFBuf = malloc (8000+1);	/* fz-hardcoded */
-    if (chFBuf == 0)
+    if (chFBuf == NULL)
 		return;
 
     gchLBuf = malloc (LINESIZE+1);
-    if (gchLBuf == 0)
+    if (gchLBuf == NULL) {
+		free(chFBuf);
 		return;
+	}
 
 	snprintf(filename, MAXFILENAME, "%s/CREDITS", DATADIR);
 	filename[MAXFILENAME-1] = '\0';
