@@ -33,6 +33,13 @@ SDL_Surface *screen;
 void toggle_fullscreen(void)
 {
 #if SDL_VERSION_ATLEAST(1,3,0)
+	const int screen_height = winheight+WINTOPOV+WINBOTOV;
+    Uint32 flags = SDL_GetWindowFlags(screen) ^ SDL_WINDOW_FULLSCREEN_DESKTOP;
+
+    if (SDL_SetWindowFullscreen(screen, flags) < 0)
+        return;
+
+    SDL_SetWindowSize(screen, winwidth, screen_height);
 #else
 	Uint32 flags = SDL_SWSURFACE;
 	Uint32 old_flags = screen->flags;
@@ -66,7 +73,7 @@ void S_Initialize(int fullscreen)
 	screen = SDL_CreateWindow("Xgalaga SDL",
 							  SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 							  winwidth, screen_height,
-							  0);
+							  SDL_WINDOW_FULLSCREEN_DESKTOP);
     if (!screen) {
         fprintf(stderr, "Couldn't set %dx%d video mode: %s\n",
                 winwidth, screen_height, SDL_GetError());
@@ -82,6 +89,8 @@ void S_Initialize(int fullscreen)
         exit(1);
 	}
 
+	if (fullscreen)
+		SDL_RenderSetLogicalSize(renderer, winwidth, screen_height);
 #else
 
 	int bpp;
