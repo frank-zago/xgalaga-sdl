@@ -40,6 +40,7 @@ Keyboard commands:
   p - pauses
   q - end this game
   s - toggle sound if your system supports it
+  alt+enter - toggle fullscreen
 
   Controls: left_arrow  - move left
             right_arrow - move right
