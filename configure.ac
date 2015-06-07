@@ -25,7 +25,7 @@ fi # ac_cv_c_compiler_gnu
 # Silent rules; but check if supported.
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
-# Check for SDL - Will accept 1.2 and 1.3
+# Check for SDL - Will accept 1.2 and 2
 AC_ARG_ENABLE(sdl2,
   AS_HELP_STRING([--enable-sdl2], [use SDL2 instead of SDL1]),
   [ if test x"$enableval" = xyes; then
@@ -46,24 +46,22 @@ AC_ARG_ENABLE(ttf,
   [ with_ttf="yes" ]
 )
 
+PKG_PROG_PKG_CONFIG
+
 if test x"$with_sdl2" = xyes; then
-  AM_PATH_SDL2("2.0.0", :, AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!]))
-  AC_CHECK_LIB(SDL2, SDL_Init,,AC_MSG_ERROR([SDL2 library not found.]))
-  AC_CHECK_LIB(SDL2_mixer,main,,AC_MSG_ERROR([SDL2_mixer library not found.]))
-  AC_CHECK_LIB(SDL2_image,IMG_Load,,AC_MSG_ERROR([SDL2_image library not found.]))
-  AC_CHECK_LIB(SDL2_gfx,SDL_framerateDelay,,AC_MSG_ERROR([SDL2_gfx library not found.]))
+  PKG_CHECK_MODULES([SDL2], [sdl2, SDL2_image, SDL2_mixer, SDL2_gfx])
   if ! test x"$with_ttf" = xno; then
-    AC_CHECK_LIB(SDL2_ttf,TTF_Init,,AC_MSG_ERROR([SDL2_ttf library not found.]))
+    PKG_CHECK_MODULES([SDL2_ttf], [SDL2_ttf])
   fi
 else
-  AM_PATH_SDL("1.2.0", :, AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!]))
-  AC_CHECK_LIB(SDL, SDL_Init,,AC_MSG_ERROR([SDL library not found.]))
-  AC_CHECK_LIB(SDL_mixer,main,,AC_MSG_ERROR([SDL_mixer library not found.]))
-  AC_CHECK_LIB(SDL_image,IMG_Load,,AC_MSG_ERROR([SDL_image library not found.]))
-  AC_CHECK_LIB(SDL_gfx,SDL_framerateDelay,,AC_MSG_ERROR([SDL_gfx library not found.]))
+  PKG_CHECK_MODULES([SDL], [sdl, SDL_image, SDL_mixer, SDL_gfx])
   if ! test x"$with_ttf" = xno; then
-    AC_CHECK_LIB(SDL_ttf,TTF_Init,,AC_MSG_ERROR([SDL_ttf library not found.]))
+    PKG_CHECK_MODULES([SDL_ttf], [SDL_ttf])
   fi
+fi
+
+if ! test "x$with_ttf" = "xno"; then
+   AC_DEFINE([HAVE_LIBSDLX_TTF], [1], [Build with TTF font support])
 fi
 
 dnl Checks for header files.
@@ -73,10 +71,26 @@ AC_CHECK_HEADERS(fcntl.h malloc.h strings.h unistd.h)
 dnl Checks for library functions.
 AC_CHECK_FUNCS(random lrand48)
 
-AC_SUBST(SDL_LIBS)
-AC_SUBST(SDL_CFLAGS)
 AC_SUBST(datadir)
 
 AC_CONFIG_HEADERS([src/config.h])
 
 AC_OUTPUT(Makefile src/Makefile)
+
+dnl Display configuration
+AC_MSG_RESULT([
+        $PACKAGE $VERSION
+        =====
+
+        prefix:                 ${prefix}
+        sysconfdir:             ${sysconfdir}
+        libdir:                 ${libdir}
+        includedir:             ${includedir}
+
+        compiler:               ${CC}
+        cflags:                 ${CFLAGS}
+        ldflags:                ${LDFLAGS}
+
+        SDL2:                   ${with_sdl2}
+        SDL_TTF:                ${with_ttf}
+])

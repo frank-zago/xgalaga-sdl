@@ -30,7 +30,7 @@
 
 /* If NOT using TTF Fonts, this file does nothing,
    check Sfont.c. */
-#if defined HAVE_LIBSDL_TTF || defined HAVE_LIBSDL2_TTF
+#if defined HAVE_LIBSDLX_TTF
 #include <assert.h>
 
 #include "xgalaga.h"

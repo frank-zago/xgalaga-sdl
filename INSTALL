@@ -1,6 +1,15 @@
+Install the dependencies first.
+
+To use SDL 1, these Debian packages are needed:
+  libsdl1.2-dev libsdl-mixer1.2-dev libsdl-image1.2-dev libsdl-gfx1.2-dev libsdl-ttf2.0-dev
+
+To use SDL 2, these Debian packages are needed:
+  libsdl2-dev libsdl2-mixer-dev libsdl2-image-dev libsdl2-gfx-dev libsdl2-ttf-dev
+
+Packages for rpm based distributions have similar names.
 
 Most people should be able to do:
-
+  autoreconf -i
   ./configure
   make
 
@@ -10,11 +19,10 @@ As root,
 or if your system supports sudo:
   sudo make install
 
+And play with:
+  xgalaga-sdl
 
 If you do not want install the game, you can run it in place:
   ./configure --datadir=`pwd`
 and start it with:
-  src/xgalaga-sdl  
-
-
-
+  src/xgalaga-sdl
