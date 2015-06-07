@@ -70,6 +70,8 @@ void S_Initialize(int fullscreen)
         exit(1);
     }
 
+	atexit(SDL_Quit);
+
 	screen = SDL_CreateWindow("Xgalaga SDL",
 							  SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 							  winwidth, screen_height,
@@ -103,6 +105,8 @@ void S_Initialize(int fullscreen)
         fprintf(stderr, "Couldn't initialize SDL: %s\n", SDL_GetError());
 		exit(1);
     }
+
+	atexit(SDL_Quit);
 
     bpp = SDL_VideoModeOK(winwidth, screen_height, 8, flags);
     if (bpp == 0) {

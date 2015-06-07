@@ -72,7 +72,6 @@ static int moves[16][2] = {
 static void xgal_exit(int v)
 {
 	sound_exit();
-	SDL_Quit();
     exit(v);
 }
 
@@ -1384,4 +1383,3 @@ int main(int argc, char *argv[])
     }
     return (0);
 }
-
