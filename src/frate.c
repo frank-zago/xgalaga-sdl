@@ -18,7 +18,12 @@
  * 02110-1301, USA.
  */
 
-#include <SDL/SDL_framerate.h>
+#include <SDL_version.h>
+#if SDL_VERSION_ATLEAST(2,0,0)
+#include <SDL2_framerate.h>
+#else
+#include <SDL_framerate.h>
+#endif
 
 #include "xgalaga.h"
 
