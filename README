@@ -21,7 +21,6 @@ GPL.  See COPYING for details
 
 See the file INSTALL for installation instructions.
 
-
 Command line options:
   -scores              Print out the high score tables and exit
   -nosound             Turn sound off on platforms with sound support
@@ -32,8 +31,7 @@ Command line options:
 
 Basic instructions:
   It's Galaga, you know how to play Galaga, stop bothering me.
-  (Ship follows the mouse, button fires.  Auto-fire by holding it
-   down, so no-one accuses me of breaking their mouse!)
+  (The ship is controlled by the keyboard, space bar fires.)
 
 Keyboard commands:
 
