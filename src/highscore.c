@@ -118,6 +118,13 @@ char *getUsersFullName()
     /* shorten to 20 chars */
     fullname[19] = 0;
 
+    /* SFont and TFont can only handle characters with values from 32d und 127d (ASCII) */
+    for (int i=0; i<=18; i++) {
+	if (fullname[i]>126 || fullname[i]<32) {
+		fullname[i]=32;
+	}
+    } 
+
     /* Return their name without any trailing stuff */
     return(fullname);
 }
